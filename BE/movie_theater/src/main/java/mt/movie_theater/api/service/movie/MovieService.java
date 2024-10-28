@@ -1,6 +1,7 @@
 package mt.movie_theater.api.service.movie;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.controller.movie.request.MovieCreateRequest;
 import mt.movie_theater.api.controller.movie.response.MovieResponse;
@@ -26,5 +27,12 @@ public class MovieService {
 
         Movie movie = request.toEntity(genres);
         return MovieResponse.create(movieRepository.save(movie));
+    }
+
+    public List<MovieResponse> getAllMovies() {
+        List<Movie> movies = movieRepository.findAll();
+        return movies.stream()
+                .map(movie -> MovieResponse.create(movie))
+                .collect(Collectors.toList());
     }
 }
