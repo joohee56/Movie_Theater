@@ -34,13 +34,11 @@ public class MovieCreateRequest {
     private String posterUrl;
     @NotNull(message = "영화 관람 등급은 필수 입력값입니다.")
     private AgeRating ageRating;
-    @NotBlank(message = "감독은 필수 입력값입니다.")
     private String director;
     @NotNull(message = "상영타입은 필수 입력값입니다.")
     private ScreeningType screeningType;
     @NotEmpty(message = "장르 리스트는 필수 입력값입니다.")
     private List<GenreType> genreTypes;
-    @NotEmpty(message = "배우 리스트는 필수 입력값입니다.")
     private List<String> actors;
 
     @Builder

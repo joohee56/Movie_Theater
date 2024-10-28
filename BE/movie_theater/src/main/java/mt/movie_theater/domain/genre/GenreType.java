@@ -11,7 +11,9 @@ public enum GenreType {
     DRAMA("드라마"),
     HORROR("공포"),
     THRILLER("스릴러"),
-    ROMANCE("로맨스");
+    ROMANCE("로맨스"),
+    SF("SF"),
+    DOCUMENTARY("다큐멘터리");
 
     private final String text;
 }
