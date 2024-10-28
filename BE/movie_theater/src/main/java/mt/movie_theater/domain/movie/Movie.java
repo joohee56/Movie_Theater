@@ -15,15 +15,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mt.movie_theater.api.controller.request.MovieCreateRequest;
 import mt.movie_theater.domain.BaseEntity;
-import mt.movie_theater.domain.actor.Actor;
 import mt.movie_theater.domain.genre.Genre;
-import mt.movie_theater.domain.genre.GenreType;
 import mt.movie_theater.domain.movieactor.MovieActor;
 import mt.movie_theater.domain.moviegenre.MovieGenre;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Movie extends BaseEntity {
@@ -43,15 +42,15 @@ public class Movie extends BaseEntity {
     private String director;
     @Enumerated(EnumType.STRING)
     private ScreeningType screeningType;
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieGenre> movieGenres = new ArrayList<>();
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-    private List<MovieActor> movieActors = new ArrayList<>();
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovieActor> actors = new ArrayList<>();
 
     @Builder
     public Movie(String title, String subTitle, String description, LocalDate releaseDate, Integer durationMinutes,
                   String posterUrl, AgeRating ageRating, String director, ScreeningType screeningType,
-                  List<GenreType> genreTypes, List<String> actors) {
+                  List<Genre> genres, List<String> actors) {
 
         if (releaseDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("영화 개봉일은 현재보다 이후일 수 없습니다.");
@@ -66,11 +65,11 @@ public class Movie extends BaseEntity {
         this.ageRating = ageRating;
         this.director = director;
         this.screeningType = screeningType;
-        this.movieGenres = genreTypes.stream()
-                            .map(genreType -> MovieGenre.create(this, Genre.create(genreType)))
+        this.movieGenres = genres.stream()
+                            .map(genre -> MovieGenre.create(this, genre))
                             .collect(Collectors.toList());
-        this.movieActors = actors.stream()
-                            .map(actor -> MovieActor.create(this, Actor.create(actor)))
+        this.actors = actors.stream()
+                            .map(name -> MovieActor.create(this, name))
                             .collect(Collectors.toList());
     }
 }

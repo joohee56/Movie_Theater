@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mt.movie_theater.domain.BaseEntity;
-import mt.movie_theater.domain.actor.Actor;
 import mt.movie_theater.domain.movie.Movie;
 
 @Getter
@@ -26,15 +25,15 @@ public class MovieActor extends BaseEntity {
     private String name;
 
     @Builder
-    private MovieActor(Actor actor, Movie movie) {
-        this.actor = actor;
+    public MovieActor(Movie movie, String name) {
         this.movie = movie;
+        this.name = name;
     }
 
-    public static MovieActor create(Movie movie, Actor actor) {
+    public static MovieActor create(Movie movie, String name) {
         return MovieActor.builder()
                 .movie(movie)
-                .actor(actor)
+                .name(name)
                 .build();
     }
 }

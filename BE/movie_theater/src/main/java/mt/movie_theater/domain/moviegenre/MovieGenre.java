@@ -7,11 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mt.movie_theater.domain.BaseEntity;
 import mt.movie_theater.domain.genre.Genre;
 import mt.movie_theater.domain.movie.Movie;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MovieGenre extends BaseEntity {
@@ -23,4 +26,17 @@ public class MovieGenre extends BaseEntity {
     private Movie movie;
     @ManyToOne(fetch = FetchType.LAZY)
     private Genre genre;
+
+    @Builder
+    private MovieGenre(Movie movie, Genre genre) {
+        this.movie = movie;
+        this.genre = genre;
+    }
+
+    public static MovieGenre create(Movie movie, Genre genre) {
+        return MovieGenre.builder()
+                .movie(movie)
+                .genre(genre)
+                .build();
+    }
 }
