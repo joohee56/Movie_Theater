@@ -1,8 +1,6 @@
 package mt.movie_theater.domain.movie;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +11,11 @@ class MovieTest {
     @Test
     void createMovieWithReleaseDateAfterThanCurrent() {
         //given
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         //when, then
         Assertions.assertThatThrownBy(() -> Movie.builder()
-                .releaseDate(now.toLocalDate().plusDays(1))
+                .releaseDate(now.plusDays(1))
                 .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("영화 개봉일은 현재보다 이후일 수 없습니다.");
