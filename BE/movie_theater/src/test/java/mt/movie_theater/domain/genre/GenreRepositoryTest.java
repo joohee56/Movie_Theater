@@ -1,19 +1,18 @@
 package mt.movie_theater.domain.genre;
 
-import static mt.movie_theater.domain.genre.GenreType.*;
+import static mt.movie_theater.domain.genre.GenreType.ACTION;
+import static mt.movie_theater.domain.genre.GenreType.COMEDY;
+import static mt.movie_theater.domain.genre.GenreType.DRAMA;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import mt.movie_theater.IntegrationTestSupport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
-@SpringBootTest
-class GenreRepositoryTest {
+class GenreRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private GenreRepository genreRepository;
 
