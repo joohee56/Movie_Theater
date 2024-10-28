@@ -14,7 +14,12 @@ import mt.movie_theater.domain.genre.Genre;
 import mt.movie_theater.domain.genre.GenreRepository;
 import mt.movie_theater.domain.genre.GenreType;
 import mt.movie_theater.domain.movie.AgeRating;
+import mt.movie_theater.domain.movie.Movie;
+import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.movie.ScreeningType;
+import mt.movie_theater.domain.movieactor.MovieActorRepository;
+import mt.movie_theater.domain.moviegenre.MovieGenreRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,20 @@ class MovieServiceTest extends IntegrationTestSupport {
     private MovieService movieService;
     @Autowired
     private GenreRepository genreRepository;
+    @Autowired
+    private MovieRepository movieRepository;
+    @Autowired
+    private MovieActorRepository movieActorRepository;
+    @Autowired
+    private MovieGenreRepository movieGenreRepository;
+
+    @AfterEach
+    void tearDown() {
+        movieGenreRepository.deleteAllInBatch();
+        genreRepository.deleteAllInBatch();
+        movieActorRepository.deleteAllInBatch();
+        movieRepository.deleteAllInBatch();
+    }
 
     @DisplayName("신규 영화를 등록한다.")
     @Test
@@ -61,6 +80,37 @@ class MovieServiceTest extends IntegrationTestSupport {
         assertThat(response.getMovieGenres()).containsExactlyInAnyOrder("드라마", "코미디");
         assertThat(response.getMovieActors()).hasSize(3);
         assertThat(response.getMovieActors()).containsExactlyInAnyOrder("홍경", "노윤서", "김민주");
+    }
+
+    @DisplayName("전체 영화를 조회한다.")
+    @Test
+    void getAllMovies() {
+        //given
+        LocalDate releaseDate = LocalDate.now();
+        Movie movie1 = createMovie("청설", releaseDate);
+        Movie movie2 = createMovie("아마존 활명수", releaseDate);
+        Movie movie3 = createMovie("고래와 나", releaseDate);
+        movieRepository.saveAll(List.of(movie1, movie2, movie3));
+
+        //when
+        List<MovieResponse> response = movieService.getAllMovies();
+
+        //then
+        assertThat(response).hasSize(3);
+        assertThat(response)
+                .extracting("title")
+                .containsExactlyInAnyOrder("청설", "아마존 활명수", "고래와 나");
+    }
+
+    private Movie createMovie(String title, LocalDate releaseDate) {
+        return Movie.builder()
+                .title(title)
+                .releaseDate(releaseDate)
+                .genres(List.of())
+                .actors(List.of())
+                .ageRating(AgeRating.ALL)
+                .screeningType(ScreeningType.TWO_D)
+                .build();
     }
 
 }
