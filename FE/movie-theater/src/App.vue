@@ -24,14 +24,12 @@ export default {
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+/* :root {
+  --primary-color: #503396;
+  --secondary-color: #2ecc71;
+  --text-color: #333333;
+  --background-color: #f0f0f0;
+} */
 
 nav a.router-link-exact-active {
   color: #42b983;
