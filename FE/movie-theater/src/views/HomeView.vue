@@ -1,0 +1,11 @@
+<template lang="ko">
+	<div>
+		Home View
+	</div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style scoped></style>
