@@ -22,6 +22,8 @@ export default {};
 .container {
   padding-bottom: 10px;
 }
+
+/* top nav  */
 .top-nav {
   font-family: IBM Plex Sans KR;
   font-size: 13px;
@@ -32,6 +34,8 @@ export default {};
 .top-nav a {
   margin-left: 20px;
 }
+
+/* main nav */
 .main-nav {
   font-family: SUIT-SemiBold;
   font-size: 19px;
@@ -41,12 +45,10 @@ export default {};
   margin-right: 20px;
   line-height: 2;
   padding-top: 0.5em;
-  display: inline-block;
 }
 #logo-link {
-  margin: 0 auto;
   display: block;
-  text-align: center;
+  margin: 0 auto;
   padding: 0;
 }
 .logo {
