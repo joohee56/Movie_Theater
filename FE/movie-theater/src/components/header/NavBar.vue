@@ -5,9 +5,11 @@
 			<a>회원가입</a>
 		</div>
 		<div class="main-nav">
-			<a>영화</a>
+			<router-link :to="{name: 'movie'}">영화</router-link>
 			<a>예매</a>
-			<img src="@/assets/megabox-logo.png" class="logo">
+			<router-link :to="{name: 'home'}" id="logo-link">
+				<img src="@/assets/megabox-logo.png" class="logo">
+			</router-link>
 		</div>
 	</div>
 </template>
@@ -37,13 +39,18 @@ export default {};
 }
 .main-nav a {
   margin-right: 20px;
-  text-align: end;
   line-height: 2;
   padding-top: 0.5em;
+  display: inline-block;
 }
-.logo {
-  width: 140px;
+#logo-link {
   margin: 0 auto;
   display: block;
+  text-align: center;
+  padding: 0;
+}
+.logo {
+  display: block;
+  width: 140px;
 }
 </style>

@@ -38,4 +38,9 @@ export default {
   transform: scaleY(0.5); /* 0.5배로 축소 */
   transform-origin: top;
 }
+
+a {
+  color: black;
+  text-decoration: none;
+}
 </style>
