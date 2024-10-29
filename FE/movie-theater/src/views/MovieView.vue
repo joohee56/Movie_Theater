@@ -1,8 +1,6 @@
 <template lang="ko">
   <div>
-    <div class="page-title">
-      전체영화
-    </div>
+    <PageTitle pageTitle="전체영화"></PageTitle>
     <div class="postercard-container">
       <PosterCard v-for="movie in movies" :key="movie.id" :movie=movie></PosterCard>
     </div>
@@ -11,6 +9,7 @@
 
 <script>
 import { getAllMovies } from "@/api/movie";
+import PageTitle from "@/components/header/PageTitle";
 import PosterCard from "@/components/movie/PosterCard";
 
 export default {
@@ -21,6 +20,7 @@ export default {
   },
   components: {
     PosterCard,
+    PageTitle,
   },
   mounted() {
     this.fetchMovies();
@@ -38,11 +38,6 @@ export default {
 </script>
 
 <style scoped>
-.page-title {
-  font-family: SUIT-Medium;
-  font-size: 30px;
-  margin: 25px 0;
-}
 .postercard-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
