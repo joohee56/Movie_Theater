@@ -1,7 +1,12 @@
 <template>
   <div id="app">
-    <NavBar></NavBar>
-    <router-view />
+    <div class="navbar-container">
+      <NavBar></NavBar>
+    </div>
+    <hr class="divider" />
+    <div class="main-routerview-container">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -20,18 +25,17 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
 
-/* :root {
-  --primary-color: #503396;
-  --secondary-color: #2ecc71;
-  --text-color: #333333;
-  --background-color: #f0f0f0;
-} */
+.navbar-container,
+.main-routerview-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
 
-nav a.router-link-exact-active {
-  color: #42b983;
+.divider {
+  border-bottom: 1px solid var(--secondary-color);
+  transform: scaleY(0.5); /* 0.5배로 축소 */
+  transform-origin: top;
 }
 </style>
