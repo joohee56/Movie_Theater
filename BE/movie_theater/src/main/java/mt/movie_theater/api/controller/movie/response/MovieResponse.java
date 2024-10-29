@@ -24,6 +24,7 @@ public class MovieResponse {
     private Integer durationMinutes;
     private String posterUrl;
     private String ageRating;
+    private String ageRatingDisplay;
     private String director;
     private String screeningType;
     private List<String> movieGenres;
@@ -41,6 +42,7 @@ public class MovieResponse {
         this.durationMinutes = durationMinutes;
         this.posterUrl = posterUrl;
         this.ageRating = ageRating.getText();
+        this.ageRatingDisplay = ageRating.getDisplay();
         this.director = director;
         this.screeningType = screeningType.getText();
         this.movieGenres = movieGenres;
