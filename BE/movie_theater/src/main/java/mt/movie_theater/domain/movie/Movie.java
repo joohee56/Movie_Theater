@@ -35,7 +35,6 @@ public class Movie extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
     private LocalDate releaseDate;
-//    @Convert(converter = DurationToStringConverter.class)
     private Duration durationMinutes;
     private String posterUrl;
     @Enumerated(EnumType.STRING)
@@ -54,11 +53,6 @@ public class Movie extends BaseEntity {
     public Movie(String title, String subTitle, String description, LocalDate releaseDate, Duration durationMinutes,
                   String posterUrl, AgeRating ageRating, String director, ScreeningType screeningType,
                   List<Genre> genres, List<String> actors, int standardPrice) {
-
-        if (releaseDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("영화 개봉일은 현재보다 이후일 수 없습니다.");
-        }
-
         this.title = title;
         this.subTitle = subTitle;
         this.description = description;
