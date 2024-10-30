@@ -1,0 +1,9 @@
+### 신규 회원 등록
+POST localhost:8081/api/v1/users/new
+Content-Type: application/json
+
+{
+  "loginId": "joohee123",
+  "name": "이주희",
+  "email": "test@test.com"
+}

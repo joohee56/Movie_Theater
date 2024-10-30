@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.controller.user.request.UserCreateRequest;
 import mt.movie_theater.api.controller.user.response.UserResponse;
+import mt.movie_theater.domain.user.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 class UserServiceTest extends IntegrationTestSupport {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAllInBatch();
+    }
 
     @DisplayName("새 회원을 등록한다.")
     @Test
