@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mt.movie_theater.domain.BaseEntity;
@@ -25,4 +26,14 @@ public class Seat extends BaseEntity {
     private String seatNumber;
     @Column(columnDefinition = "TINYINT(1) DEFAULT true")
     private boolean isAvailable;
+
+    @Builder
+    public Seat(String seatNumber) {
+        this.seatNumber = seatNumber;
+        this.isAvailable = true;
+    }
+
+    public void setHall(Hall hall) {
+        this.hall = hall;
+    }
 }

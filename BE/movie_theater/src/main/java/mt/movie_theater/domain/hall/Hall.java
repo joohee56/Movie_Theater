@@ -30,14 +30,17 @@ public class Hall extends BaseEntity {
     private Theater theater;
     @Column(length = 50)
     private String name;
-    private Integer totalSeats;
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats = new ArrayList<>();
+
+    public void addSeat(Seat seat) {
+        seat.setHall(this);
+        seats.add(seat);
+    }
 
     @Builder
     public Hall(Theater theater, String name) {
         this.theater = theater;
         this.name = name;
-        this.totalSeats = seats.size();
     }
 }

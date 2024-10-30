@@ -25,7 +25,7 @@ public class HallResponse {
                 .id(hall.getId())
                 .theater(TheaterResponse.create(hall.getTheater()))
                 .name(hall.getName())
-                .totalSeats(hall.getTotalSeats())
+                .totalSeats(hall.getSeats().size())
                 .build();
     }
 }
