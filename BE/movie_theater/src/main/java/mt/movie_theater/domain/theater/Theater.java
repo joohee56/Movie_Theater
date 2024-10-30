@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mt.movie_theater.domain.BaseEntity;
@@ -28,4 +29,14 @@ public class Theater extends BaseEntity {
     private Float longitude;
     @Column(length = 50)
     private String contactNumber;
+
+    @Builder
+    public Theater(String name, String address, Region region, Float latitude, Float longitude, String contactNumber) {
+        this.name = name;
+        this.address = address;
+        this.region = region;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.contactNumber = contactNumber;
+    }
 }

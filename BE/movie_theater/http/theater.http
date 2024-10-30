@@ -1,0 +1,12 @@
+### 신규 영화관 등록
+POST localhost:8081/api/v1/theaters/new
+Content-Type: application/json
+
+{
+  "name": "상암월드컵경기장",
+  "address": "서울특별시 마포구 월드컵로 240, (성산동) 월드컵주경기장 1층",
+  "region": "SEOUL",
+  "latitude": "37.5683",
+  "longitude": "126.8974",
+  "contactNumber": "1544-0070"
+}
