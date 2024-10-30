@@ -43,3 +43,6 @@ values ('강남', '', 'SEOUL'),
        ('광명소하', '', 'GYEONGGI'),
        ('금정ak플라자', '', 'GYEONGGI'),
        ('광명소하', '', 'GYEONGGI');
+
+insert into hall(theater_id, name, total_seats)
+    values ('1', '1관', 0);
