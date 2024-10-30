@@ -37,6 +37,7 @@ public class MovieCreateRequest {
     private String director;
     @NotNull(message = "상영타입은 필수 입력값입니다.")
     private ScreeningType screeningType;
+    private int standardPrice;
     @NotEmpty(message = "장르 리스트는 필수 입력값입니다.")
     private List<GenreType> genreTypes;
     private List<String> actors;
@@ -44,7 +45,7 @@ public class MovieCreateRequest {
     @Builder
     public MovieCreateRequest(String title, String subTitle, String description, LocalDate releaseDate,
                               Integer durationMinutes, String posterUrl, AgeRating ageRating,
-                              String director, ScreeningType screeningType, List<GenreType> genreTypes,
+                              String director, ScreeningType screeningType, int standardPrice, List<GenreType> genreTypes,
                               List<String> actors) {
         this.title = title;
         this.subTitle = subTitle;
@@ -55,6 +56,7 @@ public class MovieCreateRequest {
         this.ageRating = ageRating;
         this.director = director;
         this.screeningType = screeningType;
+        this.standardPrice = standardPrice;
         this.genreTypes = genreTypes;
         this.actors = actors;
     }
@@ -70,6 +72,7 @@ public class MovieCreateRequest {
                 .ageRating(this.ageRating)
                 .director(this.director)
                 .screeningType(this.screeningType)
+                .standardPrice(this.standardPrice)
                 .genres(genres)
                 .actors(this.actors)
                 .build();

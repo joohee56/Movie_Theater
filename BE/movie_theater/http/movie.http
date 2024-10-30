@@ -12,6 +12,7 @@ Content-Type: application/json
   "ageRating": "ALL",
   "director": "조선호",
   "screeningType": "TWO_D",
+  "standardPrice": "10000",
   "genreTypes": ["DRAMA"],
   "actors": [
     "홍경",

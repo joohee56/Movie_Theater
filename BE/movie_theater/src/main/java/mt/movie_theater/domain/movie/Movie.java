@@ -42,6 +42,7 @@ public class Movie extends BaseEntity {
     private String director;
     @Enumerated(EnumType.STRING)
     private ScreeningType screeningType;
+    private int standardPrice;
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieGenre> movieGenres = new ArrayList<>();
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,7 +51,7 @@ public class Movie extends BaseEntity {
     @Builder
     public Movie(String title, String subTitle, String description, LocalDate releaseDate, Integer durationMinutes,
                   String posterUrl, AgeRating ageRating, String director, ScreeningType screeningType,
-                  List<Genre> genres, List<String> actors) {
+                  List<Genre> genres, List<String> actors, int standardPrice) {
 
         if (releaseDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("영화 개봉일은 현재보다 이후일 수 없습니다.");
@@ -65,6 +66,7 @@ public class Movie extends BaseEntity {
         this.ageRating = ageRating;
         this.director = director;
         this.screeningType = screeningType;
+        this.standardPrice = standardPrice;
         this.movieGenres = genres.stream()
                             .map(genre -> MovieGenre.create(this, genre))
                             .collect(Collectors.toList());

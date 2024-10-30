@@ -30,6 +30,7 @@ class MovieControllerTest extends ControllerTestSupport {
                 .posterUrl("test@test.com")
                 .ageRating(AgeRating.ALL)
                 .director("조선호")
+                .standardPrice(10000)
                 .screeningType(ScreeningType.TWO_D)
                 .genreTypes(List.of(GenreType.DRAMA, GenreType.COMEDY))
                 .actors(List.of("홍경", "노윤서", "김민주"))
@@ -61,6 +62,7 @@ class MovieControllerTest extends ControllerTestSupport {
                 .ageRating(AgeRating.ALL)
                 .director("조선호")
                 .screeningType(ScreeningType.TWO_D)
+                .standardPrice(10000)
                 .genreTypes(List.of(GenreType.DRAMA, GenreType.COMEDY))
                 .actors(List.of("홍경", "노윤서", "김민주"))
                 .build();

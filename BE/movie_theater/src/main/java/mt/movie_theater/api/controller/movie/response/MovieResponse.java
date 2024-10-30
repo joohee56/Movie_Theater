@@ -27,13 +27,14 @@ public class MovieResponse {
     private String ageRatingDisplay;
     private String director;
     private String screeningType;
+    private int standardPrice;
     private List<String> movieGenres;
     private List<String> movieActors;
 
     @Builder
     public MovieResponse(Long id, String title, String subTitle, String description, LocalDate releaseDate,
                          Integer durationMinutes, String posterUrl, AgeRating ageRating, String director,
-                         ScreeningType screeningType, List<String> movieGenres, List<String> movieActors) {
+                         ScreeningType screeningType, int standardPrice, List<String> movieGenres, List<String> movieActors) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
@@ -45,6 +46,7 @@ public class MovieResponse {
         this.ageRatingDisplay = ageRating.getDisplay();
         this.director = director;
         this.screeningType = screeningType.getText();
+        this.standardPrice = standardPrice;
         this.movieGenres = movieGenres;
         this.movieActors = movieActors;
     }
@@ -61,6 +63,7 @@ public class MovieResponse {
                 .ageRating(movie.getAgeRating())
                 .director(movie.getDirector())
                 .screeningType(movie.getScreeningType())
+                .standardPrice(movie.getStandardPrice())
                 .movieGenres(movie.getMovieGenres().stream()
                         .map(movieGenre -> movieGenre.getGenre().getType().getText())
                         .collect(Collectors.toList()))
