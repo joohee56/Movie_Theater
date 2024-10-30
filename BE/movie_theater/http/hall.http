@@ -1,0 +1,8 @@
+### 신규 상영관 등록
+POST localhost:8081/api/v1/halls/new
+Content-Type: application/json
+
+{
+  "theaterId": "1",
+  "name": "1관"
+}
