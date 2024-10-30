@@ -6,6 +6,7 @@ import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.controller.hall.request.HallCreateRequest;
 import mt.movie_theater.api.controller.hall.response.HallResponse;
 import mt.movie_theater.domain.hall.HallRepository;
+import mt.movie_theater.domain.movie.ScreeningType;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
@@ -41,6 +42,7 @@ class HallServiceTest extends IntegrationTestSupport {
         HallCreateRequest request = HallCreateRequest.builder()
                                     .theaterId(savedTheater.getId())
                                     .name("1관")
+                                    .screeningType(ScreeningType.TWO_D)
                                     .build();
         //when
         HallResponse response = hallService.createHall(request);
@@ -48,8 +50,8 @@ class HallServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response.getId()).isNotNull();
         assertThat(response)
-                .extracting("name", "totalSeats")
-                .contains("1관", 0);
+                .extracting("name", "totalSeats", "screeningType")
+                .contains("1관", 0, "2D");
         assertThat(response.getTheater().getId()).isEqualTo(savedTheater.getId());
     }
 
@@ -60,6 +62,7 @@ class HallServiceTest extends IntegrationTestSupport {
         HallCreateRequest request = HallCreateRequest.builder()
                 .theaterId(Long.valueOf(1))
                 .name("1관")
+                .screeningType(ScreeningType.TWO_D)
                 .build();
         //when, then
         assertThatThrownBy(() -> hallService.createHall(request))
