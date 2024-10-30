@@ -1,5 +1,6 @@
 package mt.movie_theater.domain.hall;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -7,10 +8,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mt.movie_theater.domain.BaseEntity;
+import mt.movie_theater.domain.seat.Seat;
 import mt.movie_theater.domain.theater.Theater;
 
 @Getter
@@ -25,4 +31,13 @@ public class Hall extends BaseEntity {
     @Column(length = 50)
     private String name;
     private Integer totalSeats;
+    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seat> seats = new ArrayList<>();
+
+    @Builder
+    public Hall(Theater theater, String name) {
+        this.theater = theater;
+        this.name = name;
+        this.totalSeats = seats.size();
+    }
 }

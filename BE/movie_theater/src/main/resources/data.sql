@@ -33,4 +33,13 @@ values ('1', '류승룡'),
        ('5', '장영남'),
        ('5', '김홍파');
 
-insert into theater()
+insert into theater(name, address, region)
+values ('강남', '', 'SEOUL'),
+       ('강동', '', 'SEOUL'),
+       ('군자', '', 'SEOUL'),
+       ('더 부티크 목동현대백화점', '', 'SEOUL'),
+       ('고양스타필드', '', 'GYEONGGI'),
+       ('광명ak플라자', '', 'GYEONGGI'),
+       ('광명소하', '', 'GYEONGGI'),
+       ('금정ak플라자', '', 'GYEONGGI'),
+       ('광명소하', '', 'GYEONGGI');

@@ -2,6 +2,8 @@ package mt.movie_theater.domain.theater;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +24,7 @@ public class Theater extends BaseEntity {
     @Column(length = 50)
     private String name;
     private String address;
+    @Enumerated(EnumType.STRING)
     private Region region;
     @Column(columnDefinition = "FLOAT(9,6)")
     private Float latitude;
