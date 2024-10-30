@@ -1,6 +1,9 @@
 insert into genre(type)
 values('ACTION'), ('COMEDY'), ('DRAMA'), ('HORROR'), ('THRILLER'), ('ROMANCE'), ('SF'), ('DOCUMENTARY');
 
+insert into user(login_id, name, email)
+values('test123', '홍길동', 'test@test.com');
+
 insert into movie(title, sub_title, description, release_date, duration_minutes, poster_url, age_rating, director, screening_type)
 values ('아마존 활명수', 'AMAZON BULLSEYE',  '어서와, 아마존은 처음이지', '2024.10.28', '112', 'test@test.com', 'AGE_12', '김창주', 'TWO_D'),
        ('베놈:라스트 댄스', 'Venom: The Last Dance',  '죽음이 우리를 갈라놓을 때까지', '2024.10.23', '109', 'test@test.com', 'AGE_15', '켈리 마르셀', 'TWO_D'),
