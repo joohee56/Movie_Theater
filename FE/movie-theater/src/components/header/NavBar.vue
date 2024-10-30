@@ -6,7 +6,7 @@
 		</div>
 		<div class="main-nav">
 			<router-link :to="{name: 'movie'}">영화</router-link>
-			<a>예매</a>
+			<router-link :to="{name: 'booking'}">예매</router-link>
 			<router-link :to="{name: 'home'}" id="logo-link">
 				<img src="@/assets/img/megabox-logo.png" class="logo">
 			</router-link>
