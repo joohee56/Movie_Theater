@@ -5,6 +5,7 @@ import static mt.movie_theater.domain.genre.GenreType.COMEDY;
 import static mt.movie_theater.domain.genre.GenreType.DRAMA;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
@@ -107,10 +108,11 @@ class MovieServiceTest extends IntegrationTestSupport {
         return Movie.builder()
                 .title(title)
                 .releaseDate(releaseDate)
-                .genres(List.of())
-                .actors(List.of())
+                .movieGenres(List.of())
+                .movieActors(List.of())
                 .ageRating(AgeRating.ALL)
                 .screeningType(ScreeningType.TWO_D)
+                .durationMinutes(Duration.ofMinutes(108))
                 .build();
     }
 

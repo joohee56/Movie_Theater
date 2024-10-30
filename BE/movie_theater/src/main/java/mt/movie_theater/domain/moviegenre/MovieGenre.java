@@ -27,6 +27,10 @@ public class MovieGenre extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Genre genre;
 
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+
     @Builder
     private MovieGenre(Movie movie, Genre genre) {
         this.movie = movie;

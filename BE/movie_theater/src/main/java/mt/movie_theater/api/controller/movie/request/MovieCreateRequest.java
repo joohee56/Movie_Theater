@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import mt.movie_theater.domain.genre.GenreType;
 import mt.movie_theater.domain.movie.AgeRating;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.ScreeningType;
+import mt.movie_theater.domain.moviegenre.MovieGenre;
 
 @Getter
 @NoArgsConstructor
@@ -60,22 +62,5 @@ public class MovieCreateRequest {
         this.standardPrice = standardPrice;
         this.genreTypes = genreTypes;
         this.actors = actors;
-    }
-
-    public Movie toEntity(List<Genre> genres) {
-        return Movie.builder()
-                .title(this.title)
-                .subTitle(this.subTitle)
-                .description(this.description)
-                .releaseDate(this.releaseDate)
-                .durationMinutes(Duration.ofMinutes(this.durationMinutes))
-                .posterUrl(this.posterUrl)
-                .ageRating(this.ageRating)
-                .director(this.director)
-                .screeningType(this.screeningType)
-                .standardPrice(this.standardPrice)
-                .genres(genres)
-                .actors(this.actors)
-                .build();
     }
 }

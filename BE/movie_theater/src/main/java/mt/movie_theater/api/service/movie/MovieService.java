@@ -24,8 +24,7 @@ public class MovieService {
     public MovieResponse createMovie(MovieCreateRequest request) {
         List<GenreType> genreTypes = request.getGenreTypes();
         List<Genre> genres = genreRepository.findAllByTypeIn(genreTypes);
-
-        Movie movie = request.toEntity(genres);
+        Movie movie = Movie.create(request, genres);
         return MovieResponse.create(movieRepository.save(movie));
     }
 

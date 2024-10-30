@@ -13,11 +13,11 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mt.movie_theater.api.controller.movie.request.MovieCreateRequest;
 import mt.movie_theater.domain.BaseEntity;
 import mt.movie_theater.domain.genre.Genre;
 import mt.movie_theater.domain.movieactor.MovieActor;
@@ -49,10 +49,17 @@ public class Movie extends BaseEntity {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieActor> actors = new ArrayList<>();
 
+    public void addMovieGenre(MovieGenre movieGenre) {
+        this.movieGenres.add(movieGenre);
+    }
+    public void addMovieActor(MovieActor movieActor) {
+        this.actors.add(movieActor);
+    }
+
     @Builder
-    public Movie(String title, String subTitle, String description, LocalDate releaseDate, Duration durationMinutes,
+    private Movie(String title, String subTitle, String description, LocalDate releaseDate, Duration durationMinutes,
                   String posterUrl, AgeRating ageRating, String director, ScreeningType screeningType,
-                  List<Genre> genres, List<String> actors, int standardPrice) {
+                  List<MovieGenre> movieGenres, List<MovieActor> movieActors, int standardPrice) {
         this.title = title;
         this.subTitle = subTitle;
         this.description = description;
@@ -63,11 +70,30 @@ public class Movie extends BaseEntity {
         this.director = director;
         this.screeningType = screeningType;
         this.standardPrice = standardPrice;
-        this.movieGenres = genres.stream()
-                            .map(genre -> MovieGenre.create(this, genre))
-                            .collect(Collectors.toList());
-        this.actors = actors.stream()
-                            .map(name -> MovieActor.create(this, name))
-                            .collect(Collectors.toList());
+        this.movieGenres = movieGenres != null ? movieGenres : new ArrayList<>();
+        this.actors = movieActors != null ? movieActors : new ArrayList<>();
+    }
+
+    public static Movie create(MovieCreateRequest request, List<Genre> genres) {
+        Movie movie = Movie.builder()
+                .title(request.getTitle())
+                .subTitle(request.getSubTitle())
+                .description(request.getDescription())
+                .releaseDate(request.getReleaseDate())
+                .durationMinutes(Duration.ofMinutes(request.getDurationMinutes()))
+                .posterUrl(request.getPosterUrl())
+                .ageRating(request.getAgeRating())
+                .director(request.getDirector())
+                .screeningType(request.getScreeningType())
+                .standardPrice(request.getStandardPrice())
+                .build();
+
+        for (Genre genre : genres) {
+            movie.addMovieGenre(MovieGenre.create(movie, genre));
+        }
+        for (String name : request.getActors()) {
+            movie.addMovieActor(MovieActor.create(movie, name));
+        }
+        return movie;
     }
 }
