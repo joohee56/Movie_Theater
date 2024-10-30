@@ -4,5 +4,7 @@ Content-Type: application/json
 
 {
   "theaterId": "1",
-  "name": "1관"
+  "name": "1관",
+  "screeningType": "IMAX",
+  "hallTypeModifier": "3000"
 }

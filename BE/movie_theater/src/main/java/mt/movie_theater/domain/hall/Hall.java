@@ -35,6 +35,7 @@ public class Hall extends BaseEntity {
     private String name;
     @Enumerated(EnumType.STRING)
     private ScreeningType screeningType;
+    private int hallTypeModifier;
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats = new ArrayList<>();
 
@@ -44,9 +45,10 @@ public class Hall extends BaseEntity {
     }
 
     @Builder
-    public Hall(Theater theater, String name, ScreeningType screeningType) {
+    public Hall(Theater theater, String name, ScreeningType screeningType, int hallTypeModifier) {
         this.theater = theater;
         this.name = name;
         this.screeningType = screeningType;
+        this.hallTypeModifier = hallTypeModifier;
     }
 }

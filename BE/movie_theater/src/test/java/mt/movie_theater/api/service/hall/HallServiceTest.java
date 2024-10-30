@@ -42,7 +42,8 @@ class HallServiceTest extends IntegrationTestSupport {
         HallCreateRequest request = HallCreateRequest.builder()
                                     .theaterId(savedTheater.getId())
                                     .name("1관")
-                                    .screeningType(ScreeningType.TWO_D)
+                                    .screeningType(ScreeningType.IMAX)
+                                    .hallTypeModifier(3000)
                                     .build();
         //when
         HallResponse response = hallService.createHall(request);
@@ -50,8 +51,8 @@ class HallServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response.getId()).isNotNull();
         assertThat(response)
-                .extracting("name", "totalSeats", "screeningType")
-                .contains("1관", 0, "2D");
+                .extracting("name", "totalSeats", "screeningType", "hallTypeModifier")
+                .contains("1관", 0, "IMAX", 3000);
         assertThat(response.getTheater().getId()).isEqualTo(savedTheater.getId());
     }
 

@@ -44,5 +44,5 @@ values ('강남', '', 'SEOUL'),
        ('금정ak플라자', '', 'GYEONGGI'),
        ('광명소하', '', 'GYEONGGI');
 
-insert into hall(theater_id, name, screeing_type)
-    values ('1', '1관', "2D");
+insert into hall(theater_id, name, screening_type, hall_type_modifier)
+    values ('1', '1관', 'IMAX', 3000);
