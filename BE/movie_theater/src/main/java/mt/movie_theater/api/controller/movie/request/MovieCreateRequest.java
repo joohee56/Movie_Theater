@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -29,7 +30,7 @@ public class MovieCreateRequest {
     @JsonFormat(pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate releaseDate;
     @Positive(message = "상영시간은 양수여야합니다.")
-    private Integer durationMinutes;
+    private int durationMinutes;
     @NotBlank(message = "포스터 이미지 url은 필수 입력값입니다.")
     private String posterUrl;
     @NotNull(message = "영화 관람 등급은 필수 입력값입니다.")
@@ -44,7 +45,7 @@ public class MovieCreateRequest {
 
     @Builder
     public MovieCreateRequest(String title, String subTitle, String description, LocalDate releaseDate,
-                              Integer durationMinutes, String posterUrl, AgeRating ageRating,
+                              int durationMinutes, String posterUrl, AgeRating ageRating,
                               String director, ScreeningType screeningType, int standardPrice, List<GenreType> genreTypes,
                               List<String> actors) {
         this.title = title;
@@ -67,7 +68,7 @@ public class MovieCreateRequest {
                 .subTitle(this.subTitle)
                 .description(this.description)
                 .releaseDate(this.releaseDate)
-                .durationMinutes(this.durationMinutes)
+                .durationMinutes(Duration.ofMinutes(this.durationMinutes))
                 .posterUrl(this.posterUrl)
                 .ageRating(this.ageRating)
                 .director(this.director)

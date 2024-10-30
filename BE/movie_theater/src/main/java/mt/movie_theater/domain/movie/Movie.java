@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,8 @@ public class Movie extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
     private LocalDate releaseDate;
-    private Integer durationMinutes;
+//    @Convert(converter = DurationToStringConverter.class)
+    private Duration durationMinutes;
     private String posterUrl;
     @Enumerated(EnumType.STRING)
     private AgeRating ageRating;
@@ -49,7 +51,7 @@ public class Movie extends BaseEntity {
     private List<MovieActor> actors = new ArrayList<>();
 
     @Builder
-    public Movie(String title, String subTitle, String description, LocalDate releaseDate, Integer durationMinutes,
+    public Movie(String title, String subTitle, String description, LocalDate releaseDate, Duration durationMinutes,
                   String posterUrl, AgeRating ageRating, String director, ScreeningType screeningType,
                   List<Genre> genres, List<String> actors, int standardPrice) {
 

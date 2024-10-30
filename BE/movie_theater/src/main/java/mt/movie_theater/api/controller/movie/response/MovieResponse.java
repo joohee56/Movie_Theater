@@ -21,7 +21,7 @@ public class MovieResponse {
     private String description;
     @JsonFormat(pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate releaseDate;
-    private Integer durationMinutes;
+    private Long durationMinutes;
     private String posterUrl;
     private String ageRating;
     private String ageRatingDisplay;
@@ -33,7 +33,7 @@ public class MovieResponse {
 
     @Builder
     public MovieResponse(Long id, String title, String subTitle, String description, LocalDate releaseDate,
-                         Integer durationMinutes, String posterUrl, AgeRating ageRating, String director,
+                         Long durationMinutes, String posterUrl, AgeRating ageRating, String director,
                          ScreeningType screeningType, int standardPrice, List<String> movieGenres, List<String> movieActors) {
         this.id = id;
         this.title = title;
@@ -58,7 +58,7 @@ public class MovieResponse {
                 .subTitle(movie.getSubTitle())
                 .description(movie.getDescription())
                 .releaseDate(movie.getReleaseDate())
-                .durationMinutes(movie.getDurationMinutes())
+                .durationMinutes(movie.getDurationMinutes().toMinutes())
                 .posterUrl(movie.getPosterUrl())
                 .ageRating(movie.getAgeRating())
                 .director(movie.getDirector())
