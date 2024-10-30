@@ -25,7 +25,7 @@ public class SeatService {
     public List<SeatResponse> createSeatList(SeatListCreateRequest request) {
         Optional<Hall> hall = hallRepository.findById(request.getHallId());
         if (hall.isEmpty()) {
-            throw new IllegalArgumentException("잘못된 상영관입니다.");
+            throw new IllegalArgumentException("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
         }
 
         List<Seat> seats = new ArrayList<>();

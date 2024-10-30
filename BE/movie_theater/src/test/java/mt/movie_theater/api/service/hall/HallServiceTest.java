@@ -68,7 +68,7 @@ class HallServiceTest extends IntegrationTestSupport {
         //when, then
         assertThatThrownBy(() -> hallService.createHall(request))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 영화관입니다.");
+                .hasMessage("유효하지 않은 영화관입니다. 영화관 정보를 다시 확인해 주세요.");
     }
 
 }

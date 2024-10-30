@@ -19,7 +19,7 @@ public class HallService {
     public HallResponse createHall(HallCreateRequest request) {
         Optional<Theater> theater = theaterRepository.findById(request.getTheaterId());
         if(theater.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 영화관입니다.");
+            throw new IllegalArgumentException("유효하지 않은 영화관입니다. 영화관 정보를 다시 확인해 주세요.");
         }
 
         Hall hall = request.toEntity(theater.get());

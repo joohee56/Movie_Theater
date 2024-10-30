@@ -91,6 +91,6 @@ class SeatServiceTest extends IntegrationTestSupport {
         //when, then
         assertThatThrownBy(() -> seatService.createSeatList(request))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("잘못된 상영관입니다.");
+                .hasMessage("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
     }
 }
