@@ -50,6 +50,7 @@ class HallServiceTest extends IntegrationTestSupport {
         assertThat(response)
                 .extracting("name", "totalSeats")
                 .contains("1관", 0);
+        assertThat(response.getTheater().getId()).isEqualTo(savedTheater.getId());
     }
 
     @DisplayName("신규 상영관을 등록할 때, 잘못된 극장 번호가 포함될 경우 예외가 발생한다.")
