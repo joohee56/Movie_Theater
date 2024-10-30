@@ -1,0 +1,10 @@
+### 신규 상영시간 등록
+POST localhost:8081/api/v1/screenings/new
+Content-Type: application/json
+
+{
+  "movieId": "1",
+  "hallId": "1",
+  "startTime": "2024-10-31T08:00:00"
+}
+
