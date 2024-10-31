@@ -19,4 +19,14 @@ public class ApiControllerAdvice {
                 null
         );
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateSeatBookingException.class)
+    public ApiResponse<Object> duplicateSeatBookingException(DuplicateSeatBookingException e) {
+        return ApiResponse.of(
+                HttpStatus.BAD_REQUEST,
+                e.getMessage(),
+                null
+        );
+    }
 }
