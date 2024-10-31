@@ -46,3 +46,13 @@ values ('강남', '', 'SEOUL'),
 
 insert into hall(theater_id, name, screening_type, hall_type_modifier)
     values ('1', '1관', 'IMAX', 3000);
+
+insert into seat(hall_id, seat_number)
+values('1', 'A1'),
+      ('1', 'A2'),
+      ('1', 'B1'),
+      ('1', 'B2');
+
+insert into screening(movie_id, hall_id, start_time, end_time, total_price)
+values ('1', '1', '2024-10-31T08:00:00', '2024-10-31T09:48:00', 10000);
+

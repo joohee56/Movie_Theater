@@ -1,0 +1,10 @@
+### 신규 예매 등록
+POST localhost:8081/api/v1/bookings/new
+Content-Type: application/json
+
+{
+  "userId": "1",
+  "screeningId": "1",
+  "seatId": "3",
+  "totalPrice": "10000"
+}
