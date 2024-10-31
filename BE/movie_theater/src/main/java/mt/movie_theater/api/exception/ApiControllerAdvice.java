@@ -1,4 +1,4 @@
-package mt.movie_theater.api;
+package mt.movie_theater.api.exception;
 
 import mt.movie_theater.api.apiResponse.ApiResponse;
 import org.springframework.http.HttpStatus;
