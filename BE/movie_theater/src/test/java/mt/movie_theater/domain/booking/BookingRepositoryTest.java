@@ -20,7 +20,7 @@ class BookingRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private SeatRepository seatRepository;
 
-    @DisplayName("상영시간과 좌석과 예약 상태에 해당하는 예매를 조회한다.")
+    @DisplayName("상영시간과 좌석에 해당하는 예매를 조회한다.")
     @Test
     void findByScreeningIdAndSeatId() {
         //given
@@ -37,7 +37,7 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         bookingRepository.save(booking);
 
         //when
-        Optional<Booking> findBooking = bookingRepository.findByScreeningAndSeatAndBookingStatus(savedScreening, savedSeat, BookingStatus.CONFIRMED);
+        Optional<Booking> findBooking = bookingRepository.findByScreeningAndSeat(savedScreening, savedSeat);
         //then
         assertThat(findBooking).isPresent();
     }
@@ -65,7 +65,7 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         bookingRepository.save(booking);
 
         //when
-        Optional<Booking> findBooking = bookingRepository.findByScreeningAndSeatAndBookingStatus(savedScreening, savedSeat2, BookingStatus.CONFIRMED);
+        Optional<Booking> findBooking = bookingRepository.findByScreeningAndSeat(savedScreening, savedSeat2);
         //then
         assertThat(findBooking).isEmpty();
     }

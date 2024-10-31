@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    Optional<Booking> findByScreeningAndSeatAndBookingStatus(Screening screening, Seat seat, BookingStatus bookingStatus);
+    Optional<Booking> findByScreeningAndSeat(Screening screening, Seat seat);
 }
