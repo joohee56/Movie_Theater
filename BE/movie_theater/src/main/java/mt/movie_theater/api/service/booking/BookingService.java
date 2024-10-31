@@ -29,13 +29,12 @@ public class BookingService {
     private final UserRepository userRepository;
 
     @Transactional
-    public BookingResponse createBooking(BookingCreateRequest request) {
+    public BookingResponse createBooking(BookingCreateRequest request, LocalDateTime bookingTime) {
         User user = validateUser(request.getUserId());
-        Screening screening = validateScreening(request.getScreeningId());
+        Screening screening = validateScreening(request.getScreeningId(), bookingTime);
         Seat seat = validateSeat(request.getSeatId(), screening);
 
         String bookingNumber = BookingNumberGenerator.generateBookingNumber();
-        LocalDateTime bookingTime = LocalDateTime.now();
         Booking booking = Booking.builder()
                 .user(user)
                 .screening(screening)
@@ -56,10 +55,13 @@ public class BookingService {
         return user.get();
     }
 
-    public Screening validateScreening(Long screeningId) {
+    public Screening validateScreening(Long screeningId, LocalDateTime bookingTime) {
         Optional<Screening> screening = screeningRepository.findById(screeningId);
         if (screening.isEmpty()) {
             throw new IllegalArgumentException("유효하지 않은 상영시간입니다. 상영시간 정보를 다시 확인해 주세요.");
+        }
+        if (screening.get().getStartTime().isBefore(bookingTime)) {
+            throw new IllegalArgumentException("상영 시작 시간이 지났습니다. 다른 상영 시간을 선택해 주세요.");
         }
         return screening.get();
     }

@@ -1,6 +1,7 @@
 package mt.movie_theater.api.controller.booking;
 
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.apiResponse.ApiResponse;
 import mt.movie_theater.api.controller.booking.request.BookingCreateRequest;
@@ -19,7 +20,8 @@ public class BookingController {
 
     @PostMapping("/new")
     public ApiResponse<BookingResponse> createBooking(@Valid @RequestBody BookingCreateRequest request) {
-        BookingResponse response = bookingService.createBooking(request);
+        LocalDateTime bookingDate = LocalDateTime.now();
+        BookingResponse response = bookingService.createBooking(request, bookingDate);
         return ApiResponse.ok(response);
     }
 }

@@ -69,9 +69,10 @@ class BookingServiceTest extends IntegrationTestSupport {
                                         .seatId(savedSeat.getId())
                                         .totalPrice(12000).build();
         String bookingNumberPattern = "^\\d{4}-\\d{3}-\\d{5}$";
+        LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        BookingResponse response = bookingService.createBooking(request);
+        BookingResponse response = bookingService.createBooking(request, bookingDate);
 
         //then
         assertThat(response.getId()).isNotNull();
@@ -89,9 +90,10 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .screeningId(savedScreening.getId())
                 .seatId(savedSeat.getId())
                 .totalPrice(12000).build();
+        LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request))
+        assertThatThrownBy(() -> bookingService.createBooking(request, bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 사용자입니다. 사용자 정보를 다시 확인해 주세요.");
     }
@@ -107,9 +109,10 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .screeningId(Long.valueOf(1))
                 .seatId(savedSeat.getId())
                 .totalPrice(12000).build();
+        LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request))
+        assertThatThrownBy(() -> bookingService.createBooking(request, bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 상영시간입니다. 상영시간 정보를 다시 확인해 주세요.");
     }
@@ -125,9 +128,10 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .screeningId(savedScreening.getId())
                 .seatId(Long.valueOf(1))
                 .totalPrice(12000).build();
+        LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request))
+        assertThatThrownBy(() -> bookingService.createBooking(request, bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 좌석입니다. 좌석 정보를 다시 확인해 주세요.");
     }
@@ -144,13 +148,36 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .screeningId(savedScreening.getId())
                 .seatId(savedSeat.getId())
                 .totalPrice(12000).build();
-        bookingService.createBooking(request);
+        LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
+        bookingService.createBooking(request, bookingDate);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request))
+        assertThatThrownBy(() -> bookingService.createBooking(request, bookingDate))
                 .isInstanceOf(DuplicateSeatBookingException.class)
                 .hasMessage("이미 선택된 좌석입니다.");
     }
+
+    @DisplayName("신규 예매를 생성할 때, 상영 시작 시간보다 예매 시간이 더 이후일 경우 예외가 발생한다.")
+    @Test
+    void createBookingAfterStartDate() {
+        //given
+        User savedUser = createUser();
+        Screening savedScreening = createScreening();
+        Seat savedSeat = createSeat();
+        BookingCreateRequest request = BookingCreateRequest.builder()
+                .userId(savedUser.getId())
+                .screeningId(savedScreening.getId())
+                .seatId(savedSeat.getId())
+                .totalPrice(12000).build();
+        LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 31, 15, 0);
+
+        //when
+        assertThatThrownBy(() -> bookingService.createBooking(request, bookingDate))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("상영 시작 시간이 지났습니다. 다른 상영 시간을 선택해 주세요.");
+    }
+
+
 
     public User createUser() {
         User user = User.builder()
@@ -182,7 +209,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         Screening screening = Screening.builder()
                 .movie(savedMovie)
                 .hall(savedHall)
-                .startTime(LocalDateTime.now())
+                .startTime(LocalDateTime.of(2024, 10, 30, 15, 0))
                 .build();
         return screeningRepository.save(screening);
     }
