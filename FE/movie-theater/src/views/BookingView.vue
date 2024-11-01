@@ -16,9 +16,21 @@
 			<div class="section">
 				<div class="section-title">극장</div>
 				<div class="theater-list">
-					<button v-for="(region, index) in regions">
-						{{region.region}}({{region.count}})
-					</button>
+					<div class="region-list">
+						<button v-for="(region, index) in regions" @click="regionSelect(region.region, index)" :class="{regionSelected:selectedRegion.index==index}">
+							{{region.regionDisplay}}({{region.count}})
+						</button>
+					</div>
+					<div class="theater-detail-list">
+						<button v-for="(theater, index) in theaters" @click="theaterSelect(theater.id, index)" :class="{theaterSelected:selectedTheater.index==index}">
+							{{theater.name}}
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="section">
+				<div class="section-title">시간</div>
+				<div class="screening-list">
 				</div>
 			</div>
 		</div>
@@ -30,8 +42,8 @@ import "vue2-datepicker/index.css";
 import "vue2-datepicker/locale/ko";
 import DatePicker from "vue2-datepicker";
 import PageTitle from "@/components/header/PageTitle";
-import { getAllMovies } from "@/api/movie";
-import { getAllRegionsAndTheaterCount } from "@/api/theater";
+import { getMovies } from "@/api/movie";
+import { getRegionsAndTheaterCount, getTheatersByRegion } from "@/api/theater";
 
 export default {
   data() {
@@ -39,7 +51,15 @@ export default {
       selectedDate: null,
       movies: [],
       regions: [],
+      theaters: [],
       selectedMovie: {
+        index: -1,
+        id: -1,
+      },
+      selectedRegion: {
+        index: -1,
+      },
+      selectedTheater: {
         index: -1,
         id: -1,
       },
@@ -55,21 +75,36 @@ export default {
   },
   methods: {
     async fetchMovies() {
-      const response = await getAllMovies();
+      const response = await getMovies();
       if (response.status == 200) {
         this.movies = response.data.data;
       }
     },
     async fetchRegions() {
-      const response = await getAllRegionsAndTheaterCount();
+      const response = await getRegionsAndTheaterCount();
       if (response.status == 200) {
         this.regions = response.data.data;
+      }
+      console.log(response.data);
+    },
+    async fetchTheaters(region) {
+      const response = await getTheatersByRegion(region);
+      if (response.status == 200) {
+        this.theaters = response.data.data;
       }
       console.log(response.data);
     },
     movieSelect(movieId, index) {
       this.selectedMovie.id = movieId;
       this.selectedMovie.index = index;
+    },
+    regionSelect(name, index) {
+      this.selectedRegion.index = index;
+      this.fetchTheaters(name);
+    },
+    theaterSelect(theaterId, index) {
+      this.selectedTheater.id = theaterId;
+      this.selectedTheater.index = index;
     },
     ageClass(ageRatingDisplay) {
       return "age-" + ageRatingDisplay;
@@ -97,6 +132,8 @@ export default {
   font-size: 20px;
   margin-bottom: 20px;
 }
+
+/* 영화 */
 .movie-list {
   width: 250px;
 }
@@ -130,11 +167,32 @@ export default {
 .age-19 {
   background-color: var(--age-19-color);
 }
-.movie-list .movieSelected {
+.movie-list .movieSelected,
+.theater-list .theaterSelected {
   background-color: #666666;
   color: white;
 }
+
+/* 영화관 */
 .theater-list {
   width: 300px;
+  height: 100%;
+  display: flex;
+}
+.theater-list .regionSelected {
+  background-color: #ebebeb;
+}
+.region-list {
+  width: 50%;
+  border-right: 1px solid var(--border-line-color);
+  height: 90%;
+}
+.theater-detail-list {
+  width: 50%;
+}
+
+/* 시간 */
+.screening-list {
+  width: 400px;
 }
 </style>

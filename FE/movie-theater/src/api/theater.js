@@ -1,7 +1,7 @@
 import { jsonApiInstance } from "@/api/index";
 const jsonApi = jsonApiInstance();
 
-async function getAllRegionsAndTheaterCount() {
+async function getRegionsAndTheaterCount() {
   try {
     const response = await jsonApi.get("/theaters/count");
     return response;
@@ -10,4 +10,13 @@ async function getAllRegionsAndTheaterCount() {
   }
 }
 
-export { getAllRegionsAndTheaterCount };
+async function getTheatersByRegion(region) {
+  try {
+    const response = await jsonApi.get(`/theaters/${region}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { getRegionsAndTheaterCount, getTheatersByRegion };

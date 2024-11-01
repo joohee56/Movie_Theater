@@ -1,7 +1,7 @@
 import { jsonApiInstance } from "@/api/index";
 const jsonApi = jsonApiInstance();
 
-async function getAllMovies() {
+async function getMovies() {
   try {
     const response = await jsonApi.get("/movies");
     return response;
@@ -10,4 +10,4 @@ async function getAllMovies() {
   }
 }
 
-export { getAllMovies };
+export { getMovies };
