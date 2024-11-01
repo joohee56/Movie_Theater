@@ -16,7 +16,7 @@ class TheaterRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private TheaterRepository theaterRepository;
 
-    @DisplayName("")
+    @DisplayName("지역에 속하는 영화관 갯수를 조회한다.")
     @Test
     void countTheatersByRegion() {
         //given
