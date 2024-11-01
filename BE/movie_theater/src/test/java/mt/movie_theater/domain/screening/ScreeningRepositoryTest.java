@@ -58,7 +58,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 02, 00, 00));
 
         LocalDateTime startOfDay = LocalDateTime.of(2024, 11, 01, 00, 00);
-        LocalDateTime endOfDay = LocalDateTime.of(2024, 11, 01, 23, 59);
+        LocalDateTime endOfDay = LocalDateTime.of(2024, 11, 02, 00, 00);
 
         //when
         List<Screening> screenings = screeningRepository.findByHallIdAndDateAndOptionalMovieId(

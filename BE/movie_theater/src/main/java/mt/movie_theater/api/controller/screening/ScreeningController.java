@@ -22,4 +22,6 @@ public class ScreeningController {
         ScreeningResponse response = screeningService.createScreening(request);
         return ApiResponse.ok(response);
     }
+
+
 }

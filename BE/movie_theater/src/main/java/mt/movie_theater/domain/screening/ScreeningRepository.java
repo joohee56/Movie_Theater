@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ScreeningRepository extends JpaRepository<Screening, Long> {
 
     @Query("SELECT s FROM Screening s WHERE s.hall.id = :hallId " +
-            "AND s.startTime >= :startOfDay AND s.startTime <= :endOfDay " +
+            "AND s.startTime >= :startOfDay AND s.startTime < :endOfDay " +
             "AND (:movieId IS NULL OR s.movie.id = :movieId)")
     List<Screening> findByHallIdAndDateAndOptionalMovieId(
             @Param("hallId") Long hallId,

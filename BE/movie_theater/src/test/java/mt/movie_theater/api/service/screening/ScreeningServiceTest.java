@@ -16,6 +16,7 @@ import mt.movie_theater.domain.movie.AgeRating;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.movie.ScreeningType;
+import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
@@ -51,27 +52,11 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         //given
         LocalDate releaseDate = LocalDateTime.now().toLocalDate();
         Movie movie = createMovie("청설", releaseDate, Duration.ofMinutes(108), 10000);
-        Movie savedMovie = movieRepository.save(movie);
-
-        Theater theater = Theater.builder()
-                .region(Region.SEOUL)
-                .build();
-        Theater savedTheater = theaterRepository.save(theater);
-
-        Hall hall = Hall.builder()
-                .name("1관")
-                .theater(savedTheater)
-                .screeningType(ScreeningType.IMAX)
-                .hallTypeModifier(3000)
-                .build();
-        Hall savedHall = hallRepository.save(hall);
+        Theater theater = createTheater(Region.SEOUL);
+        Hall hall = createHall(theater, ScreeningType.IMAX, 3000);
 
         LocalDateTime startDate = LocalDateTime.of(2024, 10, 31, 15, 0);
-        ScreeningCreateRequest request = ScreeningCreateRequest.builder()
-                .movieId(savedMovie.getId())
-                .hallId(savedHall.getId())
-                .startTime(startDate)
-                .build();
+        ScreeningCreateRequest request = createRequest(movie.getId(), hall.getId(), startDate);
 
         //when
         ScreeningResponse response = screeningService.createScreening(request);
@@ -87,10 +72,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
     void createScreeningNoMovie() {
         //given
         LocalDateTime startDate = LocalDateTime.now();
-        ScreeningCreateRequest request = ScreeningCreateRequest.builder()
-                .movieId(Long.valueOf(1))
-                .startTime(startDate)
-                .build();
+        ScreeningCreateRequest request = createRequest(Long.valueOf(1), null, startDate);
 
         //when, then
         assertThatThrownBy(() -> screeningService.createScreening(request))
@@ -104,14 +86,9 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         //given
         LocalDate releaseDate = LocalDateTime.now().toLocalDate();
         Movie movie = createMovie("청설", releaseDate, Duration.ofMinutes(108), 10000);
-        Movie savedMovie = movieRepository.save(movie);
 
         LocalDateTime startDate = LocalDateTime.now();
-        ScreeningCreateRequest request = ScreeningCreateRequest.builder()
-                .movieId(savedMovie.getId())
-                .hallId(Long.valueOf(1))
-                .startTime(startDate)
-                .build();
+        ScreeningCreateRequest request = createRequest(movie.getId(), Long.valueOf(1), startDate);
 
         //when, then
         assertThatThrownBy(() -> screeningService.createScreening(request))
@@ -119,8 +96,37 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                 .hasMessage("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
     }
 
+
+    @DisplayName("상영관, 날짜, 영화에 해당하는 상영 시간을 조회한다.")
+    @Test
+    void getScreeningList() {
+        //given
+        LocalDate releaseDate = LocalDateTime.now().toLocalDate();
+        Movie movie = createMovie("청설", releaseDate, Duration.ofMinutes(108), 10000);
+        Theater theater = createTheater(Region.SEOUL);
+        Hall hall = createHall(theater, ScreeningType.IMAX, 3000);
+
+        createScreening(movie, hall, LocalDateTime.of(2024, 10, 31, 23, 59));
+        createScreening(movie, hall, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall, LocalDateTime.of(2024, 11, 01, 23, 59));
+        createScreening(movie, hall, LocalDateTime.of(2024, 11, 02, 00, 00));
+
+        LocalDate date = LocalDate.of(2024, 11, 01);
+
+        //when
+        List<ScreeningResponse> results = screeningService.getScreeningList(movie.getId(), hall.getId(), date);
+
+        //then
+        assertThat(results).hasSize(2)
+                .extracting("startTime")
+                .containsExactlyInAnyOrder(
+                        LocalDateTime.of(2024, 11, 01, 00, 00),
+                        LocalDateTime.of(2024, 11, 01, 23, 59)
+                );
+    }
+
     private Movie createMovie(String title, LocalDate releaseDate, Duration durationMinutes, int standardPrice) {
-        return Movie.builder()
+        Movie movie = Movie.builder()
                 .title(title)
                 .releaseDate(releaseDate)
                 .movieGenres(List.of())
@@ -130,6 +136,40 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                 .standardPrice(standardPrice)
                 .durationMinutes(durationMinutes)
                 .build();
+        return movieRepository.save(movie);
     }
 
+    private Theater createTheater(Region region) {
+        Theater theater = Theater.builder()
+                .region(region)
+                .build();
+        return theaterRepository.save(theater);
+    }
+    private Hall createHall(Theater theater, ScreeningType screeningType, int hallTypeModifier) {
+        Hall hall = Hall.builder()
+                .name("1관")
+                .theater(theater)
+                .screeningType(screeningType)
+                .hallTypeModifier(hallTypeModifier)
+                .build();
+        return hallRepository.save(hall);
+    }
+
+    private ScreeningCreateRequest createRequest(Long movieId, Long hallId, LocalDateTime startDate) {
+        return ScreeningCreateRequest.builder()
+                .movieId(movieId)
+                .hallId(hallId)
+                .startTime(startDate)
+                .build();
+    }
+
+    private Screening createScreening(Movie movie, Hall hall, LocalDateTime startTime) {
+        Screening screening = Screening.builder()
+                .movie(movie)
+                .hall(hall)
+                .startTime(startTime)
+                .endTime(startTime.plus(movie.getDurationMinutes()))
+                .build();
+        return screeningRepository.save(screening);
+    }
 }
