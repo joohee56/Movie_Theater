@@ -13,3 +13,6 @@ Content-Type: application/json
 
 ### 지역별 영화관 갯수 조회
 GET localhost:8081/api/v1/theaters/count
+
+### 지역별 영화관 리스트 조회
+GET localhost:8081/api/v1/theaters/SEOUL
