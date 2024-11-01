@@ -43,10 +43,10 @@ class TheaterServiceTest extends IntegrationTestSupport {
         //then
         assertThat(responses).hasSize(2);
         assertThat(responses)
-                .extracting("region", "count")
+                .extracting("region", "regionDisplay", "count")
                 .containsExactlyInAnyOrder(
-                        tuple("서울", Long.valueOf(3)),
-                        tuple("경기", Long.valueOf(2))
+                        tuple("SEOUL", "서울", Long.valueOf(3)),
+                        tuple("GYEONGGI", "경기", Long.valueOf(2))
                 );
     }
 
