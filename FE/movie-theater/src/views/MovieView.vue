@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { getAllMovies } from "@/api/movie";
+import { getMovies } from "@/api/movie";
 import PageTitle from "@/components/header/PageTitle";
 import PosterCard from "@/components/movie/PosterCard";
 
@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     async fetchMovies() {
-      const response = await getAllMovies();
+      const response = await getMovies();
       if (response.status == 200) {
         this.movies = response.data.data;
       }
