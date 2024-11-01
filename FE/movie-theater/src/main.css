@@ -3,8 +3,11 @@
 :root {
   --primary-color: #503396;
   --secondary-color: #352461;
-  /* --text-color: #333333;
-  --background-color: #f0f0f0; */
+  --border-line-color: #d8d9db;
+  --age-all-color: #229c56;
+  --age-12-color: #e9b630;
+  --age-15-color: #dd7430;
+  --age-19-color: #d92b35;
   --max-width: 1100px;
 }
 

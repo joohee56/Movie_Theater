@@ -44,6 +44,10 @@ export default {
 .movie-title-container {
   margin: 10px 0;
 }
+.movie-title {
+  display: inline;
+  font-size: 20px;
+}
 .age-rating {
   display: inline;
   font-family: "S-CoreDream-6Bold";
@@ -53,21 +57,17 @@ export default {
   padding: 2px 1px 2px 3px;
   font-size: 14px;
 }
-.movie-title {
-  display: inline;
-  font-size: 20px;
-}
 .age-ALL {
-  background-color: #229c56;
+  background-color: var(--age-all-color);
 }
 .age-12 {
-  background-color: #e9b630;
+  background-color: var(--age-12-color);
 }
 .age-15 {
-  background-color: #dd7430;
+  background-color: var(--age-15-color);
 }
 .age-19 {
-  background-color: #d92b35;
+  background-color: var(--age-19-color);
 }
 .movie-releaseDate {
   font-size: 15px;
