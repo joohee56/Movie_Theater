@@ -36,21 +36,22 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         movieRepository.deleteAllInBatch();
     }
 
-    @DisplayName("상영관, 날짜, 영화에 해당하는 상영시간을 조회한다.")
+    @DisplayName("영화관, 날짜, 영화에 해당하는 상영시간을 조회한다.")
     @Test
-    void findByHallIdAndDateAndOptionalMovieId() {
+    void findByTheaterIdAndDateAndOptionalMovieId() {
         //given
         Movie movie1 = createMovie();
         Movie movie2 = createMovie();
-        Theater theater = createTheater();
-        Hall hall1 = createHall(theater);
-        Hall hall2 = createHall(theater);
+        Theater theater1 = createTheater();
+        Theater theater2 = createTheater();
+        Hall hall1 = createHall(theater1);
+        Hall hall2 = createHall(theater2);
 
         createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
         createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 04, 00));
         createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 23, 59));
 
-        //상영관 불일치
+        //영화관 불일치
         createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
         //영화 불일치
         createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
@@ -61,8 +62,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         LocalDateTime endOfDay = LocalDateTime.of(2024, 11, 02, 00, 00);
 
         //when
-        List<Screening> screenings = screeningRepository.findByHallIdAndDateAndOptionalMovieId(
-                hall1.getId(), startOfDay, endOfDay, movie1.getId());
+        List<Screening> screenings = screeningRepository.findByTheaterIdAndDateAndOptionalMovieId(theater1.getId(), startOfDay, endOfDay, movie1.getId());
 
         //then
         assertThat(screenings).hasSize(3)
@@ -79,13 +79,14 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
     void findByHallIdAndDateAndOptionalNoMovieId() {
         //given
         Movie movie = createMovie();
-        Theater theater = createTheater();
+        Theater theater1 = createTheater();
+        Theater theater2 = createTheater();
 
-        Hall hall1 = createHall(theater);
-        Hall hall2 = createHall(theater);
+        Hall hall1 = createHall(theater1);
+        Hall hall2 = createHall(theater2);
 
         createScreening(movie, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
-        //상영관 불일치
+        //영화관 불일치
         createScreening(movie, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
         //상영시간 불일치
         createScreening(movie, hall1, LocalDateTime.of(2024, 11, 02, 00, 00));
@@ -94,8 +95,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         LocalDateTime endOfDay = LocalDateTime.of(2024, 11, 01, 23, 59);
 
         //when
-        List<Screening> screenings = screeningRepository.findByHallIdAndDateAndOptionalMovieId(
-                hall1.getId(), startOfDay, endOfDay, null);
+        List<Screening> screenings = screeningRepository.findByTheaterIdAndDateAndOptionalMovieId(theater1.getId(), startOfDay, endOfDay, null);
 
         //then
         assertThat(screenings).hasSize(1);

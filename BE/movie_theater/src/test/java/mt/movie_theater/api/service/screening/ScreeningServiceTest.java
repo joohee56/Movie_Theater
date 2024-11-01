@@ -97,7 +97,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
     }
 
 
-    @DisplayName("상영관, 날짜, 영화에 해당하는 상영 시간을 조회한다.")
+    @DisplayName("영화관, 날짜, 영화에 해당하는 상영 시간을 조회한다.")
     @Test
     void getScreeningList() {
         //given
@@ -114,7 +114,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         LocalDate date = LocalDate.of(2024, 11, 01);
 
         //when
-        List<ScreeningResponse> results = screeningService.getScreeningList(movie.getId(), hall.getId(), date);
+        List<ScreeningResponse> results = screeningService.getScreeningList(movie.getId(), theater.getId(), date);
 
         //then
         assertThat(results).hasSize(2)

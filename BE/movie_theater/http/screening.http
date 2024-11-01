@@ -4,10 +4,10 @@ Content-Type: application/json
 
 {
   "movieId": "1",
-  "hallId": "1",
+  "theaterId": "1",
   "startTime": "2024-10-31T08:00:00"
 }
 
-### 상영관, 날짜, 영화에 해당하는 상영시간 조회
-GET localhost:8081/api/v1/screenings?movieId=1&hallId=3&date=2024.11.15
+### 영화관, 날짜, 영화에 해당하는 상영시간 조회
+GET localhost:8081/api/v1/screenings?movieId=1&theaterId=1&date=2024.11.15
 Accept: application/json

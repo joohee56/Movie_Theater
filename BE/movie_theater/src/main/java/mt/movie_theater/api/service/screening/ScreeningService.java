@@ -55,8 +55,8 @@ public class ScreeningService {
         return startTime.plus(duration);
     }
 
-    public List<ScreeningResponse> getScreeningList(Long movieId, Long hallId, LocalDate date) {
-        List<Screening> screenings = screeningRepository.findByHallIdAndDateAndOptionalMovieId(hallId, date.atStartOfDay(), date.atTime(LocalTime.MAX), movieId);
+    public List<ScreeningResponse> getScreeningList(Long movieId, Long theaterId, LocalDate date) {
+        List<Screening> screenings = screeningRepository.findByTheaterIdAndDateAndOptionalMovieId(theaterId, date.atStartOfDay(), date.atTime(LocalTime.MAX), movieId);
         return screenings.stream()
                 .map(screening -> ScreeningResponse.create(screening))
                 .collect(Collectors.toList());

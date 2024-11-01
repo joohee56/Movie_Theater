@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 public class ScreeningListRequest {
     private Long movieId;
-    private Long hallId;
+    private Long theaterId;
     @DateTimeFormat(pattern = "yyyy.MM.dd")
     private LocalDate date;
 }

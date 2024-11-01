@@ -29,7 +29,7 @@ public class ScreeningController {
 
     @GetMapping("")
     public ApiResponse<List<ScreeningResponse>> getScreeningList(@ModelAttribute ScreeningListRequest request) {
-        List<ScreeningResponse> screenings = screeningService.getScreeningList(request.getMovieId(), request.getHallId(), request.getDate());
+        List<ScreeningResponse> screenings = screeningService.getScreeningList(request.getMovieId(), request.getTheaterId(), request.getDate());
         return ApiResponse.ok(screenings);
     }
 }
