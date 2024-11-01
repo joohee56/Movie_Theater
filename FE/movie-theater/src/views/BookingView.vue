@@ -48,7 +48,7 @@ import { getRegionsAndTheaterCount, getTheatersByRegion } from "@/api/theater";
 export default {
   data() {
     return {
-      selectedDate: null,
+      selectedDate: new Date(),
       movies: [],
       regions: [],
       theaters: [],
