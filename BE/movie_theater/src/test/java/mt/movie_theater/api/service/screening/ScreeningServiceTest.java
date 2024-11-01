@@ -56,6 +56,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         Hall hall = createHall(theater, ScreeningType.IMAX, 3000);
 
         LocalDateTime startDate = LocalDateTime.of(2024, 10, 31, 15, 0);
+        LocalDateTime endDate = startDate.plus(movie.getDurationMinutes());
         ScreeningCreateRequest request = createRequest(movie.getId(), hall.getId(), startDate);
 
         //when
@@ -63,8 +64,9 @@ class ScreeningServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(response.getId()).isNotNull();
-        assertThat(response.getEndTime()).isEqualTo(startDate.plus(movie.getDurationMinutes()));
-        assertThat(response.getTotalPrice()).isEqualTo(13000);
+        assertThat(response)
+                .extracting("startTime", "endTime", "totalPrice")
+                .contains("15:00", "16:48", 13000);
     }
 
     @DisplayName("신규 상영시간을 등록할 때, 유효하지 않은 영화일 시 예외가 발생한다.")
@@ -120,8 +122,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         assertThat(results).hasSize(2)
                 .extracting("startTime")
                 .containsExactlyInAnyOrder(
-                        LocalDateTime.of(2024, 11, 01, 00, 00),
-                        LocalDateTime.of(2024, 11, 01, 23, 59)
+                        "00:00", "23:59"
                 );
     }
 
