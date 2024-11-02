@@ -61,7 +61,7 @@ public class ScreeningService {
     }
 
     //날짜와 (영화)가 주어졌을 때, 조건에 맞는 상영시간을 가진 지역과 지역별 영화관 갯수 조회
-    public List<RegionTheaterCountResponse> getRegionTheaterCountList(LocalDate date, Long movieId) {
+    public List<RegionTheaterCountResponse> getRegionsWithTheaterCount(LocalDate date, Long movieId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
         List<RegionTheaterCountDto> regionCountDtos = screeningRepository.countTheaterByRegion(startDateTime, endDateTime, movieId);

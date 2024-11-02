@@ -28,8 +28,8 @@ public class ScreeningController {
     }
 
     @GetMapping("/region/theaterCount")
-    public ApiResponse<List<RegionTheaterCountResponse>> getRegionTheaterCountList(@Valid @ModelAttribute RegionTheaterCountRequest request) {
-        List<RegionTheaterCountResponse> regionResponses = screeningService.getRegionTheaterCountList(request.getDate(), request.getMovieId());
+    public ApiResponse<List<RegionTheaterCountResponse>> getRegionsWithTheaterCount(@Valid @ModelAttribute RegionTheaterCountRequest request) {
+        List<RegionTheaterCountResponse> regionResponses = screeningService.getRegionsWithTheaterCount(request.getDate(), request.getMovieId());
         return ApiResponse.ok(regionResponses);
     }
 

@@ -121,7 +121,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         LocalDate date = LocalDate.of(2024, 11, 01);
 
         //when
-        List<RegionTheaterCountResponse> regionTheaterCounts = screeningService.getRegionTheaterCountList(date, movie.getId());
+        List<RegionTheaterCountResponse> regionTheaterCounts = screeningService.getRegionsWithTheaterCount(date, movie.getId());
 
         //then
         assertThat(regionTheaterCounts).hasSize(8)
