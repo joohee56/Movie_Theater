@@ -97,7 +97,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
 
         //when
-        List<Screening> screenings = screeningRepository.findAllByDateAndMovieIdAndTheaterId(
+        List<Screening> screenings = screeningRepository.findAllByDateTheaterIdAndOptionalMovieId(
                 startDateTime, endDateTime, movie1.getId(), theater1.getId());
 
         //then

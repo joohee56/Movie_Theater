@@ -79,7 +79,7 @@ public class ScreeningService {
     public List<FullScreeningResponse> getScreenings(LocalDate date, Long movieId, Long theaterId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
-        List<Screening> screenings = screeningRepository.findAllByDateAndMovieIdAndTheaterId(startDateTime, endDateTime, movieId, theaterId);
+        List<Screening> screenings = screeningRepository.findAllByDateTheaterIdAndOptionalMovieId(startDateTime, endDateTime, movieId, theaterId);
         return screenings.stream()
                 .map(screening -> FullScreeningResponse.create(screening))
                 .collect(Collectors.toList());
