@@ -1,4 +1,4 @@
-package mt.movie_theater.api.controller.movie;
+package mt.movie_theater.api.movie.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 

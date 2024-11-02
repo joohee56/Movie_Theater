@@ -1,4 +1,4 @@
-package mt.movie_theater.api.service.screening;
+package mt.movie_theater.api.screening.service;
 
 import static mt.movie_theater.domain.movie.ScreeningType.IMAX;
 import static mt.movie_theater.domain.movie.ScreeningType.TWO_D;

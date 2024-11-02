@@ -1,4 +1,4 @@
-package mt.movie_theater.api.service.seat;
+package mt.movie_theater.api.seat.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

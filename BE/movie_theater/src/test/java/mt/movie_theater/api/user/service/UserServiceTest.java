@@ -1,4 +1,4 @@
-package mt.movie_theater.api.service.user;
+package mt.movie_theater.api.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

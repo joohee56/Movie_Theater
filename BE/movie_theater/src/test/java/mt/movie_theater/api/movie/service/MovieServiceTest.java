@@ -1,4 +1,4 @@
-package mt.movie_theater.api.service.movie;
+package mt.movie_theater.api.movie.service;
 
 import static mt.movie_theater.domain.genre.GenreType.ACTION;
 import static mt.movie_theater.domain.genre.GenreType.COMEDY;

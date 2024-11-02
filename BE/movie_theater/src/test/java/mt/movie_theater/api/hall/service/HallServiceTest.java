@@ -1,4 +1,4 @@
-package mt.movie_theater.api.service.hall;
+package mt.movie_theater.api.hall.service;
 
 import static org.assertj.core.api.Assertions.*;
 
