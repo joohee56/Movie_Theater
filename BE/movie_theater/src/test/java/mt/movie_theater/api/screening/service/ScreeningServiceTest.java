@@ -7,6 +7,7 @@ import static mt.movie_theater.domain.theater.Region.JEJU;
 import static mt.movie_theater.domain.theater.Region.SEOUL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -14,8 +15,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
+import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
-import mt.movie_theater.api.screening.service.ScreeningService;
 import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
@@ -135,6 +136,31 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                         Tuple.tuple("GWANGJU_JEONLLA", "광주/전라", Long.valueOf(0)),
                         Tuple.tuple("GANGWON", "강원", Long.valueOf(0)),
                         Tuple.tuple("JEJU", "제주", Long.valueOf(1))
+                );
+    }
+
+    @DisplayName("날짜, 영화, 영화관이 주어질 때, 조건에 맞는 상영시간 리스트를 조회한다.")
+    @Test
+    void getScreenings() {
+        //given
+        LocalDate date = LocalDate.of(2024, 11, 01);
+        Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
+        Theater theater = createTheater(SEOUL);
+        Hall hall = createHall(theater, TWO_D, 0);
+
+        createScreening(movie, hall, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall, LocalDateTime.of(2024, 11, 01, 23, 59));
+        createScreening(movie, hall, LocalDateTime.of(2024, 11, 02, 00, 00));
+
+        //when
+        List<FullScreeningResponse> screenings = screeningService.getScreenings(date, movie.getId(), theater.getId());
+
+        //then
+        assertThat(screenings).hasSize(2)
+                .extracting("startTime", "endTime")
+                .containsExactlyInAnyOrder(
+                        tuple("00:00", "01:48"),
+                        tuple("23:59", "01:47")
                 );
     }
 

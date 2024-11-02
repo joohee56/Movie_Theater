@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
+import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
 import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.domain.hall.Hall;
@@ -75,8 +76,13 @@ public class ScreeningService {
     }
 
     //날짜, 영화, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
-    public void getScreenings(LocalDate date, Long movieId, Long TheaterId) {
-
+    public List<FullScreeningResponse> getScreenings(LocalDate date, Long movieId, Long theaterId) {
+        LocalDateTime startDateTime = getStartDateTime(date);
+        LocalDateTime endDateTime = getEndDateTime(date);
+        List<Screening> screenings = screeningRepository.findAllByDateAndMovieIdAndTheaterId(startDateTime, endDateTime, movieId, theaterId);
+        return screenings.stream()
+                .map(screening -> FullScreeningResponse.create(screening))
+                .collect(Collectors.toList());
     }
 
     //날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트와 영화 리스트 조회
