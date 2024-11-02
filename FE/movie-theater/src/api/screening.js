@@ -15,4 +15,19 @@ async function getRegionsWithTheaterCount(movieId, date) {
   }
 }
 
-export { getRegionsWithTheaterCount };
+async function getScreenings(movieId, theaterId, date) {
+  try {
+    const response = await jsonApi.get("/screenings", {
+      params: {
+        movieId: movieId,
+        theaterId: theaterId,
+        date: date,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { getRegionsWithTheaterCount, getScreenings };

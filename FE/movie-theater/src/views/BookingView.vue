@@ -37,12 +37,12 @@
               <div class="end-time">~ {{screening.endTime}}</div>
             </div>
             <div class="movie-info">
-              <div class="title">{{screening.movie.title}}</div>
-              <div class="screening-type">{{screening.movie.screeningType}}</div>
+              <div class="title">{{screening.movieTitle}}</div>
+              <div class="screening-type">{{screening.screeningTypeDisplay}}</div>
             </div>
             <div class="hall-info">
-              <div>{{screening.hall.theater.name}}</div>
-              <div>{{screening.hall.name}}</div>
+              <div>{{screening.theaterName}}</div>
+              <div>{{screening.hallName}}</div>
             </div>
           </button>
 				</div>
@@ -58,7 +58,7 @@ import DatePicker from "vue2-datepicker";
 import PageTitle from "@/components/header/PageTitle";
 import { getMovies } from "@/api/movie";
 import { getTheatersByRegion } from "@/api/theater";
-import { getRegionsWithTheaterCount } from "@/api/screening";
+import { getRegionsWithTheaterCount, getScreenings } from "@/api/screening";
 
 export default {
   data() {
@@ -124,17 +124,17 @@ export default {
         this.regions = response.data.data;
       }
     },
-    // async fetchScreening() {
-    //   const response = await getScreenings(
-    //     this.selectedMovie.id,
-    //     this.selectedTheater.id,
-    //     this.formatDate
-    //   );
-    //   if (response.status == 200) {
-    //     this.screenings = response.data.data;
-    //   }
-    //   console.log(response.data);
-    // },
+    async fetchScreening() {
+      const response = await getScreenings(
+        this.selectedMovie.id,
+        this.selectedTheater.id,
+        this.formatDate
+      );
+      if (response.status == 200) {
+        this.screenings = response.data.data;
+      }
+      console.log(response.data);
+    },
     movieSelect(movieId, index) {
       this.selectedMovie.id = movieId;
       this.selectedMovie.index = index;
@@ -147,7 +147,7 @@ export default {
     theaterSelect(theaterId, index) {
       this.selectedTheater.id = theaterId;
       this.selectedTheater.index = index;
-      // this.fetchScreening();
+      this.fetchScreening();
     },
     setFormatDate() {
       const tzOffset = this.selectedDate.getTimezoneOffset() * 60 * 1000;
