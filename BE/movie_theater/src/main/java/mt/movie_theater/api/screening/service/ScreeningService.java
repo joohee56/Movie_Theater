@@ -75,6 +75,9 @@ public class ScreeningService {
     }
 
     //날짜, 영화, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
+    public void getScreenings(LocalDate date, Long movieId, Long TheaterId) {
+
+    }
 
     //날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트와 영화 리스트 조회
 

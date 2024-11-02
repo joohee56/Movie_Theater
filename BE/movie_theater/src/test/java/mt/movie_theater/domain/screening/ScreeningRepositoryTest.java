@@ -73,6 +73,41 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("주어진 날짜, 영화, 영화관에 해당하는 상영시간을 조회한다.")
+    @Test
+    void findAllByDateAndMovieIdAndTheaterId() {
+        //given
+        LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 00, 00);
+        LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 02, 00, 00);
+        Movie movie1 = createMovie();
+        Movie movie2 = createMovie();
+
+        Theater theater1 = createTheater(SEOUL);
+        Theater theater2 = createTheater(GYEONGGI);
+
+        Hall hall1 = createHall(theater1);
+        Hall hall2 = createHall(theater2);
+
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        //날짜 불일치
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 02, 00, 00));
+        //영화 불일치
+        createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        //영화관 불일치
+        createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
+
+        //when
+        List<Screening> screenings = screeningRepository.findAllByDateAndMovieIdAndTheaterId(
+                startDateTime, endDateTime, movie1.getId(), theater1.getId());
+
+        //then
+        assertThat(screenings).hasSize(1)
+                .extracting("movie", "hall")
+                .containsExactlyInAnyOrder(
+                        tuple(movie1, hall1)
+                );
+    }
+
     private Movie createMovie() {
         Movie movie = Movie.builder().build();
         return movieRepository.save(movie);
