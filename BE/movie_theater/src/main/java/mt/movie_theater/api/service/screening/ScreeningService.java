@@ -1,13 +1,8 @@
 package mt.movie_theater.api.service.screening;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.controller.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.controller.screening.response.ScreeningResponse;
@@ -54,17 +49,5 @@ public class ScreeningService {
 
     private LocalDateTime calculateEndTime(LocalDateTime startTime, Duration duration) {
         return startTime.plus(duration);
-    }
-
-    public List<ScreeningResponse> getScreeningList(Long movieId, Long theaterId, LocalDate date) {
-        List<Screening> screenings = screeningRepository.findByTheaterIdAndDateAndOptionalMovieId(theaterId, date.atStartOfDay(), date.atTime(LocalTime.MAX), movieId);
-        return screenings.stream()
-                .map(screening -> ScreeningResponse.create(screening))
-                .collect(Collectors.toList());
-    }
-
-    private String formatToHourAndMinute(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return dateTime.format(formatter);
     }
 }

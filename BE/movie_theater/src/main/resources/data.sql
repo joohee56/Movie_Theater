@@ -42,7 +42,8 @@ values ('강남', '', 'SEOUL'),
        ('광명ak플라자', '', 'GYEONGGI'),
        ('광명소하', '', 'GYEONGGI'),
        ('금정ak플라자', '', 'GYEONGGI'),
-       ('김포한강신도시', '', 'GYEONGGI');
+       ('김포한강신도시', '', 'GYEONGGI'),
+       ('제주삼화', '', 'JEJU');
 
 insert into hall(theater_id, name, screening_type, hall_type_modifier)
     values ('1', '1관', 'IMAX', 3000),

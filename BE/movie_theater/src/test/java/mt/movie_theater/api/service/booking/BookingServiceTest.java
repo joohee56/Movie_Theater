@@ -14,6 +14,8 @@ import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.movie.ScreeningType;
+import mt.movie_theater.domain.movieactor.MovieActorRepository;
+import mt.movie_theater.domain.moviegenre.MovieGenreRepository;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
@@ -44,6 +46,10 @@ class BookingServiceTest extends IntegrationTestSupport {
     private SeatRepository seatRepository;
     @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private MovieActorRepository movieActorRepository;
+    @Autowired
+    private MovieGenreRepository movieGenreRepository;
 
     @AfterEach
     void tearDown() {
@@ -52,6 +58,8 @@ class BookingServiceTest extends IntegrationTestSupport {
         seatRepository.deleteAllInBatch();
         hallRepository.deleteAllInBatch();
         theaterRepository.deleteAllInBatch();
+        movieActorRepository.deleteAllInBatch();
+        movieGenreRepository.deleteAllInBatch();
         movieRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }

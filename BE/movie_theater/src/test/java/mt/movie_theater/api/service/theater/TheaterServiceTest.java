@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
-import mt.movie_theater.api.controller.theater.response.TheaterCountResponse;
+import mt.movie_theater.api.controller.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
@@ -38,7 +38,7 @@ class TheaterServiceTest extends IntegrationTestSupport {
         createTheater("광명AK플라자", GYEONGGI);
 
         //when
-        List<TheaterCountResponse> responses = theaterService.getRegionListAndTheaterCount();
+        List<RegionTheaterCountResponse> responses = theaterService.getRegionListAndTheaterCount();
 
         //then
         assertThat(responses).hasSize(2);

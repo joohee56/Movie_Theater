@@ -10,6 +10,7 @@ import mt.movie_theater.api.controller.seat.request.SeatListCreateRequest;
 import mt.movie_theater.api.controller.seat.response.SeatResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
+import mt.movie_theater.domain.movie.ScreeningType;
 import mt.movie_theater.domain.seat.SeatRepository;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
@@ -50,6 +51,7 @@ class SeatServiceTest extends IntegrationTestSupport {
 
         Hall hall = Hall.builder()
                 .theater(savedTheater)
+                .screeningType(ScreeningType.TWO_D)
                 .name("1관")
                 .build();
         Hall savedHall = hallRepository.save(hall);

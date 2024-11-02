@@ -2,23 +2,23 @@ package mt.movie_theater.api.controller.theater.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import mt.movie_theater.domain.theater.dto.TheaterCountDto;
+import mt.movie_theater.domain.theater.dto.RegionTheaterCountDto;
 
 @Getter
-public class TheaterCountResponse {
+public class RegionTheaterCountResponse {
     private String region;
     private String regionDisplay;
     private Long count;
 
     @Builder
-    public TheaterCountResponse(String region, String regionDisplay, Long count) {
+    public RegionTheaterCountResponse(String region, String regionDisplay, Long count) {
         this.region = region;
         this.regionDisplay = regionDisplay;
         this.count = count;
     }
 
-    public static TheaterCountResponse create(TheaterCountDto dto) {
-        return TheaterCountResponse.builder()
+    public static RegionTheaterCountResponse create(RegionTheaterCountDto dto) {
+        return RegionTheaterCountResponse.builder()
                 .region(dto.getRegion().name())
                 .regionDisplay(dto.getRegion().getText())
                 .count(dto.getCount())

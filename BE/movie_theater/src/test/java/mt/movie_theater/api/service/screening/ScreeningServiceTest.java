@@ -25,7 +25,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class ScreeningServiceTest extends IntegrationTestSupport {
     @Autowired
     private ScreeningService screeningService;
@@ -96,34 +98,6 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         assertThatThrownBy(() -> screeningService.createScreening(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
-    }
-
-
-    @DisplayName("영화관, 날짜, 영화에 해당하는 상영 시간을 조회한다.")
-    @Test
-    void getScreeningList() {
-        //given
-        LocalDate releaseDate = LocalDateTime.now().toLocalDate();
-        Movie movie = createMovie("청설", releaseDate, Duration.ofMinutes(108), 10000);
-        Theater theater = createTheater(Region.SEOUL);
-        Hall hall = createHall(theater, ScreeningType.IMAX, 3000);
-
-        createScreening(movie, hall, LocalDateTime.of(2024, 10, 31, 23, 59));
-        createScreening(movie, hall, LocalDateTime.of(2024, 11, 01, 00, 00));
-        createScreening(movie, hall, LocalDateTime.of(2024, 11, 01, 23, 59));
-        createScreening(movie, hall, LocalDateTime.of(2024, 11, 02, 00, 00));
-
-        LocalDate date = LocalDate.of(2024, 11, 01);
-
-        //when
-        List<ScreeningResponse> results = screeningService.getScreeningList(movie.getId(), theater.getId(), date);
-
-        //then
-        assertThat(results).hasSize(2)
-                .extracting("startTime")
-                .containsExactlyInAnyOrder(
-                        "00:00", "23:59"
-                );
     }
 
     private Movie createMovie(String title, LocalDate releaseDate, Duration durationMinutes, int standardPrice) {
