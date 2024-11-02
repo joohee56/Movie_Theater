@@ -3,8 +3,10 @@ package mt.movie_theater.api.screening.response;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Builder;
+import lombok.Getter;
 import mt.movie_theater.domain.screening.Screening;
 
+@Getter
 public class FullScreeningResponse {
     private Long screeningId;
     private String startTime;

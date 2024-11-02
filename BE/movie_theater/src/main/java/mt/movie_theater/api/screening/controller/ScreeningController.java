@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.apiResponse.ApiResponse;
 import mt.movie_theater.api.screening.request.RegionTheaterCountRequest;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
+import mt.movie_theater.api.screening.request.ScreeningsRequest;
+import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
 import mt.movie_theater.api.screening.service.ScreeningService;
 import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
@@ -32,6 +34,12 @@ public class ScreeningController {
     public ApiResponse<List<RegionTheaterCountResponse>> getRegionsWithTheaterCount(@Valid @ModelAttribute RegionTheaterCountRequest request) {
         List<RegionTheaterCountResponse> regionResponses = screeningService.getRegionsWithTheaterCount(request.getDate(), request.getMovieId());
         return ApiResponse.ok(regionResponses);
+    }
+
+    @GetMapping("")
+    public ApiResponse<List<FullScreeningResponse>> getScreenings(@Valid @ModelAttribute ScreeningsRequest request) {
+        List<FullScreeningResponse> screenings = screeningService.getScreenings(request.getDate(), request.getMovieId(), request.getTheaterId());
+        return ApiResponse.ok(screenings);
     }
 
 
