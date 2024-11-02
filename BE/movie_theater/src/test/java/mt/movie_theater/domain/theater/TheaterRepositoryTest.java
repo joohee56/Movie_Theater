@@ -19,29 +19,6 @@ class TheaterRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private TheaterRepository theaterRepository;
 
-    @DisplayName("지역에 속하는 영화관 갯수를 조회한다.")
-    @Test
-    void countTheatersByRegion() {
-        //given
-        createTheater("강남", SEOUL);
-        createTheater("강동", SEOUL);
-        createTheater("군자", SEOUL);
-        createTheater("고양스타필드", GYEONGGI);
-        createTheater("광명AK플라자", GYEONGGI);
-
-        //when
-        List<RegionTheaterCountDto> results = theaterRepository.countTheatersByRegion();
-
-        //then
-        assertThat(results).hasSize(2);
-        assertThat(results)
-                .extracting("region", "count")
-                .containsExactlyInAnyOrder(
-                        tuple(SEOUL, Long.valueOf(3)),
-                        tuple(GYEONGGI, Long.valueOf(2))
-                );
-    }
-
     @DisplayName("지역에 해당하는 영화관 리스트를 조회한다.")
     @Test
     void findAllByRegion() {

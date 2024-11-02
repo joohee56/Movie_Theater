@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.theater.request.TheaterCreateRequest;
-import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.api.theater.response.TheaterIdNameResponse;
 import mt.movie_theater.api.theater.response.TheaterResponse;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
-import mt.movie_theater.domain.theater.dto.RegionTheaterCountDto;
 import mt.movie_theater.domain.theater.dto.TheaterIdNameDto;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +21,6 @@ public class TheaterService {
         Theater theater = request.toEntity();
         Theater savedTheater = theaterRepository.save(theater);
         return TheaterResponse.create(savedTheater);
-    }
-
-    public List<RegionTheaterCountResponse> getRegionListAndTheaterCount() {
-        List<RegionTheaterCountDto> theaterCountDtos = theaterRepository.countTheatersByRegion();
-        return theaterCountDtos.stream()
-                .map(dto -> RegionTheaterCountResponse.create(dto))
-                .collect(Collectors.toList());
     }
 
     public List<TheaterIdNameResponse> getTheaterListByRegion(Region region) {

@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.apiResponse.ApiResponse;
 import mt.movie_theater.api.theater.request.TheaterCreateRequest;
-import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.api.theater.response.TheaterIdNameResponse;
 import mt.movie_theater.api.theater.response.TheaterResponse;
 import mt.movie_theater.api.theater.service.TheaterService;
@@ -27,12 +26,6 @@ public class TheaterController {
     public ApiResponse<TheaterResponse> createTheater(@Valid @RequestBody TheaterCreateRequest request) {
         TheaterResponse response = theaterService.createTheater(request);
         return ApiResponse.ok(response);
-    }
-
-    @GetMapping("/count")
-    public ApiResponse<List<RegionTheaterCountResponse>> getRegionListAndTheaterCount() {
-        List<RegionTheaterCountResponse> responses = theaterService.getRegionListAndTheaterCount();
-        return ApiResponse.ok(responses);
     }
 
     @GetMapping("/{region}")
