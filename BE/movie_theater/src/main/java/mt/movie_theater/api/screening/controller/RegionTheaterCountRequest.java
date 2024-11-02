@@ -1,19 +1,16 @@
-package mt.movie_theater.api.screening.request;
+package mt.movie_theater.api.screening.controller;
 
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import mt.movie_theater.domain.theater.Region;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
-@NoArgsConstructor
 @Setter
-public class ScreeningListRequest {
-    private Long movieId;
-    private Long theaterId;
+@NoArgsConstructor
+public class RegionTheaterCountRequest {
     @DateTimeFormat(pattern = "yyyy.MM.dd")
     private LocalDate date;
-    private Region region;
+    private Long movieId;
 }

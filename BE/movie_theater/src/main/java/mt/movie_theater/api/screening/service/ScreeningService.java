@@ -1,17 +1,26 @@
 package mt.movie_theater.api.screening.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
+import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
+import mt.movie_theater.domain.screening.dto.RegionTheaterCountDto;
+import mt.movie_theater.domain.theater.Region;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,4 +59,30 @@ public class ScreeningService {
     private LocalDateTime calculateEndTime(LocalDateTime startTime, Duration duration) {
         return startTime.plus(duration);
     }
+
+    //날짜와 (영화)가 주어졌을 때, 조건에 맞는 상영시간을 가진 지역과 지역별 영화관 갯수 조회
+    public List<RegionTheaterCountResponse> getRegionTheaterCountList(LocalDate date, Long movieId) {
+        LocalDateTime startDateTime = getStartDateTime(date);
+        LocalDateTime endDateTime = getEndDateTime(date);
+        List<RegionTheaterCountDto> regionCountDtos = screeningRepository.countTheaterByRegion(startDateTime, endDateTime, movieId);
+
+        Map<Region, Long> regionCountMap = regionCountDtos.stream()
+                .collect(Collectors.toMap(RegionTheaterCountDto::getRegion, RegionTheaterCountDto::getCount));
+
+        return Arrays.stream(Region.values())
+                .map(region -> RegionTheaterCountResponse.create(region, regionCountMap.getOrDefault(region, Long.valueOf(0))))
+                .collect(Collectors.toList());
+    }
+
+    private LocalDateTime getStartDateTime(LocalDate date) {
+        return date.atStartOfDay(); // 00:00:00
+    }
+
+    private LocalDateTime getEndDateTime(LocalDate date) {
+        return date.atTime(LocalTime.MAX); // 23:59:59
+    }
+
+    //날짜, 영화, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
+
+    //날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트와 영화 리스트 조회
 }

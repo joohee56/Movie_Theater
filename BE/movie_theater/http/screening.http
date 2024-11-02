@@ -8,6 +8,5 @@ Content-Type: application/json
   "startTime": "2024-10-31T08:00:00"
 }
 
-### 영화관, 날짜, 영화에 해당하는 상영시간 조회
-GET localhost:8081/api/v1/screenings?movieId=1&theaterId=1&date=2024.11.15
-Accept: application/json
+###  날짜와 영화가 주어질 때, 조건에 맞는 상영시간을 가진 지역과 지역별 영화관 갯수 조회
+GET localhost:8081/api/v1/screenings/region/theaterCount?date=2024.11.15&movieId=1

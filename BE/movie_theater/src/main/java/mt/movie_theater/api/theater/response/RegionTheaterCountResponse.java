@@ -2,6 +2,7 @@ package mt.movie_theater.api.theater.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.dto.RegionTheaterCountDto;
 
 @Getter
@@ -22,6 +23,14 @@ public class RegionTheaterCountResponse {
                 .region(dto.getRegion().name())
                 .regionDisplay(dto.getRegion().getText())
                 .count(dto.getCount())
+                .build();
+    }
+
+    public static RegionTheaterCountResponse create(Region region, Long count) {
+        return RegionTheaterCountResponse.builder()
+                .region(region.name())
+                .regionDisplay(region.getText())
+                .count(count)
                 .build();
     }
 }

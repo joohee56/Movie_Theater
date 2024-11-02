@@ -1,5 +1,10 @@
 package mt.movie_theater.api.service.screening;
 
+import static mt.movie_theater.domain.movie.ScreeningType.IMAX;
+import static mt.movie_theater.domain.movie.ScreeningType.TWO_D;
+import static mt.movie_theater.domain.theater.Region.GYEONGGI;
+import static mt.movie_theater.domain.theater.Region.JEJU;
+import static mt.movie_theater.domain.theater.Region.SEOUL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -11,6 +16,7 @@ import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
 import mt.movie_theater.api.screening.service.ScreeningService;
+import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.AgeRating;
@@ -22,7 +28,7 @@ import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,22 +47,14 @@ class ScreeningServiceTest extends IntegrationTestSupport {
     @Autowired
     private ScreeningRepository screeningRepository;
 
-    @AfterEach
-    void tearDown() {
-        screeningRepository.deleteAllInBatch();
-        hallRepository.deleteAllInBatch();
-        theaterRepository.deleteAllInBatch();
-        movieRepository.deleteAllInBatch();
-    }
-
     @DisplayName("신규 상영 시간을 등록한다.")
     @Test
     void createScreening() {
         //given
         LocalDate releaseDate = LocalDateTime.now().toLocalDate();
-        Movie movie = createMovie("청설", releaseDate, Duration.ofMinutes(108), 10000);
+        Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
         Theater theater = createTheater(Region.SEOUL);
-        Hall hall = createHall(theater, ScreeningType.IMAX, 3000);
+        Hall hall = createHall(theater, IMAX, 3000);
 
         LocalDateTime startDate = LocalDateTime.of(2024, 10, 31, 15, 0);
         LocalDateTime endDate = startDate.plus(movie.getDurationMinutes());
@@ -90,7 +88,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
     void createScreeningNoHall() {
         //given
         LocalDate releaseDate = LocalDateTime.now().toLocalDate();
-        Movie movie = createMovie("청설", releaseDate, Duration.ofMinutes(108), 10000);
+        Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
 
         LocalDateTime startDate = LocalDateTime.now();
         ScreeningCreateRequest request = createRequest(movie.getId(), Long.valueOf(1), startDate);
@@ -101,14 +99,53 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                 .hasMessage("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
     }
 
-    private Movie createMovie(String title, LocalDate releaseDate, Duration durationMinutes, int standardPrice) {
+    @DisplayName("날짜와 영화가 주어질 때, 조건에 맞는 상영시간을 가진 지역과 지역별 영화관 갯수 리스트를 조회한다.")
+    @Test
+    void getRegionTheaterCountList() {
+        //given
+        Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
+
+        Theater theater1 = createTheater(SEOUL);
+        Theater theater2 = createTheater(GYEONGGI);
+        Theater theater3 = createTheater(JEJU);
+
+        Hall hall1 = createHall(theater1, TWO_D, 0);
+        Hall hall2 = createHall(theater2, TWO_D, 0);
+        Hall hall3 = createHall(theater3, TWO_D, 0);
+
+        createScreening(movie, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall3, LocalDateTime.of(2024, 11, 01, 00, 00));
+
+        LocalDate date = LocalDate.of(2024, 11, 01);
+
+        //when
+        List<RegionTheaterCountResponse> regionTheaterCounts = screeningService.getRegionTheaterCountList(date, movie.getId());
+
+        //then
+        assertThat(regionTheaterCounts).hasSize(8)
+                .extracting("region", "regionDisplay", "count")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("SEOUL", "서울", Long.valueOf(2)),
+                        Tuple.tuple("GYEONGGI", "경기", Long.valueOf(1)),
+                        Tuple.tuple("INCHEON", "인천", Long.valueOf(0)),
+                        Tuple.tuple("DAEJEON_CHUNGCHEONG_SEJONG", "대전/충청/세종", Long.valueOf(0)),
+                        Tuple.tuple("BUSAN_DAEGU_GYEONGSANG", "부산/대구/경상", Long.valueOf(0)),
+                        Tuple.tuple("GWANGJU_JEONLLA", "광주/전라", Long.valueOf(0)),
+                        Tuple.tuple("GANGWON", "강원", Long.valueOf(0)),
+                        Tuple.tuple("JEJU", "제주", Long.valueOf(1))
+                );
+    }
+
+    private Movie createMovie(String title, Duration durationMinutes, int standardPrice) {
         Movie movie = Movie.builder()
                 .title(title)
-                .releaseDate(releaseDate)
+                .releaseDate(LocalDate.of(2024, 11, 03))
                 .movieGenres(List.of())
                 .movieActors(List.of())
                 .ageRating(AgeRating.ALL)
-                .screeningType(ScreeningType.TWO_D)
+                .screeningType(TWO_D)
                 .standardPrice(standardPrice)
                 .durationMinutes(durationMinutes)
                 .build();
