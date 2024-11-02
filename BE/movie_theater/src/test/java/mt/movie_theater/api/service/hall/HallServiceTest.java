@@ -3,8 +3,9 @@ package mt.movie_theater.api.service.hall;
 import static org.assertj.core.api.Assertions.*;
 
 import mt.movie_theater.IntegrationTestSupport;
-import mt.movie_theater.api.controller.hall.request.HallCreateRequest;
-import mt.movie_theater.api.controller.hall.response.HallResponse;
+import mt.movie_theater.api.hall.request.HallCreateRequest;
+import mt.movie_theater.api.hall.response.HallResponse;
+import mt.movie_theater.api.hall.service.HallService;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.ScreeningType;
 import mt.movie_theater.domain.theater.Region;

@@ -3,6 +3,7 @@ package mt.movie_theater.api.service.screening;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import mt.movie_theater.api.screening.service.TicketPriceCalculator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

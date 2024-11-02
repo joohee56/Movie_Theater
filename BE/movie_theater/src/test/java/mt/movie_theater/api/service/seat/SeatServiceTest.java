@@ -6,8 +6,9 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
-import mt.movie_theater.api.controller.seat.request.SeatListCreateRequest;
-import mt.movie_theater.api.controller.seat.response.SeatResponse;
+import mt.movie_theater.api.seat.request.SeatListCreateRequest;
+import mt.movie_theater.api.seat.response.SeatResponse;
+import mt.movie_theater.api.seat.service.SeatService;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.ScreeningType;

@@ -7,7 +7,8 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
-import mt.movie_theater.api.controller.theater.response.RegionTheaterCountResponse;
+import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
+import mt.movie_theater.api.theater.service.TheaterService;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;

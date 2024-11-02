@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 import mt.movie_theater.ControllerTestSupport;
-import mt.movie_theater.api.controller.movie.request.MovieCreateRequest;
+import mt.movie_theater.api.movie.request.MovieCreateRequest;
 import mt.movie_theater.domain.genre.GenreType;
 import mt.movie_theater.domain.movie.AgeRating;
 import mt.movie_theater.domain.movie.ScreeningType;

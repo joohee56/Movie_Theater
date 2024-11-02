@@ -5,8 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import mt.movie_theater.IntegrationTestSupport;
-import mt.movie_theater.api.controller.booking.request.BookingCreateRequest;
-import mt.movie_theater.api.controller.booking.response.BookingResponse;
+import mt.movie_theater.api.booking.request.BookingCreateRequest;
+import mt.movie_theater.api.booking.response.BookingResponse;
+import mt.movie_theater.api.booking.service.BookingService;
 import mt.movie_theater.api.exception.DuplicateSeatBookingException;
 import mt.movie_theater.domain.booking.BookingRepository;
 import mt.movie_theater.domain.hall.Hall;

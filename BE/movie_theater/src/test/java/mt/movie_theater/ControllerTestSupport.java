@@ -1,8 +1,8 @@
 package mt.movie_theater;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import mt.movie_theater.api.controller.movie.MovieController;
-import mt.movie_theater.api.service.movie.MovieService;
+import mt.movie_theater.api.movie.controller.MovieController;
+import mt.movie_theater.api.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

@@ -3,8 +3,9 @@ package mt.movie_theater.api.service.user;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import mt.movie_theater.IntegrationTestSupport;
-import mt.movie_theater.api.controller.user.request.UserCreateRequest;
-import mt.movie_theater.api.controller.user.response.UserResponse;
+import mt.movie_theater.api.user.request.UserCreateRequest;
+import mt.movie_theater.api.user.response.UserResponse;
+import mt.movie_theater.api.user.service.UserService;
 import mt.movie_theater.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

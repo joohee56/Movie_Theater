@@ -17,7 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mt.movie_theater.api.controller.movie.request.MovieCreateRequest;
+import mt.movie_theater.api.movie.request.MovieCreateRequest;
 import mt.movie_theater.domain.BaseEntity;
 import mt.movie_theater.domain.genre.Genre;
 import mt.movie_theater.domain.movieactor.MovieActor;
