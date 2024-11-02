@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.apiResponse.ApiResponse;
+import mt.movie_theater.api.screening.request.RegionTheaterCountRequest;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
 import mt.movie_theater.api.screening.service.ScreeningService;

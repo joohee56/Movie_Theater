@@ -74,15 +74,17 @@ public class ScreeningService {
                 .collect(Collectors.toList());
     }
 
+    //날짜, 영화, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
+
+    //날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트와 영화 리스트 조회
+
     private LocalDateTime getStartDateTime(LocalDate date) {
         return date.atStartOfDay(); // 00:00:00
     }
 
     private LocalDateTime getEndDateTime(LocalDate date) {
         return date.atTime(LocalTime.MAX); // 23:59:59
+
     }
 
-    //날짜, 영화, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
-
-    //날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트와 영화 리스트 조회
 }

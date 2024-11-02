@@ -1,4 +1,4 @@
-package mt.movie_theater.api.screening.controller;
+package mt.movie_theater.api.screening.request;
 
 import java.time.LocalDate;
 import lombok.Getter;
