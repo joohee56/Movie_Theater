@@ -10,6 +10,3 @@ Content-Type: application/json
   "longitude": "126.8974",
   "contactNumber": "1544-0070"
 }
-
-### 지역별 영화관 리스트 조회
-GET localhost:8081/api/v1/theaters/SEOUL
