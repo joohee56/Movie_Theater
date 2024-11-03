@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TheaterRepository extends JpaRepository<Theater, Long> {
+
+    // ...refactoring
     @Query("select new mt.movie_theater.domain.theater.dto.TheaterIdNameDto(t.id, t.name) from Theater t where t.region=:region")
     List<TheaterIdNameDto> findTheaterIdNameDtoByRegion(@Param("region") Region region);
 }

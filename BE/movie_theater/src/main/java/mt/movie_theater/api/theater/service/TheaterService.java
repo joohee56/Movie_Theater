@@ -23,10 +23,13 @@ public class TheaterService {
         return TheaterResponse.create(savedTheater);
     }
 
+    //...refactoring
     public List<TheaterIdNameResponse> getTheaterListByRegion(Region region) {
         List<TheaterIdNameDto> dtos = theaterRepository.findTheaterIdNameDtoByRegion(region);
         return dtos.stream()
                 .map(dto -> TheaterIdNameResponse.create(dto))
                 .collect(Collectors.toList());
     }
+
+
 }

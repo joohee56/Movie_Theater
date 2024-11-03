@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
+import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
 import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
@@ -21,6 +22,7 @@ import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.screening.dto.RegionTheaterCountDto;
+import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
 import mt.movie_theater.domain.theater.Region;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +88,16 @@ public class ScreeningService {
     }
 
     //날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트와 영화 리스트 조회
+
+    //날짜, 지역, (영화)가 주어졌을 때, 해당 지역에 속하는 영화관 리스트와 영화관에 속하는 상영시간 갯수를 조회한다.
+    public List<TheaterScreeningCountResponse> getTheaterAndScreeningCountsByRegion(LocalDate date, Region region, Long movieId) {
+        LocalDateTime startDateTime = getStartDateTime(date);
+        LocalDateTime endDateTime = getEndDateTime(date);
+        List<TheaterScreeningCountDto> dtos = screeningRepository.findScreeningCountByRegion(startDateTime, endDateTime, region, movieId);
+        return dtos.stream()
+                .map(dto -> TheaterScreeningCountResponse.create(dto))
+                .collect(Collectors.toList());
+    }
 
     private LocalDateTime getStartDateTime(LocalDate date) {
         return date.atStartOfDay(); // 00:00:00

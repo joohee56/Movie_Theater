@@ -28,6 +28,7 @@ public class TheaterController {
         return ApiResponse.ok(response);
     }
 
+    //...refactoring
     @GetMapping("/{region}")
     public ApiResponse<List<TheaterIdNameResponse>> getTheaterListByRegion(@PathVariable("region") Region region) {
         List<TheaterIdNameResponse> responses = theaterService.getTheaterListByRegion(region);

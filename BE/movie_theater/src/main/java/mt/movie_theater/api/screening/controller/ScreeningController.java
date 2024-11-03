@@ -7,8 +7,10 @@ import mt.movie_theater.api.apiResponse.ApiResponse;
 import mt.movie_theater.api.screening.request.RegionTheaterCountRequest;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.request.ScreeningsRequest;
+import mt.movie_theater.api.screening.request.TheaterScreeningCountRequest;
 import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
+import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
 import mt.movie_theater.api.screening.service.ScreeningService;
 import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,5 +44,11 @@ public class ScreeningController {
         return ApiResponse.ok(screenings);
     }
 
+    //날짜, 지역, (영화)가 주어지면 해당 지역에 속하는 영화관 리스트와 각 영화관에 속하는 상영시간 갯수를 조회한다.
+    @GetMapping("/theater/screeningCount")
+    public ApiResponse<List<TheaterScreeningCountResponse>> getTheaterListAndScreeningCountByRegion(@Valid @ModelAttribute TheaterScreeningCountRequest request) {
+        List<TheaterScreeningCountResponse> responses = screeningService.getTheaterAndScreeningCountsByRegion(request.getDate(), request.getRegion(), request.getMovieId());
+        return ApiResponse.ok(responses);
+    }
 
 }
