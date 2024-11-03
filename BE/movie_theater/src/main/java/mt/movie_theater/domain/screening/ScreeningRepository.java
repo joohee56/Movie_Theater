@@ -2,6 +2,7 @@ package mt.movie_theater.domain.screening;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.screening.dto.RegionTheaterCountDto;
 import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
 import mt.movie_theater.domain.theater.Region;
@@ -32,4 +33,10 @@ public interface ScreeningRepository extends JpaRepository<Screening, Long> {
             + "and (:movieId is null or s.movie.id= :movieId) "
             + "group by s.hall.theater")
     List<TheaterScreeningCountDto> findTheaterScreeningCounts(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime, @Param("region") Region region, @Param("movieId") Long movieId);
+
+    @Query("select s.movie from Screening s "
+            + "where s.startTime >= :startDateTime and s.startTime < :endDateTime "
+            + "and (:theaterId is null or s.hall.theater.id= :theaterId) "
+            + "group by s.movie")
+    List<Movie> findMoviesByDateAndOptionalTheaterId(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("theaterId") Long theaterId);
 }

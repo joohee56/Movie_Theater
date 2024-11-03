@@ -98,7 +98,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
 
         //when
-        List<Screening> screenings = screeningRepository.findAllByDateTheaterIdAndOptionalMovieId(
+        List<Screening> screenings = screeningRepository.findAllByDateAndTheaterIdAndOptionalMovieId(
                 startDateTime, endDateTime, movie1.getId(), theater1.getId());
 
         //then
@@ -109,7 +109,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("")
+    @DisplayName("각 영화관에 속하는 상영시간 갯수를 조회한다. 상영시간의 조건은 날짜, 영화, 지역이다.")
     @Test
     void findScreeningCountByRegion() {
         //given
@@ -146,6 +146,38 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
                         tuple(theater1, Long.valueOf(2)),
                         tuple(theater2, Long.valueOf(1))
                 );
+    }
+
+    @DisplayName("주어진 날짜, 영화관에 해당하는 상영시간이 있는 영화 리스트를 조회한다.")
+    @Test
+    void findMoviesByDateAndOptionalTheaterId() {
+        //given
+        LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 00, 00);
+        LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 02, 00, 00);
+        Movie movie1 = createMovie();
+        Movie movie2 = createMovie();
+        Movie movie3 = createMovie();
+
+        Theater theater1 = createTheater(SEOUL, "강남");
+        Theater theater2 = createTheater(SEOUL, "강동");
+
+        Hall hall1 = createHall(theater1);
+        Hall hall2 = createHall(theater2);
+
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 23, 59));
+        createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+
+        //영화관 불일치
+        createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
+        //날짜 불일치
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 02, 00, 00));
+
+        //when
+        List<Movie> movies = screeningRepository.findMoviesByDateAndOptionalTheaterId(startDateTime, endDateTime, theater1.getId());
+
+        //then
+        assertThat(movies).hasSize(2);
     }
 
     private Movie createMovie() {

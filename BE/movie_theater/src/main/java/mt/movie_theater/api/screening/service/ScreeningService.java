@@ -80,19 +80,17 @@ public class ScreeningService {
                 .collect(Collectors.toList());
     }
 
-    //날짜, 영화, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
+    //날짜, (영화), 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
     public List<FullScreeningResponse> getScreenings(LocalDate date, Long movieId, Long theaterId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
-        List<Screening> screenings = screeningRepository.findAllByDateTheaterIdAndOptionalMovieId(startDateTime, endDateTime, movieId, theaterId);
+        List<Screening> screenings = screeningRepository.findAllByDateAndTheaterIdAndOptionalMovieId(startDateTime, endDateTime, movieId, theaterId);
         return screenings.stream()
                 .map(screening -> FullScreeningResponse.create(screening))
                 .collect(Collectors.toList());
     }
 
-    //날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트와 영화 리스트 조회
-
-    //날짜, 지역, (영화)가 주어졌을 때, 해당 지역에 속하는 영화관 리스트와 영화관에 속하는 상영시간 갯수를 조회한다.
+    //날짜, 지역, (영화)가 주어졌을 때, 지역에 속하는 영화관 리스트와 영화관에 속하는 상영시간 갯수 조회
     public List<TheaterScreeningCountResponse> getTheaterAndScreeningCountsByRegion(LocalDate date, Region region, Long movieId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
