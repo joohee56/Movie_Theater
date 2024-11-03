@@ -30,4 +30,23 @@ async function getScreenings(movieId, theaterId, date) {
   }
 }
 
-export { getRegionsWithTheaterCount, getScreenings };
+async function getTheaterAndScreeningCounts(date, movieId, region) {
+  try {
+    const response = await jsonApi.get("/screenings/theater/screeningCount", {
+      params: {
+        date: date,
+        movieId: movieId,
+        region: region,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export {
+  getRegionsWithTheaterCount,
+  getScreenings,
+  getTheaterAndScreeningCounts,
+};

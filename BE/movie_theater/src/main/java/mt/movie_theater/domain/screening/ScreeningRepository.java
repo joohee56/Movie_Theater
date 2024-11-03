@@ -21,9 +21,10 @@ public interface ScreeningRepository extends JpaRepository<Screening, Long> {
     @Query("select s from Screening s "
             + "where s.startTime >= :startDateTime and s.startTime < :endDateTime "
             + "and (:movieId is null or s.movie.id= :movieId) "
-            + "and s.hall.theater.id= :theaterId")
-    List<Screening> findAllByDateTheaterIdAndOptionalMovieId(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("movieId") Long movieId,
-                                                             @Param("theaterId") Long theaterId);
+            + "and s.hall.theater.id= :theaterId "
+            + "order by s.startTime asc")
+    List<Screening> findAllByDateAndTheaterIdAndOptionalMovieId(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("movieId") Long movieId,
+                                                                @Param("theaterId") Long theaterId);
 
     @Query("select new mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto(s.hall.theater, count(s)) from Screening s "
             + "where s.hall.theater.region= :region "

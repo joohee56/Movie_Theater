@@ -22,15 +22,21 @@
 						</button>
 					</div>
 					<div class="theater-detail-list">
-						<button v-for="(theater, index) in theaters" @click="theaterSelect(theater.id, index)" :class="{theaterSelected:selectedTheater.index==index}">
-							{{theater.name}}
+						<button v-for="(theater, index) in theaters" @click="theaterSelect(theater.theaterId, index)" :class="{theaterSelected:selectedTheater.index==index}">
+							{{theater.theaterName}}({{theater.screeningCount}})
 						</button>
 					</div>
 				</div>
 			</div>
 			<div class="section">
 				<div class="section-title">시간</div>
-				<div class="screening-list">
+        <div v-if="screenings && screenings.length <= 0" class="screening-list-empty">
+          <div class="content">
+            <img src="@/assets/img/screening-list-empty.png"></img>
+            <div class="description">영화와 극장을 선택하시면</br>상영시간표를 비교하여 볼 수 있습니다.</div>
+          </div>
+        </div>
+				<div v-else class="screening-list">
           <button v-for="(screening, index) in screenings">
             <div class="time-info">
               <div class="start-time">{{screening.startTime}}</div>
@@ -57,8 +63,11 @@ import "vue2-datepicker/locale/ko";
 import DatePicker from "vue2-datepicker";
 import PageTitle from "@/components/header/PageTitle";
 import { getMovies } from "@/api/movie";
-import { getTheatersByRegion } from "@/api/theater";
-import { getRegionsWithTheaterCount, getScreenings } from "@/api/screening";
+import {
+  getRegionsWithTheaterCount,
+  getScreenings,
+  getTheaterAndScreeningCounts,
+} from "@/api/screening";
 
 export default {
   data() {
@@ -75,6 +84,7 @@ export default {
       },
       selectedRegion: {
         index: -1,
+        name: "",
       },
       selectedTheater: {
         index: -1,
@@ -85,9 +95,7 @@ export default {
   watch: {
     selectedDate() {
       this.setFormatDate();
-    },
-    "selectedRegion.index"() {
-      this.resetTheater();
+      this.fetchAll();
     },
   },
   created() {
@@ -108,20 +116,23 @@ export default {
         this.movies = response.data.data;
       }
     },
-    async fetchTheaters(region) {
-      const response = await getTheatersByRegion(region);
-      if (response.status == 200) {
-        this.theaters = response.data.data;
-      }
-    },
     async fetchRegionsWithTheaterCount() {
       const response = await getRegionsWithTheaterCount(
         this.selectedMovie.id,
         this.formatDate
       );
-      console.log(response);
       if (response.status == 200) {
         this.regions = response.data.data;
+      }
+    },
+    async fetchTheaters() {
+      const response = await getTheaterAndScreeningCounts(
+        this.formatDate,
+        this.selectedMovie.id,
+        this.selectedRegion.name
+      );
+      if (response.status == 200) {
+        this.theaters = response.data.data;
       }
     },
     async fetchScreening() {
@@ -133,21 +144,42 @@ export default {
       if (response.status == 200) {
         this.screenings = response.data.data;
       }
-      console.log(response.data);
+      console.log(response);
+    },
+    async fetchAll() {
+      this.fetchRegionsWithTheaterCount();
+      this.fetchTheaters();
+      this.fetchScreening();
     },
     movieSelect(movieId, index) {
-      this.selectedMovie.id = movieId;
-      this.selectedMovie.index = index;
-      this.fetchRegionsWithTheaterCount();
+      if (this.selectedMovie.id != movieId) {
+        this.selectedMovie.id = movieId;
+        this.selectedMovie.index = index;
+      } else {
+        this.resetMovie();
+      }
+      this.fetchAll();
     },
     regionSelect(name, index) {
-      this.selectedRegion.index = index;
-      this.fetchTheaters(name);
+      if (this.selectedRegion.name != name) {
+        this.selectedRegion.index = index;
+        this.selectedRegion.name = name;
+      } else {
+        this.resetRegion();
+      }
+
+      this.resetTheater();
+      this.fetchAll();
     },
     theaterSelect(theaterId, index) {
-      this.selectedTheater.id = theaterId;
-      this.selectedTheater.index = index;
-      this.fetchScreening();
+      if (this.selectedTheater.id != theaterId) {
+        this.selectedTheater.id = theaterId;
+        this.selectedTheater.index = index;
+      } else {
+        this.resetTheater();
+      }
+
+      this.fetchAll();
     },
     setFormatDate() {
       const tzOffset = this.selectedDate.getTimezoneOffset() * 60 * 1000;
@@ -157,6 +189,14 @@ export default {
     },
     ageClass(ageRatingDisplay) {
       return "age-" + ageRatingDisplay;
+    },
+    resetMovie() {
+      this.selectedMovie.id = null;
+      this.selectedMovie.index = -1;
+    },
+    resetRegion() {
+      this.selectedRegion.index = -1;
+      this.selectedRegion.name = "";
     },
     resetTheater() {
       this.selectedTheater.index = -1;
@@ -168,7 +208,7 @@ export default {
 
 <style scoped>
 .date-picker-container {
-  margin: 20px 0;
+  margin: 50px 0 30px;
 }
 .section-container {
   display: table;
@@ -176,6 +216,8 @@ export default {
 }
 .section {
   border: 1px solid var(--border-line-color);
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
   padding: 20px;
   height: 500px;
   display: table-cell;
@@ -246,6 +288,19 @@ export default {
 }
 
 /* 시간 */
+.screening-list-empty {
+  width: 400px;
+  text-align: center;
+  height: 100%;
+}
+.screening-list-empty .content {
+  font-family: "Gothic A1", sans-serif;
+  font-size: 15px;
+  margin-top: 150px;
+}
+.screening-list-empty img {
+  width: 50px;
+}
 .screening-list {
   width: 400px;
 }
