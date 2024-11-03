@@ -34,14 +34,6 @@ public class MovieService {
         return MovieResponse.create(movieRepository.save(movie));
     }
 
-    //...refactoring
-    public List<MovieResponse> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
-        return movies.stream()
-                .map(movie -> MovieResponse.create(movie))
-                .collect(Collectors.toList());
-    }
-
     //날짜, (영화관)이 주어졌을 때, 조건에 맞는 상영시간 유무가 포함된 전체 영화 리스트 조회
     public List<MovieWatchableResponse> getMoviesWithIsWatchable(LocalDate date, Long theaterId) {
         LocalDateTime startDateTime = getStartDateTime(date);
