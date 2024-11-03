@@ -8,7 +8,7 @@
 			<div class="section">
 				<div class="section-title">영화</div>
 				<div class="movie-list">
-					<button v-for="(movie, index) in movies" @click="movieSelect(movie.id, index)" :class="{movieSelected:selectedMovie.index==index}">
+					<button v-for="(movie, index) in movies" @click="movieSelect(movie.movieId, index)" :class="{movieSelected:selectedMovie.index==index}" :disabled="!movie.watchable">
 						<span :class="[ageClass(movie.ageRatingDisplay), `age-rating`]">{{movie.ageRatingDisplay}}</span>{{movie.title}}
 					</button>
 				</div>
@@ -22,7 +22,7 @@
 						</button>
 					</div>
 					<div class="theater-detail-list">
-						<button v-for="(theater, index) in theaters" @click="theaterSelect(theater.theaterId, index)" :class="{theaterSelected:selectedTheater.index==index}">
+						<button v-for="(theater, index) in theaters" @click="theaterSelect(theater.theaterId, index)" :class="{theaterSelected:selectedTheater.index==index}" :disabled="theater.screeningCount == 0">
 							{{theater.theaterName}}({{theater.screeningCount}})
 						</button>
 					</div>
@@ -110,8 +110,17 @@ export default {
     this.fetchRegionsWithTheaterCount();
   },
   methods: {
+    async fetchAll() {
+      this.fetchRegionsWithTheaterCount();
+      this.fetchTheaters();
+      this.fetchScreening();
+      this.fetchMovies();
+    },
     async fetchMovies() {
-      const response = await getMovies();
+      const response = await getMovies(
+        this.formatDate,
+        this.selectedTheater.id
+      );
       if (response.status == 200) {
         this.movies = response.data.data;
       }
@@ -146,11 +155,7 @@ export default {
       }
       console.log(response);
     },
-    async fetchAll() {
-      this.fetchRegionsWithTheaterCount();
-      this.fetchTheaters();
-      this.fetchScreening();
-    },
+
     movieSelect(movieId, index) {
       if (this.selectedMovie.id != movieId) {
         this.selectedMovie.id = movieId;
@@ -219,7 +224,7 @@ export default {
   border-top: 1px solid black;
   border-bottom: 1px solid black;
   padding: 20px;
-  height: 500px;
+  height: 600px;
   display: table-cell;
 }
 .section-title {
@@ -231,6 +236,8 @@ export default {
 /* 영화 */
 .movie-list {
   width: 250px;
+  overflow-y: auto;
+  max-height: 550px;
 }
 .movie-list button,
 .theater-list button,
@@ -279,17 +286,18 @@ export default {
   background-color: #ebebeb;
 }
 .region-list {
-  width: 50%;
+  width: 55%;
   border-right: 1px solid var(--border-line-color);
   height: 90%;
 }
 .theater-detail-list {
   width: 50%;
+  margin-left: 10px;
 }
 
 /* 시간 */
 .screening-list-empty {
-  width: 400px;
+  width: 450px;
   text-align: center;
   height: 100%;
 }
@@ -302,7 +310,9 @@ export default {
   width: 50px;
 }
 .screening-list {
-  width: 400px;
+  width: 450px;
+  overflow-y: auto;
+  max-height: 550px;
 }
 .screening-list .time-info {
   margin-left: 10px;
@@ -329,6 +339,7 @@ export default {
   font-family: "SUIT-Regular";
   margin-top: 5px;
   text-align: right;
+  margin-right: 10px;
 }
 .screening-list button {
   border-bottom: 1px solid var(--border-line-color);
