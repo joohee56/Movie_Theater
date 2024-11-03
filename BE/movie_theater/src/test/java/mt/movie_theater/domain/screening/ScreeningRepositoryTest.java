@@ -137,7 +137,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
 
         //when
-        List<TheaterScreeningCountDto> dtos = screeningRepository.findScreeningCountByRegion(startDateTime, endDateTime, SEOUL, movie1.getId());
+        List<TheaterScreeningCountDto> dtos = screeningRepository.findTheaterScreeningCounts(startDateTime, endDateTime, SEOUL, movie1.getId());
 
         //then
         assertThat(dtos).hasSize(2)

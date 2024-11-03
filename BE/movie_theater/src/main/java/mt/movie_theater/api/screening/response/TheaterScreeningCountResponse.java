@@ -2,7 +2,7 @@ package mt.movie_theater.api.screening.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
+import mt.movie_theater.domain.theater.Theater;
 
 @Getter
 public class TheaterScreeningCountResponse {
@@ -17,11 +17,11 @@ public class TheaterScreeningCountResponse {
         this.screeningCount = screeningCount;
     }
 
-    public static TheaterScreeningCountResponse create(TheaterScreeningCountDto dto) {
+    public static TheaterScreeningCountResponse create(Theater theater,Long count) {
         return TheaterScreeningCountResponse.builder()
-                .theaterId(dto.getTheater().getId())
-                .theaterName(dto.getTheater().getName())
-                .screeningCount(dto.getCount())
+                .theaterId(theater.getId())
+                .theaterName(theater.getName())
+                .screeningCount(count)
                 .build();
     }
 }

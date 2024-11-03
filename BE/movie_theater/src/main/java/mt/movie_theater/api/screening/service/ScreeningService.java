@@ -24,6 +24,8 @@ import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.screening.dto.RegionTheaterCountDto;
 import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
 import mt.movie_theater.domain.theater.Region;
+import mt.movie_theater.domain.theater.Theater;
+import mt.movie_theater.domain.theater.TheaterRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,7 @@ public class ScreeningService {
     private final ScreeningRepository screeningRepository;
     private final MovieRepository movieRepository;
     private final HallRepository hallRepository;
+    private final TheaterRepository theaterRepository;
 
     @Transactional
     public ScreeningResponse createScreening(ScreeningCreateRequest request) {
@@ -93,10 +96,18 @@ public class ScreeningService {
     public List<TheaterScreeningCountResponse> getTheaterAndScreeningCountsByRegion(LocalDate date, Region region, Long movieId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
-        List<TheaterScreeningCountDto> dtos = screeningRepository.findScreeningCountByRegion(startDateTime, endDateTime, region, movieId);
-        return dtos.stream()
-                .map(dto -> TheaterScreeningCountResponse.create(dto))
+        Map<Theater, Long> screeningCountMap = createScreeningCountMap(startDateTime, endDateTime, region, movieId);
+
+        List<Theater> theaters = theaterRepository.findALlByRegion(region);
+        return theaters.stream()
+                .map(theater -> TheaterScreeningCountResponse.create(theater, screeningCountMap.getOrDefault(theater, Long.valueOf(0))))
                 .collect(Collectors.toList());
+    }
+
+    private Map<Theater, Long> createScreeningCountMap(LocalDateTime startDateTime, LocalDateTime endDateTime, Region region, Long movieId) {
+        List<TheaterScreeningCountDto> theaterScreeningCounts = screeningRepository.findTheaterScreeningCounts(startDateTime, endDateTime, region, movieId);
+        return theaterScreeningCounts.stream()
+                .collect(Collectors.toMap(TheaterScreeningCountDto::getTheater, TheaterScreeningCountDto::getCount));
     }
 
     private LocalDateTime getStartDateTime(LocalDate date) {

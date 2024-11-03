@@ -30,5 +30,5 @@ public interface ScreeningRepository extends JpaRepository<Screening, Long> {
             + "and s.startTime >= :startTime and s.startTime < :endTime "
             + "and (:movieId is null or s.movie.id= :movieId) "
             + "group by s.hall.theater")
-    List<TheaterScreeningCountDto> findScreeningCountByRegion(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime, @Param("region") Region region, @Param("movieId") Long movieId);
+    List<TheaterScreeningCountDto> findTheaterScreeningCounts(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime, @Param("region") Region region, @Param("movieId") Long movieId);
 }
