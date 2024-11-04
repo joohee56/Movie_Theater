@@ -1,11 +1,378 @@
 <template lang="ko">
-	<div>
-		좌석 예매
+	<div class="container">
+
+		<div class="left-side">
+			<div class="sub-title">관람인원선택</div>
+			<div class="select-section-container">
+				<div class="audience-selector">
+					성인 1
+				</div>
+				<div class="seat-container">
+					<div class="screen-title">SCREEN</div>
+					<div v-for="section in sections" :key="section">
+						{{section}}
+						<button v-for="(seat, index) in seats[section]" :key="`${section}${index}`" @click="toggleSeatSelection(seat)" :class="['seat', { selected: seat.selected, booked: seat.booked }]" :disabled="seat.booked">
+							{{seat.seatNumber}}
+						</button>
+					</div>
+					<!-- <div class="selected-seats">
+						선택된 좌석: {{ selectedSeats.map(seat => seat.seatNumber).join(', ') }}
+					</div> -->
+				</div>
+			</div>
+		</div>
+
+		<div class="right-side">
+			<div class="description-container">
+				<div class="movie-title-container">
+					<div class="age-rating age-ALL">ALL</div>
+					<div>
+						<div class="movie-title">청설</div>
+						<div>2D</div>
+					</div>
+				</div>
+				<div class="booking-description">
+					<div>
+						<div>강동</div>
+						<div>2관</div>
+						<div>2024.11.06(수)</div>
+						<div class="movie-startTime">09:35~11:33</div>
+					</div>
+					<img src="@/assets/img/no-poster-img.png" class="poster-img"></img>
+				</div>
+				<div class="seat-description">
+					<div class="seat-guide">
+						<div>선택</div>
+						<div>예매완료</div>
+						<div>일반</div>
+					</div>
+					<div class="selected-seat">
+						<div>선택좌석</div>
+						<div class="seat-numbers-container">
+							<div class="seat-number">A7</div>
+							<div class="seat-number">A7</div>
+							<div class="seat-number">A7</div>
+							<div class="seat-number">A7</div>
+							<div class="seat-number">A7</div>
+							<div class="seat-number">A7</div>
+							<div class="seat-number">A7</div>
+							<div class="seat-number">A7</div>
+						</div>
+					</div>
+				</div>
+				<div class="total-price-container">
+					<span class="title">최종결제금액</span>
+					<span class="total-price"><span class="number">18,000</span> 원</span>
+				</div>
+			</div>
+			<div class="navigation-buttons">
+				<button class="prev-button">이전</button>
+				<button class="next-button">다음</button>
+			</div>
+		</div>
+
 	</div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      sections: ["A", "B", "C"],
+      seats: {
+        A: [
+          {
+            id: 1,
+            section: "A",
+            seatNumber: "1",
+            selected: false,
+            booked: false,
+          },
+          {
+            id: 2,
+            section: "A",
+            seatNumber: "2",
+            selected: false,
+            booked: true,
+          },
+          {
+            id: 3,
+            section: "A",
+            seatNumber: "3",
+            selected: false,
+            booked: false,
+          },
+        ],
+        B: [
+          {
+            id: 4,
+            section: "B",
+            seatNumber: "1",
+            selected: false,
+            booked: false,
+          },
+          {
+            id: 5,
+            section: "B",
+            seatNumber: "2",
+            selected: false,
+            booked: false,
+          },
+          {
+            id: 6,
+            section: "B",
+            seatNumber: "3",
+            selected: false,
+            booked: false,
+          },
+        ],
+        C: [
+          {
+            id: 7,
+            section: "C",
+            seatNumber: "1",
+            selected: false,
+            booked: false,
+          },
+          {
+            id: 8,
+            section: "C",
+            seatNumber: "2",
+            selected: false,
+            booked: false,
+          },
+          {
+            id: 9,
+            section: "C",
+            seatNumber: "3",
+            selected: false,
+            booked: false,
+          },
+        ],
+      },
+    };
+  },
+  computed: {
+    selectedSeats() {
+      // return this.seats.filter((seat) => seat.selected);
+      return Object.values(this.seats)
+        .flat()
+        .filter((seat) => seat.selected);
+    },
+  },
+  created() {
+    this.fetchSeats();
+  },
+  methods: {
+    async fetchSeats() {
+      // const response = await fetch("your-backend-api/seats");
+      // const data = await response.json();
+      // // 좌석 정보에 selected 필드를 추가
+      // this.seats = Object.fromEntries(
+      //   Object.entries(data).map(([section, seatArray]) => [
+      //     section,
+      //     seatArray.map(seat => ({
+      //       ...seat,
+      //       selected: false // selected 필드 추가
+      //     }))
+      //   ])
+      // );
+    },
+    toggleSeatSelection(seat) {
+      seat.selected = !seat.selected; // 좌석 선택 상태 토글
+    },
+  },
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  --border-color: #434343;
+  --secondary-color: #329eb1;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 70% 28%;
+  column-gap: 20px;
+  height: 580px;
+}
+
+/* left-side */
+.left-side {
+  height: 100%;
+  border-top: 1px solid black;
+}
+.sub-title {
+  font-family: "SUIT-Regular";
+  font-size: 20px;
+  padding: 15px 0;
+}
+.audience-selector {
+  font-family: "SUIT-Regular";
+  background-color: #f2f4f5;
+  padding: 15px 10px;
+  font-size: 16px;
+}
+.select-section-container {
+  border: 1px solid var(--border-line-color);
+  height: 90%;
+}
+
+.seat-container {
+  text-align: center;
+  padding: 20px;
+}
+.screen-title {
+  font-family: "SUIT-Bold";
+  font-size: 18px;
+  margin: 10px;
+}
+.seat {
+  width: 20px;
+  height: 20px;
+  background-color: #747474;
+  border: 2px solid var(--secondary-color);
+  cursor: pointer;
+  text-align: center;
+  font-size: 11px;
+  color: white;
+}
+.selected {
+  background: var(--primary-color);
+}
+.booked {
+  background: #cccccc;
+}
+
+/* right side */
+.right-side {
+  background-color: #333333;
+  border-radius: 10px;
+  color: #c4c4c4;
+  font-family: "SUIT-Regular";
+  font-size: 14px;
+  position: relative;
+}
+.description-container {
+  padding: 20px;
+}
+.movie-title-container {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+.movie-title {
+  color: white;
+  font-family: "SUIT-SemiBold";
+  font-size: 18px;
+}
+.age-rating {
+  display: inline;
+  font-family: "S-CoreDream-6Bold";
+  color: white;
+  border-radius: 3px;
+  margin-right: 8px;
+  padding: 3px;
+  font-size: 10px;
+  width: 20px;
+  height: 15px;
+  text-align: center;
+}
+.age-ALL {
+  background-color: var(--age-all-color);
+}
+.age-12 {
+  background-color: var(--age-12-color);
+}
+.age-15 {
+  background-color: var(--age-15-color);
+}
+.age-19 {
+  background-color: var(--age-19-color);
+}
+
+/* 예매 상세 */
+.booking-description {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 10px;
+}
+.movie-startTime {
+  margin-top: 20px;
+  color: white;
+}
+.poster-img {
+  width: 70px;
+}
+
+/* 좌석 상세 */
+.seat-description {
+  border: 1px solid var(--border-color);
+  display: grid;
+  grid-template-columns: 55% 45%;
+}
+.seat-guide {
+  border-right: 1px solid var(--border-color);
+  padding: 15px;
+}
+.selected-seat {
+  text-align: center;
+  padding: 15px;
+}
+.seat-numbers-container {
+  display: grid;
+  grid-template-columns: 50% 50%; /* 2개의 열 */
+  grid-template-rows: repeat(4, 1fr); /* 4개의 행 */
+  column-gap: 5px; /* 요소 간 간격 */
+  row-gap: 10px;
+  margin-top: 20px;
+}
+.seat-number {
+  border: 1px solid var(--border-color);
+  width: 40px;
+  height: 35px;
+}
+
+.total-price-container {
+  font-family: "SUIT-SemiBold";
+  font-size: 15px;
+  margin-top: 50px;
+  color: white;
+}
+.total-price {
+  float: right;
+  line-height: 13px;
+}
+.total-price .number {
+  color: var(--secondary-color);
+  font-size: 23px;
+  font-family: "SUIT-Bold";
+}
+
+/* 이전, 다음 버튼 */
+.navigation-buttons {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.navigation-buttons button {
+  font-family: "SUIT-Medium";
+  font-size: 18px;
+  color: white;
+  border: none;
+  padding: 8px 0;
+}
+.navigation-buttons .prev-button {
+  width: 50%;
+  background-color: #53565b;
+  border-bottom-left-radius: 10px;
+}
+.navigation-buttons .next-button {
+  width: 50%;
+  background-color: var(--secondary-color);
+  border-bottom-right-radius: 10px;
+}
+</style>
