@@ -31,7 +31,7 @@ const routes = [
         component: BookingMovieOptions,
       },
       {
-        path: "/booking/seat",
+        path: "/booking/screening/:screeningId/seat",
         name: "bookingSeat",
         component: BookingSeat,
       },

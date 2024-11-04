@@ -36,7 +36,7 @@
           </div>
         </div>
 				<div v-else class="screening-list">
-          <button v-for="(screening, index) in screenings">
+          <button v-for="(screening, index) in screenings" @click="screeningSelect(screening.screeningId)">
             <div class="time-info">
               <div class="start-time">{{screening.startTime}}</div>
               <div class="end-time">~ {{screening.endTime}}</div>
@@ -182,6 +182,12 @@ export default {
       }
 
       this.fetchScreening();
+    },
+    screeningSelect(screeningId) {
+      this.$router.push({
+        name: "bookingSeat",
+        params: { screeningId: screeningId },
+      });
     },
     setFormatDate() {
       const tzOffset = this.selectedDate.getTimezoneOffset() * 60 * 1000;
