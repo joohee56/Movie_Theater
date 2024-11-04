@@ -10,15 +10,15 @@ public class SeatResponse {
     private Long hallId;
     private String section;
     private String seatNumber;
-    private boolean isAvailable;
+    private boolean isBooked;
 
     @Builder
-    public SeatResponse(Long id, Long hallId, String section, String seatNumber, boolean isAvailable) {
+    public SeatResponse(Long id, Long hallId, String section, String seatNumber, boolean isBooked) {
         this.id = id;
         this.hallId = hallId;
         this.section = section;
         this.seatNumber = seatNumber;
-        this.isAvailable = isAvailable;
+        this.isBooked = isBooked;
     }
 
     public static SeatResponse create(Seat seat) {
@@ -27,7 +27,7 @@ public class SeatResponse {
                 .hallId(seat.getHall().getId())
                 .section(seat.getSection())
                 .seatNumber(seat.getSeatNumber())
-                .isAvailable(seat.isAvailable())
+                .isBooked(seat.isBooked())
                 .build();
     }
 }

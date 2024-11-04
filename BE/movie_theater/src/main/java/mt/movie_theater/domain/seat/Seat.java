@@ -27,14 +27,14 @@ public class Seat extends BaseEntity {
     private String section;
     private String seatNumber;
     @Column(columnDefinition = "TINYINT(1) DEFAULT true")
-    private boolean isAvailable;
+    private boolean isBooked;
 
     @Builder
     public Seat(Hall hall, String section, String seatNumber) {
         this.hall = hall;
         this.section = section;
         this.seatNumber = seatNumber;
-        this.isAvailable = true;
+        this.isBooked = false;
     }
 
 }

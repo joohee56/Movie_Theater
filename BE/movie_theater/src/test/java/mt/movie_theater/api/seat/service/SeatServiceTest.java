@@ -67,14 +67,14 @@ class SeatServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(seats).hasSize(6)
-                .extracting("section", "seatNumber", "isAvailable")
+                .extracting("section", "seatNumber", "isBooked")
                 .containsExactlyInAnyOrder(
-                        tuple("A", "1", true),
-                        tuple("A", "2", true),
-                        tuple("A", "3", true),
-                        tuple("B", "1", true),
-                        tuple("B", "2", true),
-                        tuple("B", "3", true)
+                        tuple("A", "1", false),
+                        tuple("A", "2", false),
+                        tuple("A", "3", false),
+                        tuple("B", "1", false),
+                        tuple("B", "2", false),
+                        tuple("B", "3", false)
                 );
     }
 
