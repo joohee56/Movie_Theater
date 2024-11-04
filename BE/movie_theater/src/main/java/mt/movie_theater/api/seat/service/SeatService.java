@@ -23,21 +23,24 @@ public class SeatService {
 
     @Transactional
     public List<SeatResponse> createSeatList(SeatListCreateRequest request) {
-        Optional<Hall> hall = hallRepository.findById(request.getHallId());
-        if (hall.isEmpty()) {
+        Optional<Hall> optionalHall = hallRepository.findById(request.getHallId());
+        if (optionalHall.isEmpty()) {
             throw new IllegalArgumentException("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
         }
 
+        //TODO: 이미 좌석이 생성되어 있다면, 기존 좌석 제거 후 다시 생성..?
+
+        Hall hall = optionalHall.get();
         List<Seat> seats = new ArrayList<>();
         int rows = request.getRows();
         int columns = request.getColumns();
         for (char row = 'A'; row < 'A' + rows; row++) {
             for (int col = 1; col <= columns; col++) {
-                String seatNumber = row + String.valueOf(col);
                 Seat seat = Seat.builder()
-                        .seatNumber(seatNumber)
+                        .hall(hall)
+                        .section(String.valueOf(row))
+                        .seatNumber(String.valueOf(col))
                         .build();
-                hall.get().addSeat(seat);
                 seats.add(seat);
             }
         }

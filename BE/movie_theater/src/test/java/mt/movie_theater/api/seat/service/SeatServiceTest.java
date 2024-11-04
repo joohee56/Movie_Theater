@@ -8,7 +8,6 @@ import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.seat.request.SeatListCreateRequest;
 import mt.movie_theater.api.seat.response.SeatResponse;
-import mt.movie_theater.api.seat.service.SeatService;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.ScreeningType;
@@ -67,17 +66,15 @@ class SeatServiceTest extends IntegrationTestSupport {
         List<SeatResponse> seats = seatService.createSeatList(request);
 
         //then
-        assertThat(seats.size()).isEqualTo(6);
-        assertThat(savedHall.getSeats().size()).isEqualTo(6);
-        assertThat(seats)
-                .extracting("seatNumber", "isAvailable")
+        assertThat(seats).hasSize(6)
+                .extracting("section", "seatNumber", "isAvailable")
                 .containsExactlyInAnyOrder(
-                        tuple("A1", true),
-                        tuple("A2", true),
-                        tuple("A3", true),
-                        tuple("B1", true),
-                        tuple("B2", true),
-                        tuple("B3", true)
+                        tuple("A", "1", true),
+                        tuple("A", "2", true),
+                        tuple("A", "3", true),
+                        tuple("B", "1", true),
+                        tuple("B", "2", true),
+                        tuple("B", "3", true)
                 );
     }
 

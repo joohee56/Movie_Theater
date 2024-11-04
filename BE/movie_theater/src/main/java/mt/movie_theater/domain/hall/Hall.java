@@ -39,11 +39,6 @@ public class Hall extends BaseEntity {
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats = new ArrayList<>();
 
-    public void addSeat(Seat seat) {
-        seat.setHall(this);
-        seats.add(seat);
-    }
-
     @Builder
     public Hall(Theater theater, String name, ScreeningType screeningType, int hallTypeModifier) {
         this.theater = theater;

@@ -23,17 +23,18 @@ public class Seat extends BaseEntity {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Hall hall;
+    @Column(length = 1)
+    private String section;
     private String seatNumber;
     @Column(columnDefinition = "TINYINT(1) DEFAULT true")
     private boolean isAvailable;
 
     @Builder
-    public Seat(String seatNumber) {
+    public Seat(Hall hall, String section, String seatNumber) {
+        this.hall = hall;
+        this.section = section;
         this.seatNumber = seatNumber;
         this.isAvailable = true;
     }
 
-    public void setHall(Hall hall) {
-        this.hall = hall;
-    }
 }
