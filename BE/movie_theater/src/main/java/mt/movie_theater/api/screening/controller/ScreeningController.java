@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.apiResponse.ApiResponse;
-import mt.movie_theater.api.screening.request.RegionTheaterCountRequest;
+import mt.movie_theater.api.screening.request.RegionScreeningCountRequest;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.request.ScreeningsRequest;
 import mt.movie_theater.api.screening.request.TheaterScreeningCountRequest;
@@ -12,7 +12,7 @@ import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
 import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
 import mt.movie_theater.api.screening.service.ScreeningService;
-import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
+import mt.movie_theater.api.theater.response.RegionScreeningCountResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,22 +32,22 @@ public class ScreeningController {
         return ApiResponse.ok(response);
     }
 
-    @GetMapping("/region/theaterCount")
-    public ApiResponse<List<RegionTheaterCountResponse>> getRegionsWithTheaterCount(@Valid @ModelAttribute RegionTheaterCountRequest request) {
-        List<RegionTheaterCountResponse> regionResponses = screeningService.getRegionsWithTheaterCount(request.getDate(), request.getMovieId());
+    @GetMapping("/region/screeningCount")
+    public ApiResponse<List<RegionScreeningCountResponse>> getRegionsWithScreeningCount(@Valid @ModelAttribute RegionScreeningCountRequest request) {
+        List<RegionScreeningCountResponse> regionResponses = screeningService.getRegionsWithScreeningCount(request.getDate(), request.getMovieId());
         return ApiResponse.ok(regionResponses);
+    }
+
+    @GetMapping("/theater/screeningCount")
+    public ApiResponse<List<TheaterScreeningCountResponse>> getTheatersWithScreeningCount(@Valid @ModelAttribute TheaterScreeningCountRequest request) {
+        List<TheaterScreeningCountResponse> responses = screeningService.getTheatersWithScreeningCount(request.getDate(), request.getRegion(), request.getMovieId());
+        return ApiResponse.ok(responses);
     }
 
     @GetMapping("")
     public ApiResponse<List<FullScreeningResponse>> getScreenings(@Valid @ModelAttribute ScreeningsRequest request) {
         List<FullScreeningResponse> screenings = screeningService.getScreenings(request.getDate(), request.getMovieId(), request.getTheaterId());
         return ApiResponse.ok(screenings);
-    }
-
-    @GetMapping("/theater/screeningCount")
-    public ApiResponse<List<TheaterScreeningCountResponse>> getTheaterListAndScreeningCountByRegion(@Valid @ModelAttribute TheaterScreeningCountRequest request) {
-        List<TheaterScreeningCountResponse> responses = screeningService.getTheaterAndScreeningCountsByRegion(request.getDate(), request.getRegion(), request.getMovieId());
-        return ApiResponse.ok(responses);
     }
 
 }

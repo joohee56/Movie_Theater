@@ -3,7 +3,7 @@ package mt.movie_theater.domain.screening;
 import java.time.LocalDateTime;
 import java.util.List;
 import mt.movie_theater.domain.movie.Movie;
-import mt.movie_theater.domain.screening.dto.RegionTheaterCountDto;
+import mt.movie_theater.domain.screening.dto.RegionScreeningCountDto;
 import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
 import mt.movie_theater.domain.theater.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,19 +13,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ScreeningRepository extends JpaRepository<Screening, Long> {
-    @Query("select new mt.movie_theater.domain.screening.dto.RegionTheaterCountDto(t.region, count(s)) from Screening s join s.hall.theater t " +
-            "where s.startTime >= :startDateTime and s.startTime < :endDateTime "
+    @Query("select new mt.movie_theater.domain.screening.dto.RegionScreeningCountDto(s.hall.theater.region, count(s)) from Screening s "
+            + "where s.startTime >= :startDateTime and s.startTime < :endDateTime "
             + "and (:movieId is null or s.movie.id = :movieId) "
-            + "group by t.region")
-    List<RegionTheaterCountDto> countTheaterByRegion(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("movieId") Long movieId);
+            + "group by s.hall.theater.region")
+    List<RegionScreeningCountDto> countScreeningByRegion(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("movieId") Long movieId);
 
     @Query("select s from Screening s "
             + "where s.startTime >= :startDateTime and s.startTime < :endDateTime "
             + "and (:movieId is null or s.movie.id= :movieId) "
             + "and s.hall.theater.id= :theaterId "
             + "order by s.startTime asc")
-    List<Screening> findAllByDateAndTheaterIdAndOptionalMovieId(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("movieId") Long movieId,
-                                                                @Param("theaterId") Long theaterId);
+    List<Screening> findAllByDateAndTheaterIdAndOptionalMovieId(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("movieId") Long movieId, @Param("theaterId") Long theaterId);
 
     @Query("select new mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto(s.hall.theater, count(s)) from Screening s "
             + "where s.hall.theater.region= :region "

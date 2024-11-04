@@ -14,14 +14,14 @@ import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
 import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
-import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
+import mt.movie_theater.api.theater.response.RegionScreeningCountResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
-import mt.movie_theater.domain.screening.dto.RegionTheaterCountDto;
+import mt.movie_theater.domain.screening.dto.RegionScreeningCountDto;
 import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
@@ -66,32 +66,26 @@ public class ScreeningService {
         return startTime.plus(duration);
     }
 
-    //날짜와 (영화)가 주어졌을 때, 조건에 맞는 상영시간을 가진 지역과 지역별 영화관 갯수 조회
-    public List<RegionTheaterCountResponse> getRegionsWithTheaterCount(LocalDate date, Long movieId) {
+    /**
+     * 전체 지역 리스트 조회, 지역별 상영시간 갯수
+     */
+    public List<RegionScreeningCountResponse> getRegionsWithScreeningCount(LocalDate date, Long movieId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
-        List<RegionTheaterCountDto> regionCountDtos = screeningRepository.countTheaterByRegion(startDateTime, endDateTime, movieId);
+        List<RegionScreeningCountDto> regionCountDtos = screeningRepository.countScreeningByRegion(startDateTime, endDateTime, movieId);
 
         Map<Region, Long> regionCountMap = regionCountDtos.stream()
-                .collect(Collectors.toMap(RegionTheaterCountDto::getRegion, RegionTheaterCountDto::getCount));
+                .collect(Collectors.toMap(RegionScreeningCountDto::getRegion, RegionScreeningCountDto::getCount));
 
         return Arrays.stream(Region.values())
-                .map(region -> RegionTheaterCountResponse.create(region, regionCountMap.getOrDefault(region, Long.valueOf(0))))
+                .map(region -> RegionScreeningCountResponse.create(region, regionCountMap.getOrDefault(region, Long.valueOf(0))))
                 .collect(Collectors.toList());
     }
 
-    //날짜, (영화), 영화관이 주어졌을 때, 조건에 맞는 상영시간 리스트 조회
-    public List<FullScreeningResponse> getScreenings(LocalDate date, Long movieId, Long theaterId) {
-        LocalDateTime startDateTime = getStartDateTime(date);
-        LocalDateTime endDateTime = getEndDateTime(date);
-        List<Screening> screenings = screeningRepository.findAllByDateAndTheaterIdAndOptionalMovieId(startDateTime, endDateTime, movieId, theaterId);
-        return screenings.stream()
-                .map(screening -> FullScreeningResponse.create(screening))
-                .collect(Collectors.toList());
-    }
-
-    //날짜, 지역, (영화)가 주어졌을 때, 지역에 속하는 영화관 리스트와 영화관에 속하는 상영시간 갯수 조회
-    public List<TheaterScreeningCountResponse> getTheaterAndScreeningCountsByRegion(LocalDate date, Region region, Long movieId) {
+    /**
+     * 전체 지역별 영화관 리스트 조회, 영화관별 상영시간 갯수
+     */
+    public List<TheaterScreeningCountResponse> getTheatersWithScreeningCount(LocalDate date, Region region, Long movieId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
         Map<Theater, Long> screeningCountMap = createScreeningCountMap(startDateTime, endDateTime, region, movieId);
@@ -99,6 +93,18 @@ public class ScreeningService {
         List<Theater> theaters = theaterRepository.findALlByRegion(region);
         return theaters.stream()
                 .map(theater -> TheaterScreeningCountResponse.create(theater, screeningCountMap.getOrDefault(theater, Long.valueOf(0))))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 상영시간 리스트 조회
+     */
+    public List<FullScreeningResponse> getScreenings(LocalDate date, Long movieId, Long theaterId) {
+        LocalDateTime startDateTime = getStartDateTime(date);
+        LocalDateTime endDateTime = getEndDateTime(date);
+        List<Screening> screenings = screeningRepository.findAllByDateAndTheaterIdAndOptionalMovieId(startDateTime, endDateTime, movieId, theaterId);
+        return screenings.stream()
+                .map(screening -> FullScreeningResponse.create(screening))
                 .collect(Collectors.toList());
     }
 

@@ -17,7 +17,7 @@ public class FullScreeningResponse {
     private String hallName;
 
     @Builder
-    public FullScreeningResponse(Long screeningId, String startTime, String endTime, String movieTitle,
+    private FullScreeningResponse(Long screeningId, String startTime, String endTime, String movieTitle,
                                  String screeningTypeDisplay, String theaterName, String hallName) {
         this.screeningId = screeningId;
         this.startTime = startTime;

@@ -34,7 +34,9 @@ public class MovieService {
         return MovieResponse.create(movieRepository.save(movie));
     }
 
-    //날짜, (영화관)이 주어졌을 때, 조건에 맞는 상영시간 유무가 포함된 전체 영화 리스트 조회
+    /**
+     * 전체 영화 리스트 조회, 영화별 상영시간 포함 유무
+     */
     public List<MovieWatchableResponse> getMoviesWithIsWatchable(LocalDate date, Long theaterId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);

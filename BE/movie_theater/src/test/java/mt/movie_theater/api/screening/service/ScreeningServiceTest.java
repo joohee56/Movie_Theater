@@ -17,7 +17,8 @@ import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
-import mt.movie_theater.api.theater.response.RegionTheaterCountResponse;
+import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
+import mt.movie_theater.api.theater.response.RegionScreeningCountResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.AgeRating;
@@ -54,7 +55,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         //given
         LocalDate releaseDate = LocalDateTime.now().toLocalDate();
         Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
-        Theater theater = createTheater(Region.SEOUL);
+        Theater theater = createTheater(Region.SEOUL, "강남");
         Hall hall = createHall(theater, IMAX, 3000);
 
         LocalDateTime startDate = LocalDateTime.of(2024, 10, 31, 15, 0);
@@ -100,15 +101,15 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                 .hasMessage("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
     }
 
-    @DisplayName("날짜와 영화가 주어질 때, 조건에 맞는 상영시간을 가진 지역과 지역별 영화관 갯수 리스트를 조회한다.")
+    @DisplayName("전체 지역 리스트와 지역별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜와 (영화)가 있다.")
     @Test
-    void getRegionTheaterCountList() {
+    void getRegionsWithScreeningCount() {
         //given
         Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
 
-        Theater theater1 = createTheater(SEOUL);
-        Theater theater2 = createTheater(GYEONGGI);
-        Theater theater3 = createTheater(JEJU);
+        Theater theater1 = createTheater(SEOUL, "강남");
+        Theater theater2 = createTheater(GYEONGGI, "고양스타필드");
+        Theater theater3 = createTheater(JEJU, "제주삼화");
 
         Hall hall1 = createHall(theater1, TWO_D, 0);
         Hall hall2 = createHall(theater2, TWO_D, 0);
@@ -122,7 +123,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         LocalDate date = LocalDate.of(2024, 11, 01);
 
         //when
-        List<RegionTheaterCountResponse> regionTheaterCounts = screeningService.getRegionsWithTheaterCount(date, movie.getId());
+        List<RegionScreeningCountResponse> regionTheaterCounts = screeningService.getRegionsWithScreeningCount(date, movie.getId());
 
         //then
         assertThat(regionTheaterCounts).hasSize(8)
@@ -139,13 +140,48 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("날짜, 영화, 영화관이 주어질 때, 조건에 맞는 상영시간 리스트를 조회한다.")
+    @DisplayName("전체 지역별 영화관 리스트와 영화관별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜, (영화)가 있다.")
+    @Test
+    void getTheatersWithScreeningCount() {
+        //given
+        Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
+
+        Theater theater1 = createTheater(SEOUL, "강남");
+        Theater theater2 = createTheater(SEOUL, "강동");
+        Theater theater3 = createTheater(GYEONGGI, "고양스타필드");
+        Theater theater4 = createTheater(JEJU, "제주삼화");
+
+        Hall hall1 = createHall(theater1, TWO_D, 0);
+        Hall hall2 = createHall(theater2, TWO_D, 0);
+        Hall hall3 = createHall(theater3, TWO_D, 0);
+        Hall hall4 = createHall(theater4, TWO_D, 0);
+
+        LocalDate date = LocalDate.of(2024, 11, 01);
+        createScreening(movie, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie, hall3, LocalDateTime.of(2024, 11, 01, 00, 00));
+
+
+        //when
+        List<TheaterScreeningCountResponse> theaterScreeningCounts = screeningService.getTheatersWithScreeningCount(date, SEOUL, movie.getId());
+
+        //then
+        assertThat(theaterScreeningCounts).hasSize(2)
+                .extracting("theaterName", "screeningCount")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("강남", Long.valueOf(2)),
+                        Tuple.tuple("강동", Long.valueOf(1))
+                );
+    }
+
+    @DisplayName("상영시간 리스트를 조회한다. 상영시간 조건에는 날짜, (영화), 영화관이 있다.")
     @Test
     void getScreenings() {
         //given
         LocalDate date = LocalDate.of(2024, 11, 01);
         Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
-        Theater theater = createTheater(SEOUL);
+        Theater theater = createTheater(SEOUL, "서울");
         Hall hall = createHall(theater, TWO_D, 0);
 
         createScreening(movie, hall, LocalDateTime.of(2024, 11, 01, 00, 00));
@@ -178,9 +214,10 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         return movieRepository.save(movie);
     }
 
-    private Theater createTheater(Region region) {
+    private Theater createTheater(Region region, String name) {
         Theater theater = Theater.builder()
                 .region(region)
+                .name(name)
                 .build();
         return theaterRepository.save(theater);
     }

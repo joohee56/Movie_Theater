@@ -86,7 +86,7 @@ class MovieServiceTest extends IntegrationTestSupport {
         assertThat(response.getMovieActors()).containsExactlyInAnyOrder("홍경", "노윤서", "김민주");
     }
 
-    @DisplayName("날짜, 영화관이 주어졌을 때, 조건에 맞는 상영시간 유무가 포함된 전체 영화 리스트를 조회한다.")
+    @DisplayName("전체 영화 리스트와 영화별 상영시간 포함 유무를 조회한다. 상영시간 조건에는 날짜, (영화관)이 있다.")
     @Test
     void getMoviesWithIsWatchable() {
         //given
@@ -102,6 +102,7 @@ class MovieServiceTest extends IntegrationTestSupport {
         createScreening(movie2, hall, LocalDateTime.of(2024, 11, 01, 00, 00));
 
         LocalDate date = LocalDate.of(2024, 11, 01);
+
         //when
         List<MovieWatchableResponse> movies = movieService.getMoviesWithIsWatchable(date, theater.getId());
 

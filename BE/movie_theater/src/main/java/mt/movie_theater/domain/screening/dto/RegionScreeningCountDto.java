@@ -6,7 +6,7 @@ import mt.movie_theater.domain.theater.Region;
 
 @Getter
 @AllArgsConstructor
-public class RegionTheaterCountDto {
+public class RegionScreeningCountDto {
     private Region region;
     private Long count;
 }

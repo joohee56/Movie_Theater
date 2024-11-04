@@ -13,7 +13,7 @@ public class MovieWatchableResponse {
     private boolean isWatchable;
 
     @Builder
-    public MovieWatchableResponse(Long movieId, String title, String posterUrl, String ageRatingDisplay,
+    private MovieWatchableResponse(Long movieId, String title, String posterUrl, String ageRatingDisplay,
                                   boolean isWatchable) {
         this.movieId = movieId;
         this.title = title;

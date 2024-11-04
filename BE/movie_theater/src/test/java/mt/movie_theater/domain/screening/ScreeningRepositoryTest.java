@@ -13,7 +13,7 @@ import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.MovieRepository;
-import mt.movie_theater.domain.screening.dto.RegionTheaterCountDto;
+import mt.movie_theater.domain.screening.dto.RegionScreeningCountDto;
 import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
@@ -34,9 +34,41 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private HallRepository hallRepository;
 
-    @DisplayName("날짜, 영화가 주어질 때, 조건에 맞는 상영시간을 가진 지역과 지역별 영화관 갯수 리스트를 조회한다.")
+    @DisplayName("영화 리스트와 상영시간 포함 유무를 조회한다. 상영시간 조건에는 날짜, (영화관)이 있다.")
     @Test
-    void countTheaterByRegion() {
+    void findMoviesByDateAndOptionalTheaterId() {
+        //given
+        LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 00, 00);
+        LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 02, 00, 00);
+        Movie movie1 = createMovie();
+        Movie movie2 = createMovie();
+        Movie movie3 = createMovie();
+
+        Theater theater1 = createTheater(SEOUL, "강남");
+        Theater theater2 = createTheater(SEOUL, "강동");
+        Hall hall1 = createHall(theater1);
+        Hall hall2 = createHall(theater2);
+
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 23, 59));
+        createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+
+        //영화관 불일치
+        createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
+        //날짜 불일치
+        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 02, 00, 00));
+
+        //when
+        List<Movie> movies = screeningRepository.findMoviesByDateAndOptionalTheaterId(startDateTime, endDateTime, theater1.getId());
+
+        //then
+        assertThat(movies).hasSize(2)
+                .containsExactlyInAnyOrder(movie1, movie2);
+    }
+
+    @DisplayName("지역 리스트와 지역별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜, (영화)가 있다.")
+    @Test
+    void countScreeningByRegion() {
         //given
         LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 00, 00);
         LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 02, 00, 00);
@@ -62,7 +94,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
         createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
 
         //when
-        List<RegionTheaterCountDto> regionDtos = screeningRepository.countTheaterByRegion(startDateTime, endDateTime, movie1.getId());
+        List<RegionScreeningCountDto> regionDtos = screeningRepository.countScreeningByRegion(startDateTime, endDateTime, movie1.getId());
 
         //then
         assertThat(regionDtos).hasSize(3)
@@ -74,44 +106,9 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("주어진 날짜, 영화, 영화관에 해당하는 상영시간을 조회한다.")
+    @DisplayName("지역별 영화관 리스트와 영화관별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜, (영화)가 있다.")
     @Test
-    void findAllByDateAndMovieIdAndTheaterId() {
-        //given
-        LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 00, 00);
-        LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 02, 00, 00);
-        Movie movie1 = createMovie();
-        Movie movie2 = createMovie();
-
-        Theater theater1 = createTheater(SEOUL, "강남");
-        Theater theater2 = createTheater(GYEONGGI, "고양스타필드");
-
-        Hall hall1 = createHall(theater1);
-        Hall hall2 = createHall(theater2);
-
-        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
-        //날짜 불일치
-        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 02, 00, 00));
-        //영화 불일치
-        createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
-        //영화관 불일치
-        createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
-
-        //when
-        List<Screening> screenings = screeningRepository.findAllByDateAndTheaterIdAndOptionalMovieId(
-                startDateTime, endDateTime, movie1.getId(), theater1.getId());
-
-        //then
-        assertThat(screenings).hasSize(1)
-                .extracting("movie", "hall")
-                .containsExactlyInAnyOrder(
-                        tuple(movie1, hall1)
-                );
-    }
-
-    @DisplayName("각 영화관에 속하는 상영시간 갯수를 조회한다. 상영시간의 조건은 날짜, 영화, 지역이다.")
-    @Test
-    void findScreeningCountByRegion() {
+    void findTheaterScreeningCounts() {
         //given
         LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 00, 00);
         LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 02, 00, 00);
@@ -148,36 +145,39 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("주어진 날짜, 영화관에 해당하는 상영시간이 있는 영화 리스트를 조회한다.")
+    @DisplayName("상영시간 리스트를 조회한다. 조건에는 날짜, 영화관, (영화)가 있다.")
     @Test
-    void findMoviesByDateAndOptionalTheaterId() {
+    void findAllByDateAndMovieIdAndTheaterId() {
         //given
         LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 00, 00);
         LocalDateTime endDateTime = LocalDateTime.of(2024, 11, 02, 00, 00);
         Movie movie1 = createMovie();
         Movie movie2 = createMovie();
-        Movie movie3 = createMovie();
 
         Theater theater1 = createTheater(SEOUL, "강남");
-        Theater theater2 = createTheater(SEOUL, "강동");
+        Theater theater2 = createTheater(GYEONGGI, "고양스타필드");
 
         Hall hall1 = createHall(theater1);
         Hall hall2 = createHall(theater2);
 
         createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
-        createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 01, 23, 59));
-        createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
-
-        //영화관 불일치
-        createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
         //날짜 불일치
         createScreening(movie1, hall1, LocalDateTime.of(2024, 11, 02, 00, 00));
+        //영화 불일치
+        createScreening(movie2, hall1, LocalDateTime.of(2024, 11, 01, 00, 00));
+        //영화관 불일치
+        createScreening(movie1, hall2, LocalDateTime.of(2024, 11, 01, 00, 00));
 
         //when
-        List<Movie> movies = screeningRepository.findMoviesByDateAndOptionalTheaterId(startDateTime, endDateTime, theater1.getId());
+        List<Screening> screenings = screeningRepository.findAllByDateAndTheaterIdAndOptionalMovieId(
+                startDateTime, endDateTime, movie1.getId(), theater1.getId());
 
         //then
-        assertThat(movies).hasSize(2);
+        assertThat(screenings).hasSize(1)
+                .extracting("movie", "hall")
+                .containsExactlyInAnyOrder(
+                        tuple(movie1, hall1)
+                );
     }
 
     private Movie createMovie() {

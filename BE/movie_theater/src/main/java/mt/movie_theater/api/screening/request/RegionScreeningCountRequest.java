@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RegionTheaterCountRequest {
+public class RegionScreeningCountRequest {
     @DateTimeFormat(pattern = "yyyy.MM.dd")
     private LocalDate date;
     private Long movieId;
