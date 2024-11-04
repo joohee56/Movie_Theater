@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import MovieView from "../views/MovieView.vue";
 import BookingView from "../views/BookingView.vue";
 import BookingMovieOptions from "@/components/booking/BookingMovieOptions.vue";
+import BookingSeat from "@/components/booking/BookingSeat.vue";
 
 Vue.use(VueRouter);
 
@@ -28,6 +29,11 @@ const routes = [
         path: "/booking/movieOptions",
         name: "bookingMovieOptions",
         component: BookingMovieOptions,
+      },
+      {
+        path: "/booking/seat",
+        name: "bookingSeat",
+        component: BookingSeat,
       },
     ],
   },
