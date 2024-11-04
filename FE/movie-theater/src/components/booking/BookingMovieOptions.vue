@@ -61,7 +61,6 @@
 import "vue2-datepicker/index.css";
 import "vue2-datepicker/locale/ko";
 import DatePicker from "vue2-datepicker";
-import PageTitle from "@/components/header/PageTitle";
 import { getMovies } from "@/api/movie";
 import {
   getRegionsWithScreeningCount,
@@ -102,7 +101,6 @@ export default {
     this.setFormatDate();
   },
   components: {
-    PageTitle,
     DatePicker,
   },
   mounted() {

@@ -5,6 +5,12 @@
 	</div>
 </template>
 
-<script></script>
+<script>
+import PageTitle from "@/components/header/PageTitle.vue";
+
+export default {
+  components: { PageTitle },
+};
+</script>
 
 <style scoped></style>
