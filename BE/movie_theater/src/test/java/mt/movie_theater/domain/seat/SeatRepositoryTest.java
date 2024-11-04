@@ -19,7 +19,7 @@ class SeatRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private HallRepository hallRepository;
 
-    @DisplayName("")
+    @DisplayName("상영관에 해당하는 전체 좌석 리스트를 조회한다.")
     @Test
     void findAllByHall() {
         //given
