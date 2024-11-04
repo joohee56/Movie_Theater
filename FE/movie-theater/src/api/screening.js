@@ -1,9 +1,9 @@
 import { jsonApiInstance } from "@/api/index";
 const jsonApi = jsonApiInstance();
 
-async function getRegionsWithTheaterCount(movieId, date) {
+async function getRegionsWithScreeningCount(movieId, date) {
   try {
-    const response = await jsonApi.get("/screenings/region/theaterCount", {
+    const response = await jsonApi.get("/screenings/region/screeningCount", {
       params: {
         movieId: movieId,
         date: date,
@@ -46,7 +46,7 @@ async function getTheaterAndScreeningCounts(date, movieId, region) {
 }
 
 export {
-  getRegionsWithTheaterCount,
+  getRegionsWithScreeningCount,
   getScreenings,
   getTheaterAndScreeningCounts,
 };

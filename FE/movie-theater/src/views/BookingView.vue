@@ -64,7 +64,7 @@ import DatePicker from "vue2-datepicker";
 import PageTitle from "@/components/header/PageTitle";
 import { getMovies } from "@/api/movie";
 import {
-  getRegionsWithTheaterCount,
+  getRegionsWithScreeningCount,
   getScreenings,
   getTheaterAndScreeningCounts,
 } from "@/api/screening";
@@ -107,11 +107,11 @@ export default {
   },
   mounted() {
     this.fetchMovies();
-    this.fetchRegionsWithTheaterCount();
+    this.fetchRegionsWithScreeningCount();
   },
   methods: {
     async fetchAll() {
-      this.fetchRegionsWithTheaterCount();
+      this.fetchRegionsWithScreeningCount();
       this.fetchTheaters();
       this.fetchScreening();
       this.fetchMovies();
@@ -125,8 +125,8 @@ export default {
         this.movies = response.data.data;
       }
     },
-    async fetchRegionsWithTheaterCount() {
-      const response = await getRegionsWithTheaterCount(
+    async fetchRegionsWithScreeningCount() {
+      const response = await getRegionsWithScreeningCount(
         this.selectedMovie.id,
         this.formatDate
       );
@@ -155,7 +155,6 @@ export default {
       }
       console.log(response);
     },
-
     movieSelect(movieId, index) {
       if (this.selectedMovie.id != movieId) {
         this.selectedMovie.id = movieId;
@@ -174,7 +173,7 @@ export default {
       }
 
       this.resetTheater();
-      this.fetchAll();
+      this.fetchTheaters();
     },
     theaterSelect(theaterId, index) {
       if (this.selectedTheater.id != theaterId) {
@@ -184,7 +183,7 @@ export default {
         this.resetTheater();
       }
 
-      this.fetchAll();
+      this.fetchScreening();
     },
     setFormatDate() {
       const tzOffset = this.selectedDate.getTimezoneOffset() * 60 * 1000;
