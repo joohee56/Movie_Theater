@@ -7,7 +7,7 @@
 			<div class="section">
 				<div class="section-title">영화</div>
 				<div class="movie-list">
-					<button v-for="(movie, index) in movies" @click="movieSelect(movie.movieId, index)" :class="{movieSelected:selectedMovie.index==index}" :disabled="!movie.watchable">
+					<button v-for="(movie, index) in movies" @click="toggleMovieSelection(movie.movieId, index)" :class="{movieSelected:selectedMovie.index==index}" :disabled="!movie.watchable">
 						<span :class="[ageClass(movie.ageRatingDisplay), `age-rating`]">{{movie.ageRatingDisplay}}</span>{{movie.title}}
 					</button>
 				</div>
@@ -16,12 +16,12 @@
 				<div class="section-title">극장</div>
 				<div class="theater-list">
 					<div class="region-list">
-						<button v-for="(region, index) in regions" @click="regionSelect(region.region, index)" :class="{regionSelected:selectedRegion.index==index}">
+						<button v-for="(region, index) in regions" @click="toggleRegionSelection(region.region, index)" :class="{regionSelected:selectedRegion.index==index}">
 							{{region.regionDisplay}}({{region.count}})
 						</button>
 					</div>
 					<div class="theater-detail-list">
-						<button v-for="(theater, index) in theaters" @click="theaterSelect(theater.theaterId, index)" :class="{theaterSelected:selectedTheater.index==index}" :disabled="theater.screeningCount == 0">
+						<button v-for="(theater, index) in theaters" @click="toggleTheaterSelection(theater.theaterId, index)" :class="{theaterSelected:selectedTheater.index==index}" :disabled="theater.screeningCount == 0">
 							{{theater.theaterName}}({{theater.screeningCount}})
 						</button>
 					</div>
@@ -155,7 +155,7 @@ export default {
       }
       console.log(response);
     },
-    movieSelect(movieId, index) {
+    toggleMovieSelection(movieId, index) {
       if (this.selectedMovie.id != movieId) {
         this.selectedMovie.id = movieId;
         this.selectedMovie.index = index;
@@ -164,7 +164,7 @@ export default {
       }
       this.fetchAll();
     },
-    regionSelect(name, index) {
+    toggleRegionSelection(name, index) {
       if (this.selectedRegion.name != name) {
         this.selectedRegion.index = index;
         this.selectedRegion.name = name;
@@ -175,7 +175,7 @@ export default {
       this.resetTheater();
       this.fetchTheaters();
     },
-    theaterSelect(theaterId, index) {
+    toggleTheaterSelection(theaterId, index) {
       if (this.selectedTheater.id != theaterId) {
         this.selectedTheater.id = theaterId;
         this.selectedTheater.index = index;
