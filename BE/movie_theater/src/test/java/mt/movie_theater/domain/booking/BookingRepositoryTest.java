@@ -7,11 +7,14 @@ import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
+import mt.movie_theater.domain.seat.SeatLocation;
 import mt.movie_theater.domain.seat.SeatRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class BookingRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private BookingRepository bookingRepository;
@@ -51,10 +54,10 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         Screening savedScreening = screeningRepository.save(screening);
 
         Seat seat1 = Seat.builder()
-                        .seatNumber("A1")
+                        .seatLocation(new SeatLocation("A", "1"))
                         .build();
         Seat seat2 = Seat.builder()
-                        .seatNumber("B1")
+                        .seatLocation(new SeatLocation("B", "1"))
                         .build();
         Seat savedSeat1 = seatRepository.save(seat1);
         Seat savedSeat2 = seatRepository.save(seat2);

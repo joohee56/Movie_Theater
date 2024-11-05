@@ -7,19 +7,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class GenreRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private GenreRepository genreRepository;
-
-    @AfterEach
-    void tearDown() {
-        genreRepository.deleteAllInBatch();
-    }
 
     @DisplayName("장르타입 리스트에 해당하는 장르 리스트를 반환한다.")
     @Test

@@ -52,7 +52,7 @@ insert into hall(theater_id, name, screening_type, hall_type_modifier)
            ('2', '1관', 'TWO_D', 0),
            ('5', '5관 [Laser]', 'TWO_D', 0);
 
-insert into seat(hall_id, section, seat_number, is_booked)
+insert into seat(hall_id, section, seat_row, is_booked)
 values('1', 'A', '1', false),
       ('1', 'A', '2', false),
       ('1', 'A', '3', false),

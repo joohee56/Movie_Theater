@@ -18,6 +18,7 @@ import mt.movie_theater.domain.movie.ScreeningType;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
+import mt.movie_theater.domain.seat.SeatLocation;
 import mt.movie_theater.domain.seat.SeatRepository;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
@@ -224,7 +225,9 @@ class BookingServiceTest extends IntegrationTestSupport {
         return hallRepository.save(hall);
     }
     private Seat createSeat() {
-        Seat seat = Seat.builder().build();
+        Seat seat = Seat.builder()
+                .seatLocation(new SeatLocation("A", "1"))
+                .build();
         return seatRepository.save(seat);
     }
     private Screening createScreening(LocalDateTime startDateTime) {

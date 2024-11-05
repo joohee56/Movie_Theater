@@ -1,34 +1,26 @@
 package mt.movie_theater.api.hall.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.hall.request.HallCreateRequest;
 import mt.movie_theater.api.hall.response.HallResponse;
-import mt.movie_theater.api.hall.service.HallService;
-import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.ScreeningType;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class HallServiceTest extends IntegrationTestSupport {
     @Autowired
     private TheaterRepository theaterRepository;
     @Autowired
     private HallService hallService;
-    @Autowired
-    private HallRepository hallRepository;
-
-    @AfterEach
-    void tearDown() {
-        hallRepository.deleteAllInBatch();
-        theaterRepository.deleteAllInBatch();
-    }
 
     @DisplayName("신규 상영관을 등록한다.")
     @Test

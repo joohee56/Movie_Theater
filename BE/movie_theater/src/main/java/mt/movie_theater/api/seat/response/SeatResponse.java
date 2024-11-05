@@ -10,16 +10,16 @@ public class SeatResponse {
     private Long id;
     private Long hallId;
     private String section;
-    private String seatNumber;
+    private String seatRow;
     @JsonProperty("isBooked")
     private boolean isBooked;
 
     @Builder
-    public SeatResponse(Long id, Long hallId, String section, String seatNumber, boolean isBooked) {
+    public SeatResponse(Long id, Long hallId, String section, String seatRow, boolean isBooked) {
         this.id = id;
         this.hallId = hallId;
         this.section = section;
-        this.seatNumber = seatNumber;
+        this.seatRow = seatRow;
         this.isBooked = isBooked;
     }
 
@@ -27,8 +27,8 @@ public class SeatResponse {
         return SeatResponse.builder()
                 .id(seat.getId())
                 .hallId(seat.getHall().getId())
-                .section(seat.getSection())
-                .seatNumber(seat.getSeatNumber())
+                .section(seat.getSeatLocation().getSection())
+                .seatRow(seat.getSeatLocation().getSeatRow())
                 .isBooked(seat.isBooked())
                 .build();
     }

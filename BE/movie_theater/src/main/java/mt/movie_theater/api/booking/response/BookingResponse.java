@@ -17,14 +17,14 @@ public class BookingResponse {
     private String startDate;
     private String startTime;
     private String seatSection;
-    private String seatNumber;
+    private String seatRow;
     private String userEmail;
     private int totalPrice;
 
     @Builder
     public BookingResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
                            String screeningTypeDisplay,
-                           String theaterName, String hallName, String startDate, String startTime, String seatSection, String seatNumber,
+                           String theaterName, String hallName, String startDate, String startTime, String seatSection, String seatRow,
                            String userEmail, int totalPrice) {
         this.id = id;
         this.bookingNumber = bookingNumber;
@@ -36,7 +36,7 @@ public class BookingResponse {
         this.startDate = startDate;
         this.startTime = startTime;
         this.seatSection = seatSection;
-        this.seatNumber = seatNumber;
+        this.seatRow = seatRow;
         this.userEmail = userEmail;
         this.totalPrice = totalPrice;
     }
@@ -52,8 +52,8 @@ public class BookingResponse {
                 .hallName(booking.getScreening().getHall().getName())
                 .startDate(DateUtil.formatToStartDate(booking.getScreening().getStartTime()))
                 .startTime(DateUtil.formatToHourAndMinute(booking.getScreening().getStartTime()))
-                .seatSection(booking.getSeat().getSection())
-                .seatNumber(booking.getSeat().getSeatNumber())
+                .seatSection(booking.getSeat().getSeatLocation().getSection())
+                .seatRow(booking.getSeat().getSeatLocation().getSeatRow())
                 .userEmail(booking.getUser().getEmail())
                 .totalPrice(booking.getTotalPrice())
                 .build();

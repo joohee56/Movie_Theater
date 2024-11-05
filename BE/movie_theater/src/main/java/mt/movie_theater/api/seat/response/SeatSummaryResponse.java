@@ -9,23 +9,23 @@ import mt.movie_theater.domain.seat.Seat;
 public class SeatSummaryResponse {
     private Long seatId;
     private String section;
-    private String seatNumber;
+    private String seatRow;
     @JsonProperty("isBooked")
     private boolean isBooked;
 
     @Builder
-    private SeatSummaryResponse(Long seatId, String section, String seatNumber, boolean isBooked) {
+    private SeatSummaryResponse(Long seatId, String section, String seatRow, boolean isBooked) {
         this.seatId = seatId;
         this.section = section;
-        this.seatNumber = seatNumber;
+        this.seatRow = seatRow;
         this.isBooked = isBooked;
     }
 
     public static SeatSummaryResponse create(Seat seat) {
         return SeatSummaryResponse.builder()
                 .seatId(seat.getId())
-                .section(seat.getSection())
-                .seatNumber(seat.getSeatNumber())
+                .section(seat.getSeatLocation().getSection())
+                .seatRow(seat.getSeatLocation().getSeatRow())
                 .isBooked(seat.isBooked())
                 .build();
     }

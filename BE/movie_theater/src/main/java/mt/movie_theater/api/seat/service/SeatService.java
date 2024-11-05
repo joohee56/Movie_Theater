@@ -12,6 +12,7 @@ import mt.movie_theater.api.seat.response.SeatSummaryResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.seat.Seat;
+import mt.movie_theater.domain.seat.SeatLocation;
 import mt.movie_theater.domain.seat.SeatRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +41,7 @@ public class SeatService {
             for (int col = 1; col <= columns; col++) {
                 Seat seat = Seat.builder()
                         .hall(hall)
-                        .section(String.valueOf(row))
-                        .seatNumber(String.valueOf(col))
+                        .seatLocation(new SeatLocation(String.valueOf(row), String.valueOf(col)))
                         .build();
                 seats.add(seat);
             }
@@ -57,7 +57,7 @@ public class SeatService {
         List<Seat> seats = seatRepository.findAllByHall(hallId);
 
         Map<String, List<Seat>> sectionSeatMap = seats.stream()
-                .collect(Collectors.groupingBy(Seat::getSection));
+                .collect(Collectors.groupingBy(seat -> seat.getSeatLocation().getSection()));
 
         return sectionSeatMap.entrySet().stream()
                 .collect(Collectors.toMap(

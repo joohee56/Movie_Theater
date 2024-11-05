@@ -13,30 +13,21 @@ import mt.movie_theater.api.seat.response.SeatSummaryResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.seat.Seat;
+import mt.movie_theater.domain.seat.SeatLocation;
 import mt.movie_theater.domain.seat.SeatRepository;
-import mt.movie_theater.domain.theater.TheaterRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class SeatServiceTest extends IntegrationTestSupport {
     @Autowired
     private SeatService seatService;
     @Autowired
-    private TheaterRepository theaterRepository;
-    @Autowired
     private HallRepository hallRepository;
     @Autowired
     private SeatRepository seatRepository;
-
-    @AfterEach
-    void tearDown() {
-        seatRepository.deleteAllInBatch();
-        hallRepository.deleteAllInBatch();
-        theaterRepository.deleteAllInBatch();
-    }
 
     @Transactional
     @DisplayName("상영관에 좌석 리스트를 등록한다.")
@@ -55,7 +46,7 @@ class SeatServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(seats).hasSize(6)
-                .extracting("section", "seatNumber", "isBooked")
+                .extracting("section", "seatRow", "isBooked")
                 .containsExactlyInAnyOrder(
                         tuple("A", "1", false),
                         tuple("A", "2", false),
@@ -82,7 +73,7 @@ class SeatServiceTest extends IntegrationTestSupport {
                 .hasMessage("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
     }
 
-    @DisplayName("상영관의 좌석 리스트를 Map 형태로 조죄한다.")
+    @DisplayName("상영관의 좌석 리스트를 Map 형태로 조회한다.")
     @Test
     void getSeatList() {
         //given
@@ -100,13 +91,13 @@ class SeatServiceTest extends IntegrationTestSupport {
         //then
         assertThat(sectionSeatMap).hasSize(2);
         assertThat(sectionSeatMap.get("A")).hasSize(2)
-                .extracting("section", "seatNumber")
+                .extracting("section", "seatRow")
                 .containsExactlyInAnyOrder(
                         tuple("A", "1"),
                         tuple("A", "2")
                 );
         assertThat(sectionSeatMap.get("B")).hasSize(2)
-                .extracting("section", "seatNumber")
+                .extracting("section", "seatRow")
                 .containsExactlyInAnyOrder(
                         tuple("B", "1"),
                         tuple("B", "2")
@@ -118,11 +109,10 @@ class SeatServiceTest extends IntegrationTestSupport {
                 .build();
         return hallRepository.save(hall);
     }
-    private Seat createSeat(Hall hall, String section, String seatNumber) {
+    private Seat createSeat(Hall hall, String section, String seatRow) {
         Seat seat = Seat.builder()
                 .hall(hall)
-                .section(section)
-                .seatNumber(seatNumber)
+                .seatLocation(new SeatLocation(section, seatRow))
                 .build();
         return seatRepository.save(seat);
     }

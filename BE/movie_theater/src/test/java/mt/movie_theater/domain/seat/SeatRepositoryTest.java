@@ -35,10 +35,10 @@ class SeatRepositoryTest extends IntegrationTestSupport {
 
         //then
         Assertions.assertThat(seats).hasSize(2)
-                .extracting("hall", "section", "seatNumber")
+                .extracting("hall", "seatLocation")
                 .containsExactlyInAnyOrder(
-                        tuple(hall1, "A", "1"),
-                        tuple(hall1, "A", "2")
+                        tuple(hall1, new SeatLocation("A", "1")),
+                        tuple(hall1, new SeatLocation("A", "2"))
                 );
     }
 
@@ -48,10 +48,9 @@ class SeatRepositoryTest extends IntegrationTestSupport {
         return hallRepository.save(hall);
     }
 
-    private Seat createSeat(Hall hall, String section, String seatNumber) {
+    private Seat createSeat(Hall hall, String section, String seatRow) {
         Seat seat = Seat.builder()
-                .section(section)
-                .seatNumber(seatNumber)
+                .seatLocation(new SeatLocation(section, seatRow))
                 .hall(hall)
                 .build();
         return seatRepository.save(seat);

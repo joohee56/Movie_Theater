@@ -1,6 +1,7 @@
 package mt.movie_theater.domain.seat;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,18 +24,15 @@ public class Seat extends BaseEntity {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Hall hall;
-    @Column(length = 1)
-    private String section;
-    private String seatNumber;
+    @Embedded
+    private SeatLocation seatLocation;
     @Column(columnDefinition = "TINYINT(1) DEFAULT true")
     private boolean isBooked;
 
     @Builder
-    public Seat(Long id, Hall hall, String section, String seatNumber, boolean isBooked) {
-        this.id = id;
+    public Seat(Hall hall, SeatLocation seatLocation, boolean isBooked) {
         this.hall = hall;
-        this.section = section;
-        this.seatNumber = seatNumber;
+        this.seatLocation = seatLocation;
         this.isBooked = isBooked;
     }
 
