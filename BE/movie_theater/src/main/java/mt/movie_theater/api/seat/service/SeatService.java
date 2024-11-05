@@ -55,8 +55,10 @@ public class SeatService {
 
     public Map<String, List<SeatSummaryResponse>> getSeatList(Long hallId) {
         List<Seat> seats = seatRepository.findAllByHall(hallId);
+
         Map<String, List<Seat>> sectionSeatMap = seats.stream()
                 .collect(Collectors.groupingBy(Seat::getSection));
+
         return sectionSeatMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,

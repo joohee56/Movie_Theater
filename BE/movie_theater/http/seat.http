@@ -7,3 +7,6 @@ Content-Type: application/json
   "rows": "2",
   "columns": "3"
 }
+
+### 좌석 리스트 조회
+GET localhost:8081/api/v1/seats?hallId=1

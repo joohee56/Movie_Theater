@@ -11,7 +11,7 @@
 					<div class="screen-title">SCREEN</div>
 					<div v-for="section in sections" :key="section">
 						{{section}}
-						<button v-for="(seat, index) in seats[section]" :key="`${section}${index}`" @click="toggleSeatSelection(seat)" :class="['seat', { selected: seat.selected, booked: seat.booked }]" :disabled="seat.booked">
+						<button v-for="(seat, index) in seats[section]" :key="`${section}${index}`" @click="toggleSeatSelection(seat)" :class="['seat', { selected: seat.isSelected, booked: seat.isBooked }]" :disabled="seat.isBooked">
 							{{seat.seatNumber}}
 						</button>
 					</div>
@@ -75,81 +75,13 @@
 </template>
 
 <script>
+import { getSeats } from "@/api/seat";
+
 export default {
   data() {
     return {
       sections: ["A", "B", "C"],
-      seats: {
-        A: [
-          {
-            id: 1,
-            section: "A",
-            seatNumber: "1",
-            selected: false,
-            booked: false,
-          },
-          {
-            id: 2,
-            section: "A",
-            seatNumber: "2",
-            selected: false,
-            booked: true,
-          },
-          {
-            id: 3,
-            section: "A",
-            seatNumber: "3",
-            selected: false,
-            booked: false,
-          },
-        ],
-        B: [
-          {
-            id: 4,
-            section: "B",
-            seatNumber: "1",
-            selected: false,
-            booked: false,
-          },
-          {
-            id: 5,
-            section: "B",
-            seatNumber: "2",
-            selected: false,
-            booked: false,
-          },
-          {
-            id: 6,
-            section: "B",
-            seatNumber: "3",
-            selected: false,
-            booked: false,
-          },
-        ],
-        C: [
-          {
-            id: 7,
-            section: "C",
-            seatNumber: "1",
-            selected: false,
-            booked: false,
-          },
-          {
-            id: 8,
-            section: "C",
-            seatNumber: "2",
-            selected: false,
-            booked: false,
-          },
-          {
-            id: 9,
-            section: "C",
-            seatNumber: "3",
-            selected: false,
-            booked: false,
-          },
-        ],
-      },
+      seats: {},
     };
   },
   computed: {
@@ -165,21 +97,23 @@ export default {
   },
   methods: {
     async fetchSeats() {
-      // const response = await fetch("your-backend-api/seats");
-      // const data = await response.json();
-      // // 좌석 정보에 selected 필드를 추가
-      // this.seats = Object.fromEntries(
-      //   Object.entries(data).map(([section, seatArray]) => [
-      //     section,
-      //     seatArray.map(seat => ({
-      //       ...seat,
-      //       selected: false // selected 필드 추가
-      //     }))
-      //   ])
-      // );
+      const response = await getSeats(this.$route.params.hallId);
+      const data = response.data.data;
+
+      // 좌석 정보에 selected 필드를 추가
+      this.seats = Object.fromEntries(
+        Object.entries(data).map(([section, seatArray]) => [
+          section,
+          seatArray.map((seat) => ({
+            ...seat,
+            isSelected: false, // selected 필드 추가
+          })),
+        ])
+      );
+      this.sections = Object.keys(data);
     },
     toggleSeatSelection(seat) {
-      seat.selected = !seat.selected; // 좌석 선택 상태 토글
+      seat.isSelected = !seat.isSelected; // 좌석 선택 상태 토글
     },
   },
 };
@@ -222,6 +156,8 @@ export default {
 .seat-container {
   text-align: center;
   padding: 20px;
+  overflow-y: auto;
+  max-height: 430px;
 }
 .screen-title {
   font-family: "SUIT-Bold";
@@ -229,8 +165,8 @@ export default {
   margin: 10px;
 }
 .seat {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   background-color: #747474;
   border: 2px solid var(--secondary-color);
   cursor: pointer;
