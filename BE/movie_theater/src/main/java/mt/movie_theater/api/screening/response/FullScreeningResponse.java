@@ -15,10 +15,11 @@ public class FullScreeningResponse {
     private String screeningTypeDisplay;
     private String theaterName;
     private String hallName;
+    private Long hallId;
 
     @Builder
     private FullScreeningResponse(Long screeningId, String startTime, String endTime, String movieTitle,
-                                 String screeningTypeDisplay, String theaterName, String hallName) {
+                                 String screeningTypeDisplay, String theaterName, String hallName, Long hallId) {
         this.screeningId = screeningId;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -26,6 +27,7 @@ public class FullScreeningResponse {
         this.screeningTypeDisplay = screeningTypeDisplay;
         this.theaterName = theaterName;
         this.hallName = hallName;
+        this.hallId = hallId;
     }
 
     public static FullScreeningResponse create(Screening screening) {
@@ -37,6 +39,7 @@ public class FullScreeningResponse {
                 .screeningTypeDisplay(screening.getHall().getScreeningType().getText())
                 .theaterName(screening.getHall().getTheater().getName())
                 .hallName(screening.getHall().getName())
+                .hallId(screening.getHall().getId())
                 .build();
     }
 
