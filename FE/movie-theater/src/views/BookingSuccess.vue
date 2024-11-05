@@ -24,7 +24,7 @@
 							<td>· 관람인원</td><td>성인 1명</td>
 						</tr>
 						<tr>
-							<td>· 좌석번호</td><td>{{booking.seatSection}}열 {{booking.seatNumber}}</td>
+							<td>· 좌석번호</td><td>{{booking.seatSection}}열 {{booking.seatRow}}</td>
 						</tr>
 						<tr>
 							<td>· 이메일</td><td>{{booking.userEmail}}</td>

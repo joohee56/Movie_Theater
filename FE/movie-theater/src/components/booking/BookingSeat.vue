@@ -13,7 +13,7 @@
 						<div class="section">{{section}}</div>
             <div class="seat-container">
               <button v-for="(seat, index) in seats[section]" :key="`${section}${index}`" @click="toggleSeatSelection(seat)" :class="['seat-btn', { selected: seat.isSelected, booked: seat.isBooked, seatGap: index==1 || index==13}]" :disabled="seat.isBooked">
-                {{seat.seatNumber}}
+                {{seat.seatRow}}
               </button>
             </div>
 					</div>
@@ -51,7 +51,7 @@
 						<div>선택좌석</div>
 						<div class="selected-seat-numbers-container">
 							<div class="selected-seat-number" v-for="selectedSeat in selectedSeats">
-                {{selectedSeat.section}}{{selectedSeat.seatNumber}}
+                {{selectedSeat.section}}{{selectedSeat.seatRow}}
               </div>
 						</div>
 					</div>
