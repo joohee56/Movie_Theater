@@ -95,7 +95,6 @@ class SeatServiceTest extends IntegrationTestSupport {
         createSeat(hall2, "A", "1");
 
         //when
-//        Map<String, List<SeatSummaryResponse>> sectionSeatMap = seatService.getSeatList(hall1.getId());
         Map<String, List<SeatSummaryResponse>> sectionSeatMap = seatService.getSeatList(hall1.getId());
 
         //then
