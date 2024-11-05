@@ -3,9 +3,11 @@ package mt.movie_theater.api.booking.request;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
+@Setter
 public class BookingCreateRequest {
     private Long userId;
     private Long screeningId;
