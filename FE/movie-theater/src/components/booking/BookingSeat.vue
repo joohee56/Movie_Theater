@@ -194,7 +194,7 @@ export default {
 .right-side {
   background-color: #333333;
   border-radius: 10px;
-  color: #c4c4c4;
+  color: var(--text-sub-color);
   font-family: "SUIT-Regular";
   font-size: 14px;
   position: relative;
