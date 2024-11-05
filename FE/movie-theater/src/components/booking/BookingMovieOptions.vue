@@ -36,7 +36,7 @@
           </div>
         </div>
 				<div v-else class="screening-list">
-          <button v-for="(screening, index) in screenings" @click="screeningSelect(screening.screeningId)">
+          <button v-for="(screening, index) in screenings" @click="screeningSelect(screening.screeningId, screening.hallId)">
             <div class="time-info">
               <div class="start-time">{{screening.startTime}}</div>
               <div class="end-time">~ {{screening.endTime}}</div>
@@ -183,10 +183,13 @@ export default {
 
       this.fetchScreening();
     },
-    screeningSelect(screeningId) {
+    screeningSelect(screeningId, hallId) {
       this.$router.push({
         name: "bookingSeat",
-        params: { screeningId: screeningId },
+        params: {
+          hallId: hallId,
+          screeningId: screeningId,
+        },
       });
     },
     setFormatDate() {
