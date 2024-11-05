@@ -25,18 +25,18 @@
 		<div class="right-side">
 			<div class="description-container">
 				<div class="movie-title-container">
-					<div class="age-rating age-ALL">ALL</div>
+					<div class="age-rating age-ALL">{{screening.ageRatingDisplay}}</div>
 					<div>
-						<div class="movie-title">청설</div>
-						<div>2D</div>
+						<div class="movie-title">{{screening.movieTitle}}</div>
+						<div>{{screening.screeningTypeDisplay}}}</div>
 					</div>
 				</div>
 				<div class="booking-description">
 					<div>
-						<div>강동</div>
-						<div>2관</div>
-						<div>2024.11.06(수)</div>
-						<div class="movie-startTime">09:35~11:33</div>
+						<div>{{screening.theaterName}}</div>
+						<div>{{screening.hallName}}</div>
+						<div>{{screening.startDate}}</div>
+						<div class="movie-startTime">{{screening.startTime}}~{{screening.endTime}}</div>
 					</div>
 					<img src="@/assets/img/no-poster-img.png" class="poster-img"></img>
 				</div>
@@ -62,7 +62,7 @@
 				</div>
 				<div class="total-price-container">
 					<span class="title">최종결제금액</span>
-					<span class="total-price"><span class="number">18,000</span> 원</span>
+					<span class="total-price"><span class="number">{{screening.totalPrice}}</span> 원</span>
 				</div>
 			</div>
 			<div class="navigation-buttons">
@@ -76,12 +76,14 @@
 
 <script>
 import { getSeats } from "@/api/seat";
+import { getScreeningAndTotalPrice } from "@/api/screening";
 
 export default {
   data() {
     return {
-      sections: ["A", "B", "C"],
+      sections: [],
       seats: {},
+      screening: {},
     };
   },
   computed: {
@@ -94,6 +96,7 @@ export default {
   },
   created() {
     this.fetchSeats();
+    this.fetchScreeningWithTotalPrice();
   },
   methods: {
     async fetchSeats() {
@@ -111,6 +114,13 @@ export default {
         ])
       );
       this.sections = Object.keys(data);
+    },
+    async fetchScreeningWithTotalPrice() {
+      const response = await getScreeningAndTotalPrice(
+        this.$route.params.screeningId
+      );
+      this.screening = response.data.data;
+      console.log(this.screening);
     },
     toggleSeatSelection(seat) {
       seat.isSelected = !seat.isSelected; // 좌석 선택 상태 토글

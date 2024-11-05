@@ -45,8 +45,18 @@ async function getTheaterAndScreeningCounts(date, movieId, region) {
   }
 }
 
+async function getScreeningAndTotalPrice(screeningId) {
+  try {
+    const response = await jsonApi.get(`/screenings/screening/${screeningId}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export {
   getRegionsWithScreeningCount,
   getScreenings,
   getTheaterAndScreeningCounts,
+  getScreeningAndTotalPrice,
 };
