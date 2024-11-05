@@ -10,4 +10,13 @@ async function createBooking(bookingRequest) {
   }
 }
 
-export { createBooking };
+async function getBooking(bookingId) {
+  try {
+    const response = await jsonApi.get(`/bookings/booking/${bookingId}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { createBooking, getBooking };

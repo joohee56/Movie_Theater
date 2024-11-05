@@ -4,7 +4,7 @@
 		<div class="ticket-content">
 			<div class="left-side">
 				<div>티켓 예매번호</div>
-				<div class="booking-number">9441-837-41709</div>
+				<div class="booking-number">{{booking.bookingNumber}}</div>
 				<img src="@/assets/img/no-poster-img.png" class="poster-img">
 			</div>
 			<div class="right-side">
@@ -12,25 +12,25 @@
 				<div class="booking-detail">
 					<table>
 						<tr>
-							<td>· 예매영화</td><td>청설 / 2D</td>
+							<td>· 예매영화</td><td>{{booking.movieTitle}} / {{booking.screeningTypeDisplay}}</td>
 						</tr>
 						<tr>
-							<td>· 관람극장/상영관</td><td>백석벨라시타 / 102호</td>
+							<td>· 관람극장/상영관</td><td>{{booking.theaterName}} / {{booking.hallName}}</td>
 						</tr>
 						<tr>
-							<td>· 관람일시</td><td>2024.11.06 (수) 12:40</td>
+							<td>· 관람일시</td><td>{{booking.startDate}} {{booking.startTime}}</td>
 						</tr>
 						<tr>
 							<td>· 관람인원</td><td>성인 1명</td>
 						</tr>
 						<tr>
-							<td>· 좌석번호</td><td>E열 7</td>
+							<td>· 좌석번호</td><td>{{booking.seatSection}}열 {{booking.seatNumber}}</td>
 						</tr>
 						<tr>
-							<td>· 전화번호</td><td>010-1234-5678</td>
+							<td>· 이메일</td><td>{{booking.userEmail}}</td>
 						</tr>
 						<tr>
-							<td>· 결제정보</td><td>15,000원</td>
+							<td>· 결제정보</td><td>{{booking.totalPrice}}원</td>
 						</tr>
 					</table>
 				</div>
@@ -45,9 +45,24 @@
 
 <script>
 import PageTitle from "@/components/header/PageTitle.vue";
+import { getBooking } from "@/api/booking";
 
 export default {
+  data() {
+    return {
+      booking: {},
+    };
+  },
   components: { PageTitle },
+  mounted() {
+    this.fetchBooking();
+  },
+  methods: {
+    async fetchBooking() {
+      const response = await getBooking(this.$route.params.bookingId);
+      this.booking = response.data.data;
+    },
+  },
 };
 </script>
 
