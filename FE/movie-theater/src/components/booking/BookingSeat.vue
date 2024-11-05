@@ -132,7 +132,6 @@ export default {
 <style scoped>
 .container {
   --border-color: #434343;
-  --secondary-color: #329eb1;
 }
 
 .container {
@@ -178,7 +177,7 @@ export default {
   width: 22px;
   height: 22px;
   background-color: #747474;
-  border: 2px solid var(--secondary-color);
+  border: 2px solid var(--point-color);
   cursor: pointer;
   text-align: center;
   font-size: 11px;
@@ -293,7 +292,7 @@ export default {
   line-height: 13px;
 }
 .total-price .number {
-  color: var(--secondary-color);
+  color: var(--point-color);
   font-size: 23px;
   font-family: "SUIT-Bold";
 }
@@ -309,7 +308,7 @@ export default {
   font-size: 18px;
   color: white;
   border: none;
-  padding: 8px 0;
+  padding: 10px 0;
 }
 .navigation-buttons .prev-button {
   width: 50%;
