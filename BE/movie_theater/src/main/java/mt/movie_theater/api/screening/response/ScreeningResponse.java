@@ -1,12 +1,11 @@
 package mt.movie_theater.api.screening.response;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import lombok.Builder;
 import lombok.Getter;
 import mt.movie_theater.api.hall.response.HallResponse;
 import mt.movie_theater.api.movie.response.MovieResponse;
 import mt.movie_theater.domain.screening.Screening;
+import mt.movie_theater.util.DateUtil;
 
 @Getter
 public class ScreeningResponse {
@@ -33,14 +32,9 @@ public class ScreeningResponse {
                 .id(screening.getId())
                 .movie(MovieResponse.create(screening.getMovie()))
                 .hall(HallResponse.create(screening.getHall()))
-                .startTime(formatToHourAndMinute(screening.getStartTime()))
-                .endTime(formatToHourAndMinute(screening.getEndTime()))
+                .startTime(DateUtil.formatToHourAndMinute(screening.getStartTime()))
+                .endTime(DateUtil.formatToHourAndMinute(screening.getEndTime()))
                 .totalPrice(screening.getTotalPrice())
                 .build();
-    }
-
-    private static String formatToHourAndMinute(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return dateTime.format(formatter);
     }
 }

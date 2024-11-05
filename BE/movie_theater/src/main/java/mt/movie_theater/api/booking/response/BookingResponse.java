@@ -1,11 +1,9 @@
 package mt.movie_theater.api.booking.response;
 
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-import mt.movie_theater.api.user.response.UserResponse;
 import mt.movie_theater.domain.booking.Booking;
-import mt.movie_theater.domain.booking.BookingStatus;
+import mt.movie_theater.util.DateUtil;
 
 @Getter
 public class BookingResponse {
@@ -13,33 +11,34 @@ public class BookingResponse {
     private String bookingNumber;
     private String posterUrl;
     private String movieTitle;
-    private String screeningType;
+    private String screeningTypeDisplay;
     private String theaterName;
     private String hallName;
-    private LocalDateTime startTime;
-    private LocalDateTime bookingTime;
+    private String startDate;
+    private String startTime;
+    private String seatSection;
     private String seatNumber;
-    private UserResponse user;
+    private String userEmail;
     private int totalPrice;
-    private BookingStatus bookingStatus;
 
     @Builder
-    public BookingResponse(Long id, String bookingNumber, String posterUrl, String movieTitle, String screeningType,
-                           String theaterName, String hallName, LocalDateTime startTime, LocalDateTime bookingTime,
-                           String seatNumber, UserResponse user, int totalPrice, BookingStatus bookingStatus) {
+    public BookingResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
+                           String screeningTypeDisplay,
+                           String theaterName, String hallName, String startDate, String startTime, String seatSection, String seatNumber,
+                           String userEmail, int totalPrice) {
         this.id = id;
         this.bookingNumber = bookingNumber;
         this.posterUrl = posterUrl;
         this.movieTitle = movieTitle;
-        this.screeningType = screeningType;
+        this.screeningTypeDisplay = screeningTypeDisplay;
         this.theaterName = theaterName;
         this.hallName = hallName;
+        this.startDate = startDate;
         this.startTime = startTime;
-        this.bookingTime = bookingTime;
+        this.seatSection = seatSection;
         this.seatNumber = seatNumber;
-        this.user = user;
+        this.userEmail = userEmail;
         this.totalPrice = totalPrice;
-        this.bookingStatus = bookingStatus;
     }
 
     public static BookingResponse create(Booking booking) {
@@ -48,15 +47,15 @@ public class BookingResponse {
                 .bookingNumber(booking.getBookingNumber())
                 .posterUrl(booking.getScreening().getMovie().getPosterUrl())
                 .movieTitle(booking.getScreening().getMovie().getTitle())
-                .screeningType(booking.getScreening().getHall().getScreeningType().getText())
+                .screeningTypeDisplay(booking.getScreening().getHall().getScreeningType().getText())
                 .theaterName(booking.getScreening().getHall().getTheater().getName())
                 .hallName(booking.getScreening().getHall().getName())
-                .startTime(booking.getScreening().getStartTime())
-                .bookingTime(booking.getBookingTime())
+                .startDate(DateUtil.formatToStartDate(booking.getScreening().getStartTime()))
+                .startTime(DateUtil.formatToHourAndMinute(booking.getScreening().getStartTime()))
+                .seatSection(booking.getSeat().getSection())
                 .seatNumber(booking.getSeat().getSeatNumber())
-                .user(UserResponse.create(booking.getUser()))
+                .userEmail(booking.getUser().getEmail())
                 .totalPrice(booking.getTotalPrice())
-                .bookingStatus(booking.getBookingStatus())
                 .build();
     }
 }

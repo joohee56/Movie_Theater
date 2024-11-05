@@ -78,4 +78,12 @@ public class BookingService {
         }
         return seat.get();
     }
+
+    public BookingResponse getBooking(Long bookingId) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isEmpty()) {
+            throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
+        }
+        return BookingResponse.create(optionalBooking.get());
+    }
 }
