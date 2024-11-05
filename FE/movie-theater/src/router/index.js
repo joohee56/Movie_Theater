@@ -39,7 +39,7 @@ const routes = [
     ],
   },
   {
-    path: "/booking/success",
+    path: "/booking/success/:bookingId",
     name: "bookingSuccess",
     component: BookingSuccess,
   },

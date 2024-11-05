@@ -7,17 +7,16 @@
 				<div class="audience-selector">
 					성인 1
 				</div>
-				<div class="seat-container">
+				<div class="screen-seat-container">
 					<div class="screen-title">SCREEN</div>
-					<div v-for="section in sections" :key="section">
-						{{section}}
-						<button v-for="(seat, index) in seats[section]" :key="`${section}${index}`" @click="toggleSeatSelection(seat)" :class="['seat', { selected: seat.isSelected, booked: seat.isBooked }]" :disabled="seat.isBooked">
-							{{seat.seatNumber}}
-						</button>
+					<div v-for="section in sections" :key="section" class="section-seat-container">
+						<div class="section">{{section}}</div>
+            <div class="seat-container">
+              <button v-for="(seat, index) in seats[section]" :key="`${section}${index}`" @click="toggleSeatSelection(seat)" :class="['seat-btn', { selected: seat.isSelected, booked: seat.isBooked, seatGap: index==1 || index==13}]" :disabled="seat.isBooked">
+                {{seat.seatNumber}}
+              </button>
+            </div>
 					</div>
-					<!-- <div class="selected-seats">
-						선택된 좌석: {{ selectedSeats.map(seat => seat.seatNumber).join(', ') }}
-					</div> -->
 				</div>
 			</div>
 		</div>
@@ -28,7 +27,7 @@
 					<div class="age-rating age-ALL">{{screening.ageRatingDisplay}}</div>
 					<div>
 						<div class="movie-title">{{screening.movieTitle}}</div>
-						<div>{{screening.screeningTypeDisplay}}}</div>
+						<div>{{screening.screeningTypeDisplay}}</div>
 					</div>
 				</div>
 				<div class="booking-description">
@@ -47,16 +46,13 @@
 						<div>일반</div>
 					</div>
 					<div class="selected-seat">
+            <div class="selected-seats">
+            </div>
 						<div>선택좌석</div>
-						<div class="seat-numbers-container">
-							<div class="seat-number">A7</div>
-							<div class="seat-number">A7</div>
-							<div class="seat-number">A7</div>
-							<div class="seat-number">A7</div>
-							<div class="seat-number">A7</div>
-							<div class="seat-number">A7</div>
-							<div class="seat-number">A7</div>
-							<div class="seat-number">A7</div>
+						<div class="selected-seat-numbers-container">
+							<div class="selected-seat-number" v-for="selectedSeat in selectedSeats">
+                {{selectedSeat.section}}{{selectedSeat.seatNumber}}
+              </div>
 						</div>
 					</div>
 				</div>
@@ -67,7 +63,7 @@
 			</div>
 			<div class="navigation-buttons">
 				<button class="prev-button">이전</button>
-				<button class="next-button">다음</button>
+				<button class="next-button" @click="submitReservation">다음</button>
 			</div>
 		</div>
 
@@ -77,6 +73,7 @@
 <script>
 import { getSeats } from "@/api/seat";
 import { getScreeningAndTotalPrice } from "@/api/screening";
+import { createBooking } from "@/api/booking";
 
 export default {
   data() {
@@ -88,10 +85,10 @@ export default {
   },
   computed: {
     selectedSeats() {
-      // return this.seats.filter((seat) => seat.selected);
-      return Object.values(this.seats)
-        .flat()
-        .filter((seat) => seat.selected);
+      return Object.values(this.seats) // 모든 섹션의 좌석 리스트를 배열로 가져옴
+        .flatMap(
+          (seatList) => seatList.filter((seat) => seat.isSelected) // isSelected true인 좌석만 필터링
+        );
     },
   },
   created() {
@@ -121,6 +118,21 @@ export default {
       );
       this.screening = response.data.data;
       console.log(this.screening);
+    },
+    async submitReservation() {
+      const bookingRequest = {
+        userId: 1,
+        screeningId: this.$route.params.screeningId,
+        seatId: this.selectedSeats.at(0).seatId,
+        totalPrice: this.screening.totalPrice,
+      };
+      const response = await createBooking(bookingRequest);
+      if (response.status == 200) {
+        this.$router.push({
+          name: "bookingSuccess",
+          params: { bookingId: response.data.data.id },
+        });
+      }
     },
     toggleSeatSelection(seat) {
       seat.isSelected = !seat.isSelected; // 좌석 선택 상태 토글
@@ -162,7 +174,7 @@ export default {
   height: 90%;
 }
 
-.seat-container {
+.screen-seat-container {
   text-align: center;
   padding: 20px;
   overflow-y: auto;
@@ -171,17 +183,36 @@ export default {
 .screen-title {
   font-family: "SUIT-Bold";
   font-size: 18px;
-  margin: 10px;
+  margin: 20px;
 }
-.seat {
+.section-seat-container {
+  display: flex;
+  width: 70%;
+  margin: 0 auto;
+}
+.seat-container {
+  margin: 0 auto;
+}
+.section {
+  border: 1px solid var(--border-line-color);
+  color: #747474;
   width: 22px;
   height: 22px;
+  font-size: 13px;
+  line-height: 20px;
+}
+.seat-btn {
+  width: 24px;
+  height: 24px;
   background-color: #747474;
   border: 2px solid var(--point-color);
   cursor: pointer;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   color: white;
+}
+.seatGap {
+  margin-right: 20px; /* 원하는 마진 값으로 설정 */
 }
 .selected {
   background: var(--primary-color);
@@ -266,8 +297,9 @@ export default {
 .selected-seat {
   text-align: center;
   padding: 15px;
+  height: 220px;
 }
-.seat-numbers-container {
+.selected-seat-numbers-container {
   display: grid;
   grid-template-columns: 50% 50%; /* 2개의 열 */
   grid-template-rows: repeat(4, 1fr); /* 4개의 행 */
@@ -275,10 +307,14 @@ export default {
   row-gap: 10px;
   margin-top: 20px;
 }
-.seat-number {
+.selected-seat-number {
   border: 1px solid var(--border-color);
   width: 40px;
   height: 35px;
+  background-color: var(--primary-color);
+  line-height: 35px;
+  font-family: "S-CoreDream-5Medium";
+  font-size: 13px;
 }
 
 .total-price-container {
