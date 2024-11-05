@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
+import mt.movie_theater.api.screening.response.ScreeningWithPriceResponse;
 import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
 import mt.movie_theater.api.theater.response.RegionScreeningCountResponse;
 import mt.movie_theater.domain.hall.Hall;
@@ -23,6 +24,7 @@ import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.screening.dto.RegionScreeningCountDto;
 import mt.movie_theater.domain.screening.dto.TheaterScreeningCountDto;
+import mt.movie_theater.domain.seat.SeatRepository;
 import mt.movie_theater.domain.theater.Region;
 import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
@@ -37,6 +39,7 @@ public class ScreeningService {
     private final MovieRepository movieRepository;
     private final HallRepository hallRepository;
     private final TheaterRepository theaterRepository;
+    private final SeatRepository seatRepository;
 
     @Transactional
     public ScreeningResponse createScreening(ScreeningCreateRequest request) {
@@ -96,6 +99,12 @@ public class ScreeningService {
                 .collect(Collectors.toList());
     }
 
+    private Map<Theater, Long> createScreeningCountMap(LocalDateTime startDateTime, LocalDateTime endDateTime, Region region, Long movieId) {
+        List<TheaterScreeningCountDto> theaterScreeningCounts = screeningRepository.findTheaterScreeningCounts(startDateTime, endDateTime, region, movieId);
+        return theaterScreeningCounts.stream()
+                .collect(Collectors.toMap(TheaterScreeningCountDto::getTheater, TheaterScreeningCountDto::getCount));
+    }
+
     /**
      * 상영시간 리스트 조회
      */
@@ -108,10 +117,17 @@ public class ScreeningService {
                 .collect(Collectors.toList());
     }
 
-    private Map<Theater, Long> createScreeningCountMap(LocalDateTime startDateTime, LocalDateTime endDateTime, Region region, Long movieId) {
-        List<TheaterScreeningCountDto> theaterScreeningCounts = screeningRepository.findTheaterScreeningCounts(startDateTime, endDateTime, region, movieId);
-        return theaterScreeningCounts.stream()
-                .collect(Collectors.toMap(TheaterScreeningCountDto::getTheater, TheaterScreeningCountDto::getCount));
+
+    /**
+     * 최종금액과 상영시간 조회
+     */
+    public ScreeningWithPriceResponse getScreeningWithTotalPrice(Long screeningId) {
+        Optional<Screening> optionalScreening = screeningRepository.findById(screeningId);
+        if (optionalScreening.isEmpty()) {
+            throw new IllegalArgumentException("유효하지 않은 상영시간입니다. 상영시간 정보를 다시 확인해 주세요.");
+        }
+
+        return ScreeningWithPriceResponse.create(optionalScreening.get());
     }
 
     private LocalDateTime getStartDateTime(LocalDate date) {

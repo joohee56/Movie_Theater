@@ -17,6 +17,7 @@ import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.screening.request.ScreeningCreateRequest;
 import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
+import mt.movie_theater.api.screening.response.ScreeningWithPriceResponse;
 import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
 import mt.movie_theater.api.theater.response.RegionScreeningCountResponse;
 import mt.movie_theater.domain.hall.Hall;
@@ -200,6 +201,34 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("최종 결제 금액과 상영시간을 조회한다.")
+    @Test
+    void getScreeningWithTotalPrice() {
+        //given
+        Movie movie = createMovie("청설", Duration.ofMinutes(108), 10000);
+        Theater theater = createTheater(SEOUL, "서울");
+        Hall hall = createHall(theater, TWO_D, 0);
+        LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 15, 00);
+        Screening screening = createScreening(movie, hall, startDateTime);
+
+        //when
+        ScreeningWithPriceResponse response = screeningService.getScreeningWithTotalPrice(screening.getId());
+
+        //then
+        assertThat(response)
+                .extracting("startDate", "startTime", "endTime")
+                .containsExactly("2024.11.01(금)", "15:00", "16:48");
+    }
+
+    @DisplayName("최종 결제 금액과 상영시간을 조회할 때, 유효하지 않은 상영시간일 경우 예외가 발생한다.")
+    @Test
+    void getScreeningWithTotalPriceWithNoScreening() {
+        //when, then
+        assertThatThrownBy(() -> screeningService.getScreeningWithTotalPrice(Long.valueOf(1)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("유효하지 않은 상영시간입니다. 상영시간 정보를 다시 확인해 주세요.");
+    }
+
     private Movie createMovie(String title, Duration durationMinutes, int standardPrice) {
         Movie movie = Movie.builder()
                 .title(title)
@@ -248,4 +277,5 @@ class ScreeningServiceTest extends IntegrationTestSupport {
                 .build();
         return screeningRepository.save(screening);
     }
+
 }

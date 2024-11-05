@@ -10,11 +10,13 @@ import mt.movie_theater.api.screening.request.ScreeningsRequest;
 import mt.movie_theater.api.screening.request.TheaterScreeningCountRequest;
 import mt.movie_theater.api.screening.response.FullScreeningResponse;
 import mt.movie_theater.api.screening.response.ScreeningResponse;
+import mt.movie_theater.api.screening.response.ScreeningWithPriceResponse;
 import mt.movie_theater.api.screening.response.TheaterScreeningCountResponse;
 import mt.movie_theater.api.screening.service.ScreeningService;
 import mt.movie_theater.api.theater.response.RegionScreeningCountResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +50,11 @@ public class ScreeningController {
     public ApiResponse<List<FullScreeningResponse>> getScreenings(@Valid @ModelAttribute ScreeningsRequest request) {
         List<FullScreeningResponse> screenings = screeningService.getScreenings(request.getDate(), request.getMovieId(), request.getTheaterId());
         return ApiResponse.ok(screenings);
+    }
+
+    @GetMapping("/screening/{screeningId}")
+    public ApiResponse<ScreeningWithPriceResponse> getScreeningAndTotalPrice(@PathVariable("screeningId") Long screeningId) {
+        return ApiResponse.ok(screeningService.getScreeningWithTotalPrice(screeningId));
     }
 
 }
