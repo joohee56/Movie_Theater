@@ -7,6 +7,8 @@ import mt.movie_theater.api.apiResponse.ApiResponse;
 import mt.movie_theater.api.booking.request.BookingCreateRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.service.BookingService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +25,10 @@ public class BookingController {
         LocalDateTime bookingDate = LocalDateTime.now();
         BookingResponse response = bookingService.createBooking(request, bookingDate);
         return ApiResponse.ok(response);
+    }
+
+    @GetMapping("/booking/{bookingId}")
+    public ApiResponse<BookingResponse> getBooking(@PathVariable("bookingId") Long bookingId) {
+        return ApiResponse.ok(bookingService.getBooking(bookingId));
     }
 }

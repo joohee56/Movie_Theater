@@ -8,3 +8,6 @@ Content-Type: application/json
   "seatId": "3",
   "totalPrice": "10000"
 }
+
+### 예매 내역 조회
+GET localhost:8081/api/v1/bookings/booking/1
