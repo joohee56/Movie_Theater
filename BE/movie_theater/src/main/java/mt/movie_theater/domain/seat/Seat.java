@@ -30,11 +30,16 @@ public class Seat extends BaseEntity {
     private boolean isBooked;
 
     @Builder
-    public Seat(Hall hall, String section, String seatNumber) {
+    public Seat(Long id, Hall hall, String section, String seatNumber, boolean isBooked) {
+        this.id = id;
         this.hall = hall;
         this.section = section;
         this.seatNumber = seatNumber;
-        this.isBooked = false;
+        this.isBooked = isBooked;
+    }
+
+    public void book() {
+       this.isBooked = true;
     }
 
 }

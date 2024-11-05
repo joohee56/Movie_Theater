@@ -7,16 +7,12 @@ import java.time.LocalDateTime;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.booking.request.BookingCreateRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
-import mt.movie_theater.api.booking.service.BookingService;
 import mt.movie_theater.api.exception.DuplicateSeatBookingException;
-import mt.movie_theater.domain.booking.BookingRepository;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.movie.ScreeningType;
-import mt.movie_theater.domain.movieactor.MovieActorRepository;
-import mt.movie_theater.domain.moviegenre.MovieGenreRepository;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
@@ -25,11 +21,12 @@ import mt.movie_theater.domain.theater.Theater;
 import mt.movie_theater.domain.theater.TheaterRepository;
 import mt.movie_theater.domain.user.User;
 import mt.movie_theater.domain.user.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class BookingServiceTest extends IntegrationTestSupport {
     @Autowired
     private BookingService bookingService;
@@ -45,45 +42,28 @@ class BookingServiceTest extends IntegrationTestSupport {
     private HallRepository hallRepository;
     @Autowired
     private SeatRepository seatRepository;
-    @Autowired
-    private BookingRepository bookingRepository;
-    @Autowired
-    private MovieActorRepository movieActorRepository;
-    @Autowired
-    private MovieGenreRepository movieGenreRepository;
-
-    @AfterEach
-    void tearDown() {
-        bookingRepository.deleteAllInBatch();
-        screeningRepository.deleteAllInBatch();
-        seatRepository.deleteAllInBatch();
-        hallRepository.deleteAllInBatch();
-        theaterRepository.deleteAllInBatch();
-        movieActorRepository.deleteAllInBatch();
-        movieGenreRepository.deleteAllInBatch();
-        movieRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @DisplayName("신규 예매를 생성한다.")
     @Test
     void createBooking() {
         //given
-        User savedUser = createUser();
-        Screening savedScreening = createScreening();
-        Seat savedSeat = createSeat();
+        User user = createUser();
+        Screening screening = createScreening();
+        Seat seat = createSeat();
         BookingCreateRequest request = BookingCreateRequest.builder()
-                                        .userId(savedUser.getId())
-                                        .screeningId(savedScreening.getId())
-                                        .seatId(savedSeat.getId())
+                                        .userId(user.getId())
+                                        .screeningId(screening.getId())
+                                        .seatId(seat.getId())
                                         .totalPrice(12000).build();
         String bookingNumberPattern = "^\\d{4}-\\d{3}-\\d{5}$";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
+        assertThat(seat.isBooked()).isFalse();
 
         //when
         BookingResponse response = bookingService.createBooking(request, bookingDate);
 
         //then
+        assertThat(seat.isBooked()).isTrue();
         assertThat(response.getId()).isNotNull();
         assertThat(response.getBookingNumber().matches(bookingNumberPattern)).isTrue();
     }
@@ -185,8 +165,6 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상영 시작 시간이 지났습니다. 다른 상영 시간을 선택해 주세요.");
     }
-
-
 
     public User createUser() {
         User user = User.builder()

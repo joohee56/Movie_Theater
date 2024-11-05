@@ -44,6 +44,7 @@ public class BookingService {
                 .totalPrice(request.getTotalPrice())
                 .build();
         Booking savedBooking = bookingRepository.save(booking);
+        seat.book();
         return BookingResponse.create(savedBooking);
     }
 
