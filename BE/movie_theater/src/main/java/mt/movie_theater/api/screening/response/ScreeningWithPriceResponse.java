@@ -1,11 +1,9 @@
 package mt.movie_theater.api.screening.response;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import lombok.Builder;
 import lombok.Getter;
 import mt.movie_theater.domain.screening.Screening;
+import mt.movie_theater.util.DateUtil;
 
 @Getter
 public class ScreeningWithPriceResponse {
@@ -45,21 +43,11 @@ public class ScreeningWithPriceResponse {
                 .posterUrl(screening.getMovie().getPosterUrl())
                 .theaterName(screening.getHall().getTheater().getName())
                 .hallName(screening.getHall().getName())
-                .startDate(formatToStartDate(screening.getStartTime()))
-                .startTime(formatToHourAndMinute(screening.getStartTime()))
-                .endTime(formatToHourAndMinute(screening.getEndTime()))
+                .startDate(DateUtil.formatToStartDate(screening.getStartTime()))
+                .startTime(DateUtil.formatToHourAndMinute(screening.getStartTime()))
+                .endTime(DateUtil.formatToHourAndMinute(screening.getEndTime()))
                 .totalPrice(screening.getTotalPrice())
                 .build();
-    }
-
-    private static String formatToStartDate(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd(EEE)", Locale.KOREA);
-        return dateTime.format(formatter);
-    }
-
-    private static String formatToHourAndMinute(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return dateTime.format(formatter);
     }
 
 }
