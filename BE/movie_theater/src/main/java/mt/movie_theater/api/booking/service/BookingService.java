@@ -3,13 +3,18 @@ package mt.movie_theater.api.booking.service;
 import static mt.movie_theater.domain.booking.BookingStatus.CONFIRMED;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.booking.request.BookingCreateRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
+import mt.movie_theater.api.booking.response.BookingWithDateResponse;
 import mt.movie_theater.api.exception.DuplicateSeatBookingException;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.domain.booking.BookingRepository;
+import mt.movie_theater.domain.booking.BookingStatus;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
@@ -35,14 +40,7 @@ public class BookingService {
         Seat seat = validateSeat(request.getSeatId(), screening);
 
         String bookingNumber = BookingNumberGenerator.generateBookingNumber();
-        Booking booking = Booking.builder()
-                .user(user)
-                .screening(screening)
-                .seat(seat)
-                .bookingNumber(bookingNumber)
-                .bookingTime(bookingTime)
-                .totalPrice(request.getTotalPrice())
-                .build();
+        Booking booking = Booking.create(user,screening,seat,bookingNumber,bookingTime, request.getTotalPrice());
         Booking savedBooking = bookingRepository.save(booking);
         seat.book();
         return BookingResponse.create(savedBooking);
@@ -85,5 +83,16 @@ public class BookingService {
             throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
         }
         return BookingResponse.create(optionalBooking.get());
+    }
+
+    /**
+     * 회원의 전체 예매 내역 조회 (confirmed, canceled)
+     */
+    public Map<BookingStatus, List<BookingWithDateResponse>> getBookingList(Long userId) {
+        List<Booking> bookings = bookingRepository.findAllByUserId(userId);
+        return bookings.stream()
+                .collect(Collectors.groupingBy(
+                        Booking::getBookingStatus,
+                        Collectors.mapping(booking -> BookingWithDateResponse.create(booking), Collectors.toList())));
     }
 }

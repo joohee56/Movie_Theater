@@ -1,15 +1,20 @@
 package mt.movie_theater.api.booking.service;
 
+import static mt.movie_theater.domain.booking.BookingStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.booking.request.BookingCreateRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
+import mt.movie_theater.api.booking.response.BookingWithDateResponse;
 import mt.movie_theater.api.exception.DuplicateSeatBookingException;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.domain.booking.BookingRepository;
+import mt.movie_theater.domain.booking.BookingStatus;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
@@ -52,17 +57,17 @@ class BookingServiceTest extends IntegrationTestSupport {
     @Test
     void createBookingTest() {
         //given
-        LocalDateTime startDate = LocalDateTime.of(2024, 10, 30, 15, 0);
         User user = createUser();
-        Screening screening = createScreening(startDate);
+        Screening screening = createScreening();
         Seat seat = createSeat();
         BookingCreateRequest request = BookingCreateRequest.builder()
                                         .userId(user.getId())
                                         .screeningId(screening.getId())
                                         .seatId(seat.getId())
-                                        .totalPrice(12000).build();
+                                        .build();
         String bookingNumberPattern = "^\\d{4}-\\d{3}-\\d{5}$";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
+
         assertThat(seat.isBooked()).isFalse();
 
         //when
@@ -78,14 +83,13 @@ class BookingServiceTest extends IntegrationTestSupport {
     @Test
     void createBookingNoUser() {
         //given
-        LocalDateTime startDate = LocalDateTime.of(2024, 10, 30, 15, 0);
-        Screening screening = createScreening(startDate);
+        Screening screening = createScreening();
         Seat seat = createSeat();
         BookingCreateRequest request = BookingCreateRequest.builder()
                 .userId(Long.valueOf(1))
                 .screeningId(screening.getId())
                 .seatId(seat.getId())
-                .totalPrice(12000).build();
+                .build();
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
@@ -104,7 +108,7 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .userId(user.getId())
                 .screeningId(Long.valueOf(1))
                 .seatId(seat.getId())
-                .totalPrice(12000).build();
+                .build();
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
@@ -118,13 +122,12 @@ class BookingServiceTest extends IntegrationTestSupport {
     void createBookingNoSeat() {
         //given
         User user = createUser();
-        LocalDateTime startDate = LocalDateTime.of(2024, 10, 30, 15, 0);
-        Screening screening = createScreening(startDate);
+        Screening screening = createScreening();
         BookingCreateRequest request = BookingCreateRequest.builder()
                 .userId(user.getId())
                 .screeningId(screening.getId())
                 .seatId(Long.valueOf(1))
-                .totalPrice(12000).build();
+                .build();
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
@@ -138,14 +141,13 @@ class BookingServiceTest extends IntegrationTestSupport {
     void createBookingExistingBooking() {
         //given
         User user = createUser();
-        LocalDateTime startDate = LocalDateTime.of(2024, 10, 30, 15, 0);
-        Screening screening = createScreening(startDate);
+        Screening screening = createScreening();
         Seat seat = createSeat();
         BookingCreateRequest request = BookingCreateRequest.builder()
                 .userId(user.getId())
                 .screeningId(screening.getId())
                 .seatId(seat.getId())
-                .totalPrice(12000).build();
+                .build();
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
         bookingService.createBooking(request, bookingDate);
 
@@ -167,7 +169,7 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .userId(user.getId())
                 .screeningId(screening.getId())
                 .seatId(seat.getId())
-                .totalPrice(12000).build();
+                .build();
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 31, 15, 0);
 
         //when
@@ -202,6 +204,30 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .hasMessage("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
     }
 
+    @DisplayName("회원의 전체 예매 내역을 조회한다.")
+    @Test
+    void getBookingList() {
+        //given
+        User user = createUser();
+        Screening screening = createScreening(LocalDateTime.of(2024, 11, 02, 15, 00));
+        LocalDateTime bookingDate = LocalDateTime.of(2024, 11, 01, 00, 00);
+        createBooking(user, screening, CONFIRMED, bookingDate);
+        createBooking(user, screening, CONFIRMED, bookingDate);
+        createBooking(user, screening, CONFIRMED, bookingDate);
+        createBooking(user, screening, CANCELED, bookingDate);
+
+        //when
+        Map<BookingStatus, List<BookingWithDateResponse>> bookingStatusMap = bookingService.getBookingList(user.getId());
+
+        //then
+        assertThat(bookingStatusMap).hasSize(2);
+        assertThat(bookingStatusMap.get(CONFIRMED)).hasSize(3);
+        assertThat(bookingStatusMap.get(CONFIRMED).get(0))
+                .extracting("startDate", "startTime", "bookingDate")
+                .containsExactly("2024.11.02(토)", "15:00", "2024.11.01(금)");
+        assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
+    }
+
     private User createUser() {
         User user = User.builder()
                 .build();
@@ -230,6 +256,14 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .build();
         return seatRepository.save(seat);
     }
+    private Screening createScreening() {
+        Screening screening = Screening.builder()
+                .movie(createMovie())
+                .hall(createHall())
+                .startTime(LocalDateTime.of(2024, 11, 01, 00, 00))
+                .build();
+        return screeningRepository.save(screening);
+    }
     private Screening createScreening(LocalDateTime startDateTime) {
         Screening screening = Screening.builder()
                 .movie(createMovie())
@@ -243,6 +277,16 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .user(createUser())
                 .screening(screening)
                 .seat(createSeat())
+                .build();
+        return bookingRepository.save(booking);
+    }
+    private Booking createBooking(User user, Screening screening, BookingStatus bookingStatus, LocalDateTime bookingTime) {
+        Booking booking = Booking.builder()
+                .user(user)
+                .screening(screening)
+                .seat(createSeat())
+                .bookingStatus(bookingStatus)
+                .bookingTime(bookingTime)
                 .build();
         return bookingRepository.save(booking);
     }

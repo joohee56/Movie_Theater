@@ -46,13 +46,30 @@ public class Booking extends BaseEntity {
     private int totalPrice;
 
     @Builder
-    public Booking(User user, Screening screening, Seat seat, String bookingNumber, LocalDateTime bookingTime, int totalPrice) {
+    public Booking(User user, Screening screening, Seat seat, String bookingNumber, LocalDateTime bookingTime,
+                   BookingStatus bookingStatus, int totalPrice) {
         this.user = user;
         this.screening = screening;
         this.seat = seat;
         this.bookingNumber = bookingNumber;
         this.bookingTime = bookingTime;
-        this.bookingStatus = BookingStatus.CONFIRMED;
+        this.bookingStatus = bookingStatus;
         this.totalPrice = totalPrice;
+    }
+
+    public static Booking create(User user, Screening screening, Seat seat, String bookingNumber, LocalDateTime bookingTime, int totalPrice) {
+        return Booking.builder()
+                .user(user)
+                .screening(screening)
+                .seat(seat)
+                .bookingNumber(bookingNumber)
+                .bookingTime(bookingTime)
+                .bookingStatus(BookingStatus.CONFIRMED)
+                .totalPrice(totalPrice)
+                .build();
+    }
+
+    public void cancel() {
+        this.bookingStatus = BookingStatus.CANCELED;
     }
 }
