@@ -38,7 +38,7 @@
 		</div>
 		<img src="@/assets/img/ticket-frame.png" class="ticket-frame"></img>
 		<div class="navigation-buttons">
-			<button class="booking-history-btn">예매내역</button>
+			<button class="booking-history-btn" @click="goToBookingList">예매내역</button>
 		</div>
 	</div>
 </template>
@@ -61,6 +61,9 @@ export default {
     async fetchBooking() {
       const response = await getBooking(this.$route.params.bookingId);
       this.booking = response.data.data;
+    },
+    goToBookingList() {
+      this.$router.push({ name: "bookingList" });
     },
   },
 };
