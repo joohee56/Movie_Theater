@@ -71,5 +71,6 @@ public class Booking extends BaseEntity {
 
     public void cancel() {
         this.bookingStatus = BookingStatus.CANCELED;
+        this.seat.cancel();
     }
 }

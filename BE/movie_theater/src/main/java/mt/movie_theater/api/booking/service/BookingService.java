@@ -46,6 +46,36 @@ public class BookingService {
         return BookingResponse.create(savedBooking);
     }
 
+    public BookingResponse getBooking(Long bookingId) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isEmpty()) {
+            throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
+        }
+        return BookingResponse.create(optionalBooking.get());
+    }
+
+    /**
+     * 회원의 전체 예매 내역 조회 (confirmed, canceled)
+     */
+    public Map<BookingStatus, List<BookingWithDateResponse>> getBookingHistory(Long userId) {
+        List<Booking> bookings = bookingRepository.findAllByUserId(userId);
+        return bookings.stream()
+                .collect(Collectors.groupingBy(
+                        Booking::getBookingStatus,
+                        Collectors.mapping(booking -> BookingWithDateResponse.create(booking), Collectors.toList())));
+    }
+
+    /**
+     * 예매 취소 후 예매 내역 조회
+     */
+    public Map<BookingStatus, List<BookingWithDateResponse>> cancelBookingAndGetBookingHistory(Long userId, Long bookingId) {
+        User user = validateUser(userId);
+        Booking booking = validateBooking(bookingId, user.getId());
+
+        booking.cancel();
+        return getBookingHistory(userId);
+    }
+
     public User validateUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
@@ -77,22 +107,18 @@ public class BookingService {
         return seat.get();
     }
 
-    public BookingResponse getBooking(Long bookingId) {
+    public Booking validateBooking(Long bookingId, Long userId) {
         Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
         if (optionalBooking.isEmpty()) {
-            throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
+            throw new IllegalArgumentException("유효하지 예매입니다. 예매 정보를 다시 확인해 주세요.");
         }
-        return BookingResponse.create(optionalBooking.get());
-    }
-
-    /**
-     * 회원의 전체 예매 내역 조회 (confirmed, canceled)
-     */
-    public Map<BookingStatus, List<BookingWithDateResponse>> getBookingHistory(Long userId) {
-        List<Booking> bookings = bookingRepository.findAllByUserId(userId);
-        return bookings.stream()
-                .collect(Collectors.groupingBy(
-                        Booking::getBookingStatus,
-                        Collectors.mapping(booking -> BookingWithDateResponse.create(booking), Collectors.toList())));
+        Booking booking = optionalBooking.get();
+        if (booking.getBookingStatus().equals(BookingStatus.CANCELED)) {
+            throw new IllegalArgumentException("이미 취소된 예매입니다.");
+        }
+        if (booking.getUser().getId() != userId) {
+            throw new IllegalArgumentException("예매 취소 권한이 없습니다.");
+        }
+        return optionalBooking.get();
     }
 }

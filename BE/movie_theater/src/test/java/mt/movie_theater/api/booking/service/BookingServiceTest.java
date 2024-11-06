@@ -228,6 +228,27 @@ class BookingServiceTest extends IntegrationTestSupport {
         assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
     }
 
+    @DisplayName("예매를 취소한 후 예매 내역을 조회한다.")
+    @Test
+    void cancelBookingAndGetBookingHistory() {
+        //given
+        User user = createUser();
+        Seat seat1 = createSeat(true);
+        Seat seat2 = createSeat(true);
+        Booking booking1 = createBooking(user, seat1, CONFIRMED);
+        Booking booking2 = createBooking(user, seat2, CONFIRMED);
+
+        //when
+        Map<BookingStatus, List<BookingWithDateResponse>> bookingStatusMap =
+                bookingService.cancelBookingAndGetBookingHistory(user.getId(), booking1.getId());
+
+        //then
+        assertThat(bookingStatusMap.get(CONFIRMED)).hasSize(1);
+        assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
+        assertThat(booking1.getSeat().isBooked()).isFalse();
+        assertThat(booking2.getSeat().isBooked()).isTrue();
+    }
+
     private User createUser() {
         User user = User.builder()
                 .build();
@@ -256,6 +277,13 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .build();
         return seatRepository.save(seat);
     }
+    private Seat createSeat(boolean isBooked) {
+        Seat seat = Seat.builder()
+                .seatLocation(new SeatLocation("A", "1"))
+                .isBooked(isBooked)
+                .build();
+        return seatRepository.save(seat);
+    }
     private Screening createScreening() {
         Screening screening = Screening.builder()
                 .movie(createMovie())
@@ -277,6 +305,16 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .user(createUser())
                 .screening(screening)
                 .seat(createSeat())
+                .build();
+        return bookingRepository.save(booking);
+    }
+    private Booking createBooking(User user, Seat seat, BookingStatus bookingStatus) {
+        Booking booking = Booking.builder()
+                .user(user)
+                .screening(createScreening())
+                .seat(seat)
+                .bookingStatus(bookingStatus)
+                .bookingTime(LocalDateTime.of(2024, 11, 06, 00, 00))
                 .build();
         return bookingRepository.save(booking);
     }

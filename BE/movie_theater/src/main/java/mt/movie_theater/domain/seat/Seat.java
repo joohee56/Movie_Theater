@@ -40,4 +40,8 @@ public class Seat extends BaseEntity {
        this.isBooked = true;
     }
 
+    public void cancel() {
+        this.isBooked = false;
+    }
+
 }
