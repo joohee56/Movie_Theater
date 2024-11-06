@@ -64,7 +64,7 @@ export default {
   display: flex;
   border: 1px solid var(--border-line-color);
   border-radius: 10px;
-  padding: 30px;
+  padding: 20px;
   font-family: "SUIT-Regular";
   font-size: 15px;
   width: 620px;
@@ -74,12 +74,12 @@ export default {
 .poster-img {
   width: 130px;
   aspect-ratio: 290/410;
-  margin-right: 50px;
+  margin-right: 30px;
 }
 .confirmed-booking table {
   border-collapse: separate;
   border-spacing: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 .booking-number {
   color: var(--point-color);

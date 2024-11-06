@@ -5,12 +5,18 @@
     <div v-for="confirmedBooking in bookingHistory['CONFIRMED']">
       <ConfirmedBooking :confirmedBooking="confirmedBooking"></ConfirmedBooking>
     </div>
-    <div>
-      <div>예매취소내역</div>
-      <table>
-        <th>
-          <td>취소일시</td><td>영화명</td><td>극장</td><td>상영일시</td><td>취소금액</td>
-        </th>
+    <div class="canceled-booking-section">
+      <div class="sub-title">예매취소내역</div>
+      <table class="canceled-booking">
+        <tr class="header">
+          <td style="width: 20%;">취소일시</td><td style="width: 30%;">영화명</td><td style="width: 15%;">극장</td><td style="width: 20%;">상영일시</td><td style="width: 15%;">취소금액</td>
+        </tr>
+        <tr>
+          <td>2024.11.06(12:51)</td><td>청설</td><td>백석벨라시타</td><td>2024.11.09(토) 14:10</td><td class="cancel-price">16000원</td>
+        </tr>
+        <tr>
+          <td>2024.10.31(13:29)</td><td>청설</td><td>백석벨라시타</td><td>2024.11.06(수) 12:40</td><td class="cancel-price">15000원</td>
+        </tr>
       </table>
     </div>
   </div>
@@ -51,5 +57,36 @@ export default {
   font-family: "SUIT-Medium";
   font-size: 19px;
   padding: 10px 0;
+}
+.canceled-booking-section {
+  width: 100%;
+}
+.canceled-booking {
+  table-layout: fixed;
+  width: 100%;
+  font-family: "SUIT-Regular";
+  border-top: solid 1px black;
+}
+.sub-title {
+  font-family: SUIT-Medium;
+  font-size: 26px;
+  margin: 150px 0 20px;
+  color: var(--primary-color);
+}
+.canceled-booking .header {
+  background-color: #f2f4f5;
+  font-family: "SUIT-SemiBold";
+  text-align: center;
+}
+.canceled-booking td {
+  padding: 15px 0;
+  border-bottom: solid 1px #f2f4f5;
+  font-size: 15px;
+  padding-left: 10px;
+}
+.cancel-price {
+  text-align: right;
+  color: #e81002;
+  font-family: "SUIT-SemiBold";
 }
 </style>
