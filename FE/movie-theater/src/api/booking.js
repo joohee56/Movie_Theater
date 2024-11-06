@@ -19,4 +19,13 @@ async function getBooking(bookingId) {
   }
 }
 
-export { createBooking, getBooking };
+async function getBookingList(userId) {
+  try {
+    const response = await jsonApi.get(`/bookings/user/${userId}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { createBooking, getBooking, getBookingList };

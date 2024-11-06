@@ -2,26 +2,26 @@
   <div>
 		<PageTitle pageTitle="예매내역"></PageTitle>
     <div class="ticket-count">총 1건</div>
-    <div class="confirmed-booking-container">
+    <div v-for="confirmedBooking in bookingList['CONFIRMED']" class="confirmed-booking-container">
       <div>
         <img src="@/assets/img/no-poster-img.png" class="poster-img">
       </div>
       <div class="confirmed-booking">
         <table>
           <tr>
-            <td>예매번호</td><td class="booking-number">9441-834-41709</td>
+            <td>예매번호</td><td class="booking-number">{{confirmedBooking.bookingNumber}}</td>
           </tr>
           <tr>
-            <td>영화명</td><td>청설 2D</td>
+            <td>영화명</td><td>{{confirmedBooking.movieTitle}} {{confirmedBooking.screeningTypeDisplay}}</td>
           </tr>
           <tr>
-            <td>극장/상영관</td><td>백석벨라시타/102호</td><td>관람인원</td><td>성인 1명</td>
+            <td>극장/상영관</td><td>{{confirmedBooking.theaterName}}/{{confirmedBooking.hallName}}</td><td>관람인원</td><td>성인 1명</td>
           </tr>
           <tr>
-            <td>관람일시</td><td>2024.11.06(수) 12:40</td><td>관람좌석</td><td>E열 7</td>
+            <td>관람일시</td><td>{{confirmedBooking.startDate}} {{confirmedBooking.startTime}}</td><td>관람좌석</td><td>{{confirmedBooking.seatSection}}열 {{confirmedBooking.seatRow}}</td>
           </tr>
           <tr>
-            <td>결제일시</td><td>2024.10.31</td>
+            <td>결제일시</td><td>{{confirmedBooking.bookingDate}}</td>
           </tr>
         </table>
         <div class="navigation-buttons">
@@ -34,10 +34,25 @@
 
 <script>
 import PageTitle from "@/components/header/PageTitle.vue";
+import { getBookingList } from "@/api/booking";
 
 export default {
+  data() {
+    return {
+      bookingList: {},
+    };
+  },
   components: { PageTitle },
+  mounted() {
+    this.fetchBookingList();
+  },
   methods: {
+    async fetchBookingList() {
+      const response = await getBookingList("1");
+      console.log(response);
+      this.bookingList = response.data.data;
+      console.log(this.bookingList);
+    },
     submitCancleBooking() {
       alert("예매를 취소하시겠습니까?");
     },
