@@ -1,8 +1,8 @@
 <template lang="ko">
   <div>
 		<PageTitle pageTitle="예매내역"></PageTitle>
-    <div class="ticket-count">총 1건</div>
-    <div v-for="confirmedBooking in bookingList['CONFIRMED']" class="confirmed-booking-container">
+    <div class="ticket-count">총 {{bookingHistory['CONFIRMED'].length}}건</div>
+    <div v-for="confirmedBooking in bookingHistory['CONFIRMED']" class="confirmed-booking-container">
       <div>
         <img src="@/assets/img/no-poster-img.png" class="poster-img">
       </div>
@@ -34,12 +34,12 @@
 
 <script>
 import PageTitle from "@/components/header/PageTitle.vue";
-import { getBookingList } from "@/api/booking";
+import { getBookingHistory } from "@/api/booking";
 
 export default {
   data() {
     return {
-      bookingList: {},
+      bookingHistory: {},
     };
   },
   components: { PageTitle },
@@ -48,10 +48,10 @@ export default {
   },
   methods: {
     async fetchBookingList() {
-      const response = await getBookingList("1");
+      const response = await getBookingHistory("1");
       console.log(response);
-      this.bookingList = response.data.data;
-      console.log(this.bookingList);
+      this.bookingHistory = response.data.data;
+      console.log(this.bookingHistory);
     },
     submitCancleBooking() {
       alert("예매를 취소하시겠습니까?");

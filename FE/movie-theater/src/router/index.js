@@ -7,7 +7,7 @@ import BookingMovieOptions from "@/components/booking/BookingMovieOptions.vue";
 import BookingSeat from "@/components/booking/BookingSeat.vue";
 import BookingSuccess from "@/views/BookingSuccess.vue";
 import MyPage from "@/views/MyPage.vue";
-import BookingList from "@/components/mypage/BookingList.vue";
+import BookingHistory from "@/components/mypage/BookingHistory.vue";
 
 Vue.use(VueRouter);
 
@@ -49,12 +49,12 @@ const routes = [
     path: "/mypage",
     name: "myPage",
     component: MyPage,
-    redirect: "/mypage/bookinglist",
+    redirect: "/mypage/bookingHistory",
     children: [
       {
-        path: "/mypage/bookingList",
-        name: "bookingList",
-        component: BookingList,
+        path: "/mypage/bookingHistory",
+        name: "bookingHistory",
+        component: BookingHistory,
       },
     ],
   },

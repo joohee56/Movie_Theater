@@ -19,7 +19,7 @@ async function getBooking(bookingId) {
   }
 }
 
-async function getBookingList(userId) {
+async function getBookingHistory(userId) {
   try {
     const response = await jsonApi.get(`/bookings/user/${userId}`);
     return response;
@@ -28,4 +28,4 @@ async function getBookingList(userId) {
   }
 }
 
-export { createBooking, getBooking, getBookingList };
+export { createBooking, getBooking, getBookingHistory };
