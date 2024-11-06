@@ -2,11 +2,15 @@ package mt.movie_theater.api.booking.controller;
 
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.apiResponse.ApiResponse;
 import mt.movie_theater.api.booking.request.BookingCreateRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
+import mt.movie_theater.api.booking.response.BookingWithDateResponse;
 import mt.movie_theater.api.booking.service.BookingService;
+import mt.movie_theater.domain.booking.BookingStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,5 +34,10 @@ public class BookingController {
     @GetMapping("/booking/{bookingId}")
     public ApiResponse<BookingResponse> getBooking(@PathVariable("bookingId") Long bookingId) {
         return ApiResponse.ok(bookingService.getBooking(bookingId));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ApiResponse<Map<BookingStatus, List<BookingWithDateResponse>>> getBookingList(@PathVariable("userId") Long userId) {
+        return ApiResponse.ok(bookingService.getBookingList(userId));
     }
 }
