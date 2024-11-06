@@ -68,10 +68,10 @@ public class BookingService {
     /**
      * 예매 취소 후 예매 내역 조회
      */
+    @Transactional
     public Map<BookingStatus, List<BookingWithDateResponse>> cancelBookingAndGetBookingHistory(Long userId, Long bookingId) {
         User user = validateUser(userId);
         Booking booking = validateBooking(bookingId, user.getId());
-
         booking.cancel();
         return getBookingHistory(userId);
     }
