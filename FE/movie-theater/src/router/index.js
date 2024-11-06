@@ -6,6 +6,8 @@ import BookingView from "../views/BookingView.vue";
 import BookingMovieOptions from "@/components/booking/BookingMovieOptions.vue";
 import BookingSeat from "@/components/booking/BookingSeat.vue";
 import BookingSuccess from "@/views/BookingSuccess.vue";
+import MyPage from "@/views/MyPage.vue";
+import BookingList from "@/components/mypage/BookingList.vue";
 
 Vue.use(VueRouter);
 
@@ -42,6 +44,19 @@ const routes = [
     path: "/booking/success/:bookingId",
     name: "bookingSuccess",
     component: BookingSuccess,
+  },
+  {
+    path: "/mypage",
+    name: "myPage",
+    component: MyPage,
+    redirect: "/mypage/bookinglist",
+    children: [
+      {
+        path: "/mypage/bookingList",
+        name: "bookingList",
+        component: BookingList,
+      },
+    ],
   },
 ];
 
