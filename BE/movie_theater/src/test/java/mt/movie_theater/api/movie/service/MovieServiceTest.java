@@ -86,6 +86,24 @@ class MovieServiceTest extends IntegrationTestSupport {
         assertThat(response.getMovieActors()).containsExactlyInAnyOrder("홍경", "노윤서", "김민주");
     }
 
+    @DisplayName("전체 영화를 조회한다.")
+    @Test
+    void getAllMovies() {
+        //given
+        LocalDate releaseDate = LocalDate.now();
+        Movie movie1 = createMovie("청설", releaseDate);
+        Movie movie2 = createMovie("아마존 활명수", releaseDate);
+        Movie movie3 = createMovie("고래와 나", releaseDate);
+        movieRepository.saveAll(List.of(movie1, movie2, movie3));
+        //when
+        List<MovieResponse> response = movieService.getAllMovies();
+        //then
+        assertThat(response).hasSize(3);
+        assertThat(response)
+                .extracting("title")
+                .containsExactlyInAnyOrder("청설", "아마존 활명수", "고래와 나");
+    }
+
     @DisplayName("전체 영화 리스트와 영화별 상영시간 포함 유무를 조회한다. 상영시간 조건에는 날짜, (영화관)이 있다.")
     @Test
     void getMoviesWithIsWatchable() {

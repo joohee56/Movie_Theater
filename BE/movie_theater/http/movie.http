@@ -21,5 +21,8 @@ Content-Type: application/json
   ]
 }
 
+### 전체 영화 조회
+GET localhost:8080/api/v1/movies
+
 ### 전체 영화 리스트와 상영시간 유무 포함 조회
-GET localhost:8081/api/v1/movies?date=2024.11.15&theaterId=1
+GET localhost:8081/api/v1/movies/watchable?date=2024.11.15&theaterId=1

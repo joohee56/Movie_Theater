@@ -34,6 +34,13 @@ public class MovieService {
         return MovieResponse.create(movieRepository.save(movie));
     }
 
+    public List<MovieResponse> getAllMovies() {
+        List<Movie> movies = movieRepository.findAll();
+        return movies.stream()
+                .map(movie -> MovieResponse.create(movie))
+                .collect(Collectors.toList());
+    }
+
     /**
      * 전체 영화 리스트 조회, 영화별 상영시간 포함 유무
      */

@@ -29,6 +29,11 @@ public class MovieController {
     }
 
     @GetMapping
+    public ApiResponse<List<MovieResponse>> getAllMovies() {
+        return ApiResponse.ok(movieService.getAllMovies());
+    }
+
+    @GetMapping("/watchable")
     public ApiResponse<List<MovieWatchableResponse>> getMoviesWithIsWatchable(@Valid @ModelAttribute MovieWatchableRequest request) {
         List<MovieWatchableResponse> movieResponses = movieService.getMoviesWithIsWatchable(request.getDate(), request.getTheaterId());
         return ApiResponse.ok(movieResponses);
