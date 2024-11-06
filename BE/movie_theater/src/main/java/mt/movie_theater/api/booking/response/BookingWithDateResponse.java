@@ -20,14 +20,15 @@ public class BookingWithDateResponse {
     private String seatRow;
     private int totalPrice;
     private String cancelDate;
+    private String cancelTime;
     private String bookingDate;
 
     @Builder
-    private BookingWithDateResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
+    public BookingWithDateResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
                                    String screeningTypeDisplay, String theaterName, String hallName, String startDate,
                                    String startTime, String seatSection, String seatRow, int totalPrice,
                                    String cancelDate,
-                                   String bookingDate) {
+                                   String cancelTime, String bookingDate) {
         this.id = id;
         this.bookingNumber = bookingNumber;
         this.posterUrl = posterUrl;
@@ -41,6 +42,7 @@ public class BookingWithDateResponse {
         this.seatRow = seatRow;
         this.totalPrice = totalPrice;
         this.cancelDate = cancelDate;
+        this.cancelTime = cancelTime;
         this.bookingDate = bookingDate;
     }
 
@@ -59,6 +61,7 @@ public class BookingWithDateResponse {
                 .seatRow(booking.getSeat().getSeatLocation().getSeatRow())
                 .totalPrice(booking.getTotalPrice())
                 .cancelDate(DateUtil.formatToStartDate(booking.getUpdatedAt()))
+                .cancelTime(DateUtil.formatToHourAndMinute(booking.getUpdatedAt()))
                 .bookingDate(DateUtil.formatToStartDate(booking.getBookingTime()))
                 .build();
     }
