@@ -40,7 +40,7 @@
 				</tr>
 			</table>
 			<div class="navigation-buttons">
-				<button class="cancle-booking-button" @click="submitCancleBooking">
+				<button class="cancle-booking-button" @click="cancelBooking(confirmedBooking.id)">
 					예매취소
 				</button>
 			</div>
@@ -49,11 +49,16 @@
 </template>
 
 <script>
+import { cancelBookingAndGetBookingHistory } from "@/api/booking";
+
 export default {
   props: ["confirmedBooking"],
   methods: {
-    submitCancleBooking() {
+    async cancelBooking(bookingId) {
       alert("예매를 취소하시겠습니까?");
+      const response = await cancelBookingAndGetBookingHistory(1, bookingId);
+      console.log(response.data);
+      this.$emit("updateBookingHistory", response.data.data);
     },
   },
 };

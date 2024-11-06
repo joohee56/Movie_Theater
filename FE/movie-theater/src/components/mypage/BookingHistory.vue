@@ -1,9 +1,9 @@
 <template lang="ko">
   <div>
 		<PageTitle pageTitle="예매내역"></PageTitle>
-    <div class="ticket-count">총 {{bookingHistory['CONFIRMED'].length}}건</div>
+    <!-- <div class="ticket-count">총 {{bookingHistory['CONFIRMED'].length}}건</div> -->
     <div v-for="confirmedBooking in bookingHistory['CONFIRMED']">
-      <ConfirmedBooking :confirmedBooking="confirmedBooking"></ConfirmedBooking>
+      <ConfirmedBooking :confirmedBooking="confirmedBooking" @updateBookingHistory="updateBookingHistory"></ConfirmedBooking>
     </div>
     <div class="canceled-booking-section">
       <div class="sub-title">예매취소내역</div>
@@ -22,7 +22,6 @@
 <script>
 import PageTitle from "@/components/header/PageTitle.vue";
 import ConfirmedBooking from "./ConfirmedBooking.vue";
-
 import { getBookingHistory } from "@/api/booking";
 
 export default {
@@ -44,6 +43,11 @@ export default {
       console.log(response);
       this.bookingHistory = response.data.data;
       console.log(this.bookingHistory);
+    },
+    updateBookingHistory(data) {
+      console.log("parent update history");
+      console.log(data);
+      this.bookingHistory = data;
     },
   },
 };

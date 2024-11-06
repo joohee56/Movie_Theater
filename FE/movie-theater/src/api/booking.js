@@ -28,4 +28,20 @@ async function getBookingHistory(userId) {
   }
 }
 
-export { createBooking, getBooking, getBookingHistory };
+async function cancelBookingAndGetBookingHistory(userId, bookingId) {
+  try {
+    const response = await jsonApi.get(
+      `/bookings/cancel/${bookingId}/user/${userId}`
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export {
+  createBooking,
+  getBooking,
+  getBookingHistory,
+  cancelBookingAndGetBookingHistory,
+};
