@@ -11,11 +11,8 @@
         <tr class="header">
           <td style="width: 20%;">취소일시</td><td style="width: 30%;">영화명</td><td style="width: 15%;">극장</td><td style="width: 20%;">상영일시</td><td style="width: 15%;">취소금액</td>
         </tr>
-        <tr>
-          <td>2024.11.06(12:51)</td><td>청설</td><td>백석벨라시타</td><td>2024.11.09(토) 14:10</td><td class="cancel-price">16000원</td>
-        </tr>
-        <tr>
-          <td>2024.10.31(13:29)</td><td>청설</td><td>백석벨라시타</td><td>2024.11.06(수) 12:40</td><td class="cancel-price">15000원</td>
+        <tr v-for="canceledBooking in bookingHistory['CANCELED']"">
+          <td>{{canceledBooking.cancelDate}} ({{canceledBooking.cancelTime}})</td><td>{{canceledBooking.movieTitle}}</td><td>{{canceledBooking.theaterName}}</td><td>{{canceledBooking.startDate}} {{canceledBooking.startTime}}</td><td class="cancel-price">{{canceledBooking.totalPrice}}원</td>
         </tr>
       </table>
     </div>
