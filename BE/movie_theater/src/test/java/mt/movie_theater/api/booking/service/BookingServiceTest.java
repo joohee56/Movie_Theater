@@ -206,7 +206,7 @@ class BookingServiceTest extends IntegrationTestSupport {
 
     @DisplayName("회원의 전체 예매 내역을 조회한다.")
     @Test
-    void getBookingList() {
+    void getBookingHistory() {
         //given
         User user = createUser();
         Screening screening = createScreening(LocalDateTime.of(2024, 11, 02, 15, 00));
@@ -217,7 +217,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         createBooking(user, screening, CANCELED, bookingDate);
 
         //when
-        Map<BookingStatus, List<BookingWithDateResponse>> bookingStatusMap = bookingService.getBookingList(user.getId());
+        Map<BookingStatus, List<BookingWithDateResponse>> bookingStatusMap = bookingService.getBookingHistory(user.getId());
 
         //then
         assertThat(bookingStatusMap).hasSize(2);

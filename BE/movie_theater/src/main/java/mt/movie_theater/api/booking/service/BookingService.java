@@ -88,7 +88,7 @@ public class BookingService {
     /**
      * 회원의 전체 예매 내역 조회 (confirmed, canceled)
      */
-    public Map<BookingStatus, List<BookingWithDateResponse>> getBookingList(Long userId) {
+    public Map<BookingStatus, List<BookingWithDateResponse>> getBookingHistory(Long userId) {
         List<Booking> bookings = bookingRepository.findAllByUserId(userId);
         return bookings.stream()
                 .collect(Collectors.groupingBy(
