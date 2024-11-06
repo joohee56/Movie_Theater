@@ -1,12 +1,9 @@
 <template lang="ko">
 	<div>
-		my page		
 		<router-view></router-view>
 	</div>
 </template>
 
-<script>
-export default {};
-</script>
+<script></script>
 
 <style scoped></style>
