@@ -5,6 +5,14 @@
     <div v-for="confirmedBooking in bookingHistory['CONFIRMED']">
       <ConfirmedBooking :confirmedBooking="confirmedBooking"></ConfirmedBooking>
     </div>
+    <div>
+      <div>예매취소내역</div>
+      <table>
+        <th>
+          <td>취소일시</td><td>영화명</td><td>극장</td><td>상영일시</td><td>취소금액</td>
+        </th>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -17,7 +25,10 @@ import { getBookingHistory } from "@/api/booking";
 export default {
   data() {
     return {
-      bookingHistory: {},
+      bookingHistory: {
+        CONFIRMED: [],
+        CANCELED: [],
+      },
     };
   },
   components: { PageTitle, ConfirmedBooking },
@@ -30,9 +41,6 @@ export default {
       console.log(response);
       this.bookingHistory = response.data.data;
       console.log(this.bookingHistory);
-    },
-    submitCancleBooking() {
-      alert("예매를 취소하시겠습니까?");
     },
   },
 };

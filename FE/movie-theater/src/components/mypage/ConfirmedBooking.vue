@@ -51,6 +51,11 @@
 <script>
 export default {
   props: ["confirmedBooking"],
+  methods: {
+    submitCancleBooking() {
+      alert("예매를 취소하시겠습니까?");
+    },
+  },
 };
 </script>
 
