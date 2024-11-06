@@ -5,10 +5,15 @@
 			<a>회원가입</a>
 		</div>
 		<div class="main-nav">
-			<router-link :to="{name: 'movie'}">영화</router-link>
-			<router-link :to="{name: 'booking'}">예매</router-link>
+      <div class="left-side">
+        <router-link :to="{name: 'movie'}">영화</router-link>
+        <router-link :to="{name: 'booking'}">예매</router-link>
+      </div>
 			<router-link :to="{name: 'home'}" id="logo-link">
 				<img src="@/assets/img/megabox-logo.png" class="logo">
+			</router-link>
+      <router-link :to="{name: 'myPage'}">
+				<img src="@/assets/img/user.png" class="user-img">
 			</router-link>
 		</div>
 	</div>
@@ -19,10 +24,6 @@ export default {};
 </script>
 
 <style scoped>
-.container {
-  padding-bottom: 10px;
-}
-
 /* top nav  */
 .top-nav {
   font-family: IBM Plex Sans KR;
@@ -41,10 +42,9 @@ export default {};
   font-size: 19px;
   display: flex;
 }
-.main-nav a {
+.main-nav .left-side a {
   margin-right: 20px;
   line-height: 2;
-  padding-top: 0.5em;
 }
 #logo-link {
   display: block;
@@ -54,5 +54,12 @@ export default {};
 .logo {
   display: block;
   width: 140px;
+  margin-bottom: 7px;
+}
+.user-img {
+  width: 20px;
+  display: inline-block;
+  padding-top: 0.9rem;
+  margin-right: 3px;
 }
 </style>
