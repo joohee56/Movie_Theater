@@ -1,5 +1,6 @@
 package mt.movie_theater.domain.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,12 +19,15 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String loginId;
+    @Column(length = 50)
+    private String password;
     private String name;
     private String email;
 
     @Builder
-    public User(String loginId, String name, String email) {
+    public User(String loginId, String password, String name, String email) {
         this.loginId = loginId;
+        this.password = password;
         this.name = name;
         this.email = email;
     }

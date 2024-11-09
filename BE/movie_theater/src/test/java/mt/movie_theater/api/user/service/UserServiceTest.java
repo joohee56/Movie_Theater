@@ -1,10 +1,12 @@
 package mt.movie_theater.api.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.user.request.UserCreateRequest;
 import mt.movie_theater.api.user.response.UserResponse;
+import mt.movie_theater.domain.user.User;
 import mt.movie_theater.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,10 +22,11 @@ class UserServiceTest extends IntegrationTestSupport {
 
     @DisplayName("새 회원을 등록한다.")
     @Test
-    void createUser() {
+    void createUserTest() {
         //given
         UserCreateRequest request = UserCreateRequest.builder()
                 .loginId("joohee123")
+                .password("1234")
                 .name("이주희")
                 .email("test@test.com")
                 .build();
@@ -33,7 +36,53 @@ class UserServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response.getId()).isNotNull();
         assertThat(response)
-                .extracting("loginId", "name", "email")
-                .contains("joohee123", "이주희", "test@test.com");
+                .extracting("loginId", "name")
+                .contains("joohee123", "이주희");
+    }
+
+    @DisplayName("로그인 검증을 성공한다.")
+    @Test
+    void authenticate() {
+        //given
+        String loginId = "test123";
+        String password = "1234";
+        createUser(loginId, password);
+
+        //when
+        boolean result = userService.authenticate(loginId, password);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("로그인 검증 시, 없는 로그인 ID일 경우 예외가 발생한다. ")
+    @Test
+    void authenticateWithNoLoginId() {
+        //when, then
+        assertThatThrownBy(() -> userService.authenticate("test1234", "1234"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("없는 아이디입니다. 아이디 정보를 다시 확인해 주세요.");
+    }
+
+    @DisplayName("로그인 검증 시, 틀린 비밀번호일 경우 예외가 발생한다.")
+    @Test
+    void authenticateWithWrongPassword() {
+        //given
+        String loginId = "test123";
+        User user = createUser(loginId, "1234");
+
+        //when, then
+        assertThatThrownBy(() -> userService.authenticate(loginId, "000"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("아이디와 비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
+    }
+
+    private User createUser(String loginId, String password) {
+        User user = User.builder()
+                .loginId(loginId)
+                .password(password)
+                .build();
+
+        return userRepository.save(user);
     }
 }

@@ -1,5 +1,6 @@
 package mt.movie_theater.api.user.service;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.user.request.UserCreateRequest;
 import mt.movie_theater.api.user.response.UserResponse;
@@ -18,5 +19,17 @@ public class UserService {
     public UserResponse createUser(UserCreateRequest request) {
         User savedUser = userRepository.save(request.toEntity());
         return UserResponse.create(savedUser);
+    }
+
+    public boolean authenticate(String loginId, String password) {
+        Optional<User> findUser = userRepository.findByLoginId(loginId);
+        if(findUser.isEmpty()) {
+            throw new IllegalArgumentException("없는 아이디입니다. 아이디 정보를 다시 확인해 주세요.");
+        }
+        if (!findUser.get().getPassword().equals(password)) {
+            throw new IllegalArgumentException("아이디와 비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
+        }
+
+        return true;
     }
 }

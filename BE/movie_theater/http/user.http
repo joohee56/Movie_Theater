@@ -4,6 +4,16 @@ Content-Type: application/json
 
 {
   "loginId": "joohee123",
+  "password": "1234",
   "name": "이주희",
   "email": "test@test.com"
+}
+
+### 로그인
+POST localhost:8081/api/v1/users/user/login
+Content-Type: application/json
+
+{
+  "loginId": "test123",
+  "password": "1234"
 }

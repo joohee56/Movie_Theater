@@ -1,8 +1,8 @@
 insert into genre(type)
 values('ACTION'), ('COMEDY'), ('DRAMA'), ('HORROR'), ('THRILLER'), ('ROMANCE'), ('SF'), ('DOCUMENTARY');
 
-insert into user(login_id, name, email)
-values('test123', '홍길동', 'test@test.com');
+insert into user(login_id, password, name, email)
+values('test123', '1234', '홍길동', 'test@test.com');
 
 insert into movie(title, sub_title, description, release_date, duration_minutes, poster_url, age_rating, director, screening_type, standard_price)
 values ('아마존 활명수', 'AMAZON BULLSEYE',  '어서와, 아마존은 처음이지', '2024.10.28', '112', 'test@test.com', 'AGE_12', '김창주', 'TWO_D', 10000),
