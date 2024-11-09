@@ -9,7 +9,7 @@ import mt.movie_theater.api.user.request.UserLoginRequest;
 import mt.movie_theater.api.user.response.UserResponse;
 import mt.movie_theater.api.user.service.SessionService;
 import mt.movie_theater.api.user.service.UserService;
-import org.springframework.http.HttpStatus;
+import mt.movie_theater.domain.user.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +30,8 @@ public class UserController {
 
     @PostMapping("/user/login")
     public ApiResponse<String> login(@Valid @RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
-        if (userService.authenticate(userLoginRequest.getLoginId(), userLoginRequest.getPassword())) {
-            sessionService.createLoginSession(request, userLoginRequest.getLoginId());
-            return ApiResponse.ok("로그인 성공");
-        }
-
-        return ApiResponse.of(HttpStatus.UNAUTHORIZED, "로그인 실패");
+        User user = userService.authenticate(userLoginRequest.getLoginId(), userLoginRequest.getPassword());
+        sessionService.createLoginSession(request, user.getId());
+        return ApiResponse.ok("로그인 성공");
     }
 }

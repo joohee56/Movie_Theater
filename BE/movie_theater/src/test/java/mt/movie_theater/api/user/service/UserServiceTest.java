@@ -49,10 +49,12 @@ class UserServiceTest extends IntegrationTestSupport {
         createUser(loginId, password);
 
         //when
-        boolean result = userService.authenticate(loginId, password);
+        User user = userService.authenticate(loginId, password);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(user)
+                .extracting("loginId", "password")
+                .containsExactly(loginId, password);
     }
 
     @DisplayName("로그인 검증 시, 없는 로그인 ID일 경우 예외가 발생한다. ")

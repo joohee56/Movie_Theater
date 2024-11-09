@@ -36,8 +36,8 @@ public class BookingController {
         return ApiResponse.ok(bookingService.getBooking(bookingId));
     }
 
-    @GetMapping("/user/{userId}")
-    public ApiResponse<Map<BookingStatus, List<BookingWithDateResponse>>> getBookingHistory(@PathVariable("userId") Long userId) {
+    @GetMapping("/user")
+    public ApiResponse<Map<BookingStatus, List<BookingWithDateResponse>>> getBookingHistory(Long userId) {
         return ApiResponse.ok(bookingService.getBookingHistory(userId));
     }
 

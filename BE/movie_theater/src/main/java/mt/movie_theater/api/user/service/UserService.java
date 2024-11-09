@@ -21,7 +21,7 @@ public class UserService {
         return UserResponse.create(savedUser);
     }
 
-    public boolean authenticate(String loginId, String password) {
+    public User authenticate(String loginId, String password) {
         Optional<User> findUser = userRepository.findByLoginId(loginId);
         if(findUser.isEmpty()) {
             throw new IllegalArgumentException("없는 아이디입니다. 아이디 정보를 다시 확인해 주세요.");
@@ -30,6 +30,6 @@ public class UserService {
             throw new IllegalArgumentException("아이디와 비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
         }
 
-        return true;
+        return findUser.get();
     }
 }
