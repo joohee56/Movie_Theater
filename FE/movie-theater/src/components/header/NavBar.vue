@@ -1,8 +1,9 @@
 <template lang="ko">
   <div class="container">
 		<div class="top-nav">
-			<a>로그인</a>
-			<a>회원가입</a>
+      <button @click="showLoginModal = true">로그인</button>
+      <LoginModal :isVisible="showLoginModal" @close="showLoginModal = false" />
+			<button>회원가입</button>
 		</div>
 		<div class="main-nav">
       <div class="left-side">
@@ -20,7 +21,16 @@
 </template>
 
 <script>
-export default {};
+import LoginModal from "@/views/LoginModal.vue";
+
+export default {
+  components: { LoginModal },
+  data() {
+    return {
+      showLoginModal: false,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -33,8 +43,11 @@ export default {};
   justify-content: flex-end;
   margin-bottom: 10px;
 }
-.top-nav a {
+.top-nav button {
   margin-left: 20px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
 }
 
 /* main nav */
@@ -51,7 +64,6 @@ export default {};
   position: fixed; /* 화면을 기준으로 고정 */
   left: 50%;
   transform: translate(-50%, -50%); /* 요소를 정확히 중앙에 배치 */
-  z-index: 1000; /* 다른 요소 위에 오도록 설정 */
   width: 140px;
   margin-top: 10px;
 }
