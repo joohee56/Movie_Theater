@@ -28,8 +28,6 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             if (session == null || session.getAttribute(SessionConstants.LOGIN_USER_ID) == null) {
                 log.info("미인증 사용자 오류");
                 throw new UnauthorizedException("로그인이 필요한 서비스입니다.");
-//                response.sendError(401, "로그인이 필요한 서비스입니다.");
-//                return false;
             }
         }
 
