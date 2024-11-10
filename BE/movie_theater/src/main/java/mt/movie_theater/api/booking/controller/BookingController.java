@@ -11,7 +11,6 @@ import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.response.BookingWithDateResponse;
 import mt.movie_theater.api.booking.service.BookingService;
 import mt.movie_theater.api.user.annotation.Login;
-import mt.movie_theater.api.user.annotation.LoginCheck;
 import mt.movie_theater.domain.booking.BookingStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookingController {
     private final BookingService bookingService;
 
-    @LoginCheck
+//    @LoginCheck
     @PostMapping("/new")
     public ApiResponse<BookingResponse> createBooking(@Valid @RequestBody BookingCreateRequest request, @Login Long userId) {
         LocalDateTime bookingDate = LocalDateTime.now();
