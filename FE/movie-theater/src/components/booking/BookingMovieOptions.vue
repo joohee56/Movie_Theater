@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import "vue2-datepicker/index.css";
 import "vue2-datepicker/locale/ko";
 import DatePicker from "vue2-datepicker";
@@ -108,6 +109,7 @@ export default {
     this.fetchRegionsWithScreeningCount();
   },
   methods: {
+    ...mapMutations(["SHOW_LOGIN_MODAL"]),
     async fetchAll() {
       this.fetchRegionsWithScreeningCount();
       this.fetchTheaters();
@@ -184,13 +186,17 @@ export default {
       this.fetchScreening();
     },
     screeningSelect(screeningId, hallId) {
-      this.$router.push({
-        name: "bookingSeat",
-        params: {
-          hallId: hallId,
-          screeningId: screeningId,
-        },
-      });
+      if (localStorage.getItem("isAuthenticated") !== "true") {
+        this.SHOW_LOGIN_MODAL();
+      } else {
+        this.$router.push({
+          name: "bookingSeat",
+          params: {
+            hallId: hallId,
+            screeningId: screeningId,
+          },
+        });
+      }
     },
     setFormatDate() {
       const tzOffset = this.selectedDate.getTimezoneOffset() * 60 * 1000;

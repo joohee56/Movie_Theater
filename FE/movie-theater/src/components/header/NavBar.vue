@@ -2,8 +2,8 @@
   <div class="container">
 		<div class="top-nav">
       <button v-if="isAuthenticated" @click="logout">로그아웃</button>
-      <button v-else @click="showLoginModal = true">로그인</button>
-      <LoginModal :isVisible="showLoginModal" @close="showLoginModal = false" @checkAuthStatus="checkAuthStatus" />
+      <button v-else @click="SHOW_LOGIN_MODAL">로그인</button>
+      <LoginModal @checkAuthStatus="checkAuthStatus" />
 			<button>회원가입</button>
 		</div>
 		<div class="main-nav">
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import { logout } from "@/api/user";
 import LoginModal from "@/views/LoginModal.vue";
 
@@ -41,6 +42,7 @@ export default {
     window.removeEventListener("storage", this.checkAuthStatus);
   },
   methods: {
+    ...mapMutations(["SHOW_LOGIN_MODAL"]),
     checkAuthStatus() {
       const authStatus = localStorage.getItem("isAuthenticated");
       this.isAuthenticated = authStatus === "true";

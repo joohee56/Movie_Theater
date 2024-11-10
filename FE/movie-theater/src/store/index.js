@@ -4,9 +4,18 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    isLoginModalVisible: false,
+  },
   getters: {},
-  mutations: {},
+  mutations: {
+    SHOW_LOGIN_MODAL(state) {
+      state.isLoginModalVisible = true;
+    },
+    HIDE_LOGIN_MODAL(state) {
+      state.isLoginModalVisible = false;
+    },
+  },
   actions: {},
   modules: {},
 });

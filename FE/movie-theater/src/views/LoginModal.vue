@@ -1,9 +1,9 @@
 <template lang="ko">
-  <div v-if="isVisible" class="modal-overlay">
+  <div v-if="isLoginModalVisible" class="modal-overlay">
     <div class="modal-content">
       <div class="top">
         <div>로그인</div>
-        <button class="close-btn" @click="close">X</button>
+        <button class="close-btn" @click="HIDE_LOGIN_MODAL">X</button>
       </div>
       <div class="content">
         <div class="left-side">
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 import { login } from "@/api/user";
 
 export default {
@@ -31,15 +32,16 @@ export default {
       password: "",
     };
   },
-  props: ["isVisible"],
   computed: {
+    ...mapState(["isLoginModalVisible"]),
     isLoginDisabled() {
       return this.userId.trim() === "" || this.password.trim() === "";
     },
   },
   methods: {
+    ...mapMutations(["HIDE_LOGIN_MODAL"]),
     close() {
-      this.$emit("close");
+      this.HIDE_LOGIN_MODAL();
     },
     async login() {
       const response = await login(this.userId, this.password);
