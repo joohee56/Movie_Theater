@@ -13,4 +13,13 @@ async function login(loginId, password) {
   }
 }
 
-export { login };
+async function logout() {
+  try {
+    const response = await jsonApi.get("/users/user/logout");
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { login, logout };

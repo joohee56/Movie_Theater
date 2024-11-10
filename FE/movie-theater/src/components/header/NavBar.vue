@@ -1,7 +1,7 @@
 <template lang="ko">
   <div class="container">
 		<div class="top-nav">
-      <button v-if="isAuthenticated">로그아웃</button>
+      <button v-if="isAuthenticated" @click="logout">로그아웃</button>
       <button v-else @click="showLoginModal = true">로그인</button>
       <LoginModal :isVisible="showLoginModal" @close="showLoginModal = false" @checkAuthStatus="checkAuthStatus" />
 			<button>회원가입</button>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { logout } from "@/api/user";
 import LoginModal from "@/views/LoginModal.vue";
 
 export default {
@@ -43,6 +44,13 @@ export default {
     checkAuthStatus() {
       const authStatus = localStorage.getItem("isAuthenticated");
       this.isAuthenticated = authStatus === "true";
+    },
+    async logout() {
+      const response = await logout();
+      if (response.status == 200) {
+        localStorage.removeItem("isAuthenticated");
+        this.checkAuthStatus();
+      }
     },
   },
 };
