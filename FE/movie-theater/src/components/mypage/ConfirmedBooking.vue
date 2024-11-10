@@ -56,7 +56,7 @@ export default {
   methods: {
     async cancelBooking(bookingId) {
       alert("예매를 취소하시겠습니까?");
-      const response = await cancelBookingAndGetBookingHistory(1, bookingId);
+      const response = await cancelBookingAndGetBookingHistory(bookingId);
       console.log(response.data);
       this.$emit("updateBookingHistory", response.data.data);
     },

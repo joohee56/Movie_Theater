@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     async fetchBookingList() {
-      const response = await getBookingHistory("1");
+      const response = await getBookingHistory();
       console.log(response);
       this.bookingHistory = response.data.data;
       console.log(this.bookingHistory);

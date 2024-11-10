@@ -11,7 +11,7 @@
             <input type="text" id="userId" v-model="userId" placeholder="아이디" required />
             <input type="password" id="password" v-model="password" placeholder="비밀번호" required />
           </div>
-          <button class="login-btn" :disabled="isLoginDisabled">로그인</button>
+          <button class="login-btn" :disabled="isLoginDisabled" @click="login">로그인</button>
         </div>
         <div class="ad">
           <img src="@/assets/img/ad-img.png"></img>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { login } from "@/api/user";
+
 export default {
   data() {
     return {
@@ -39,11 +41,14 @@ export default {
     close() {
       this.$emit("close");
     },
-    handleSubmit() {
-      // 로그인 처리 로직
-      console.log("Username:", this.username);
-      console.log("Password:", this.password);
-      this.close(); // 로그인 완료 후 모달 닫기
+    async login() {
+      const response = await login(this.userId, this.password);
+      console.log(response);
+      if (response.status == 200) {
+        localStorage.setItem("isAuthenticated", true);
+        this.$emit("checkAuthStatus");
+        this.close();
+      }
     },
   },
 };

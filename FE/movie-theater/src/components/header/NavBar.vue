@@ -1,8 +1,9 @@
 <template lang="ko">
   <div class="container">
 		<div class="top-nav">
-      <button @click="showLoginModal = true">로그인</button>
-      <LoginModal :isVisible="showLoginModal" @close="showLoginModal = false" />
+      <button v-if="isAuthenticated">로그아웃</button>
+      <button v-else @click="showLoginModal = true">로그인</button>
+      <LoginModal :isVisible="showLoginModal" @close="showLoginModal = false" @checkAuthStatus="checkAuthStatus" />
 			<button>회원가입</button>
 		</div>
 		<div class="main-nav">
@@ -28,7 +29,21 @@ export default {
   data() {
     return {
       showLoginModal: false,
+      isAuthenticated: false,
     };
+  },
+  mounted() {
+    this.checkAuthStatus();
+    window.addEventListener("storage", this.checkAuthStatus);
+  },
+  beforeUnmount() {
+    window.removeEventListener("storage", this.checkAuthStatus);
+  },
+  methods: {
+    checkAuthStatus() {
+      const authStatus = localStorage.getItem("isAuthenticated");
+      this.isAuthenticated = authStatus === "true";
+    },
   },
 };
 </script>

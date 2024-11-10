@@ -19,20 +19,18 @@ async function getBooking(bookingId) {
   }
 }
 
-async function getBookingHistory(userId) {
+async function getBookingHistory() {
   try {
-    const response = await jsonApi.get(`/bookings/user/${userId}`);
+    const response = await jsonApi.get("/bookings/user");
     return response;
   } catch (error) {
     console.log(error);
   }
 }
 
-async function cancelBookingAndGetBookingHistory(userId, bookingId) {
+async function cancelBookingAndGetBookingHistory(bookingId) {
   try {
-    const response = await jsonApi.get(
-      `/bookings/cancel/${bookingId}/user/${userId}`
-    );
+    const response = await jsonApi.get(`/bookings/cancel/${bookingId}`);
     return response;
   } catch (error) {
     console.log(error);

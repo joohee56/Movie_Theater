@@ -1,4 +1,5 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const config = {
   baseUrl: "http://localhost:8081/api/v1",

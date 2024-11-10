@@ -121,7 +121,6 @@ export default {
     },
     async submitReservation() {
       const bookingRequest = {
-        userId: 1,
         screeningId: this.$route.params.screeningId,
         seatId: this.selectedSeats.at(0).seatId,
         totalPrice: this.screening.totalPrice,
