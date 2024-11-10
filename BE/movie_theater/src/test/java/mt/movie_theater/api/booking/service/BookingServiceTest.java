@@ -70,7 +70,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         assertThat(seat.isBooked()).isFalse();
 
         //when
-        BookingResponse response = bookingService.createBooking(request, user.getId(), bookingDate);
+        BookingResponse response = bookingService.createBooking(user.getId(), request, bookingDate);
 
         //then
         assertThat(seat.isBooked()).isTrue();
@@ -91,7 +91,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request, Long.valueOf(1), bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(Long.valueOf(1), request, bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 사용자입니다. 사용자 정보를 다시 확인해 주세요.");
     }
@@ -109,7 +109,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request, user.getId(), bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), request, bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 상영시간입니다. 상영시간 정보를 다시 확인해 주세요.");
     }
@@ -127,7 +127,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request, user.getId(), bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), request, bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 좌석입니다. 좌석 정보를 다시 확인해 주세요.");
     }
@@ -144,10 +144,10 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .seatId(seat.getId())
                 .build();
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
-        bookingService.createBooking(request, user.getId(), bookingDate);
+        bookingService.createBooking(user.getId(),request, bookingDate);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request, user.getId(), bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), request, bookingDate))
                 .isInstanceOf(DuplicateSeatBookingException.class)
                 .hasMessage("이미 선택된 좌석입니다.");
     }
@@ -167,7 +167,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 31, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(request, user.getId(), bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), request, bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상영 시작 시간이 지났습니다. 다른 상영 시간을 선택해 주세요.");
     }

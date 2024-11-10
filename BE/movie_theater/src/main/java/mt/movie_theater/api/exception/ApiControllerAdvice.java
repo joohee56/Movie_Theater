@@ -40,4 +40,13 @@ public class ApiControllerAdvice {
         );
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedException.class)
+    public ApiResponse<Object> UnauthorizedException(UnauthorizedException e) {
+        return ApiResponse.of(
+                HttpStatus.UNAUTHORIZED,
+                e.getMessage(),
+                null
+        );
+    }
 }

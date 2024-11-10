@@ -3,7 +3,6 @@ POST localhost:8081/api/v1/bookings/new
 Content-Type: application/json
 
 {
-  "userId": "1",
   "screeningId": "1",
   "seatId": "3",
   "totalPrice": "10000"
@@ -13,7 +12,7 @@ Content-Type: application/json
 GET localhost:8081/api/v1/bookings/booking/1
 
 ### 예매 내역 전체 조회
-GET localhost:8081/api/v1/bookings/user/1
+GET localhost:8081/api/v1/bookings
 
 ### 예매 취소 및 예매 내역 전체 조회
 GET localhost:8081/api/v1/bookings/cancel/1/user/1

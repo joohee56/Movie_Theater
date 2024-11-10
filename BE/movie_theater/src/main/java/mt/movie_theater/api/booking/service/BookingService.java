@@ -34,7 +34,7 @@ public class BookingService {
     private final UserRepository userRepository;
 
     @Transactional
-    public BookingResponse createBooking(BookingCreateRequest request, Long userId, LocalDateTime bookingTime) {
+    public BookingResponse createBooking(Long userId, BookingCreateRequest request, LocalDateTime bookingTime) {
         User user = validateUser(userId);
         Screening screening = validateScreening(request.getScreeningId(), bookingTime);
         Seat seat = validateSeat(request.getSeatId(), screening);
