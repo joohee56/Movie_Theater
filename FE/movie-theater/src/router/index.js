@@ -12,7 +12,7 @@ import store from "@/store/index.js";
 
 Vue.use(VueRouter);
 
-const checkAuthenticate = (next) => {
+const checkAuthenticate = (to, from, next) => {
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
   if (!isAuthenticated) {
