@@ -8,8 +8,20 @@ import BookingSeat from "@/components/booking/BookingSeat.vue";
 import BookingSuccess from "@/views/BookingSuccess.vue";
 import MyPage from "@/views/MyPage.vue";
 import BookingHistory from "@/components/mypage/BookingHistory.vue";
+import store from "@/store/index.js";
 
 Vue.use(VueRouter);
+
+const checkAuthenticate = (next) => {
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+
+  if (!isAuthenticated) {
+    store.commit("SHOW_LOGIN_MODAL");
+    next(false);
+  } else {
+    next();
+  }
+};
 
 const routes = [
   {
@@ -36,6 +48,7 @@ const routes = [
       {
         path: "/booking/hall/:hallId/screening/:screeningId/seat",
         name: "bookingSeat",
+        beforeEnter: checkAuthenticate,
         component: BookingSeat,
       },
     ],
