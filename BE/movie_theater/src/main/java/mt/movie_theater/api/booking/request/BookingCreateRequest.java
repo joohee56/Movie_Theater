@@ -9,14 +9,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 public class BookingCreateRequest {
-    private Long userId;
     private Long screeningId;
     private Long seatId;
     private int totalPrice;
 
     @Builder
-    public BookingCreateRequest(Long userId, Long screeningId, Long seatId, int totalPrice) {
-        this.userId = userId;
+    public BookingCreateRequest(Long screeningId, Long seatId, int totalPrice) {
         this.screeningId = screeningId;
         this.seatId = seatId;
         this.totalPrice = totalPrice;
