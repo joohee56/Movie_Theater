@@ -189,13 +189,10 @@ export default {
       if (localStorage.getItem("isAuthenticated") !== "true") {
         this.SHOW_LOGIN_MODAL();
       } else {
-        this.$router.push({
-          name: "bookingSeat",
-          params: {
-            hallId: hallId,
-            screeningId: screeningId,
-          },
-        });
+        sessionStorage.setItem("hallId", hallId);
+        sessionStorage.setItem("screeningId", screeningId);
+
+        this.$router.push({ name: "bookingSeat" });
       }
     },
     setFormatDate() {

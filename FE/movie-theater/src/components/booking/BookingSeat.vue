@@ -63,17 +63,15 @@
 			</div>
 			<div class="navigation-buttons">
 				<button class="prev-button">이전</button>
-				<button class="next-button" @click="submitReservation">다음</button>
+				<button class="next-button" @click="goToNext">다음</button>
 			</div>
 		</div>
-
 	</div>
 </template>
 
 <script>
 import { getSeats } from "@/api/seat";
 import { getScreeningAndTotalPrice } from "@/api/screening";
-import { createBooking } from "@/api/booking";
 
 export default {
   data() {
@@ -81,6 +79,8 @@ export default {
       sections: [],
       seats: {},
       screening: {},
+      hallId: sessionStorage.getItem("hallId"),
+      screeningId: sessionStorage.getItem("screeningId"),
     };
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     async fetchSeats() {
-      const response = await getSeats(this.$route.params.hallId);
+      const response = await getSeats(this.hallId);
       const data = response.data.data;
 
       // 좌석 정보에 selected 필드를 추가
@@ -113,28 +113,16 @@ export default {
       this.sections = Object.keys(data);
     },
     async fetchScreeningWithTotalPrice() {
-      const response = await getScreeningAndTotalPrice(
-        this.$route.params.screeningId
-      );
+      const response = await getScreeningAndTotalPrice(this.screeningId);
       this.screening = response.data.data;
       console.log(this.screening);
     },
-    async submitReservation() {
-      const bookingRequest = {
-        screeningId: this.$route.params.screeningId,
-        seatId: this.selectedSeats.at(0).seatId,
-        totalPrice: this.screening.totalPrice,
-      };
-      const response = await createBooking(bookingRequest);
-      if (response.status == 200) {
-        this.$router.push({
-          name: "bookingSuccess",
-          params: { bookingId: response.data.data.id },
-        });
-      }
-    },
     toggleSeatSelection(seat) {
       seat.isSelected = !seat.isSelected; // 좌석 선택 상태 토글
+    },
+    goToNext() {
+      sessionStorage.setItem("seatId", this.selectedSeats.at(0).seatId);
+      this.$router.push({ name: "paymentView" });
     },
   },
 };
