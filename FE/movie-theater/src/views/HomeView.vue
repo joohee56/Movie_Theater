@@ -1,9 +1,13 @@
 <template lang="ko">
-	<div>
+	<div class="container">
 		Home View
 	</div>
 </template>
 
 <script></script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  height: 100vh;
+}
+</style>

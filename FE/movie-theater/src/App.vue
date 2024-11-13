@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <div class="navbar-container">
+  <div id="app" :class="backgroundClass">
+    <div :class="['navbar-container', navBackgroundClass]">
       <NavBar></NavBar>
     </div>
     <hr class="divider" />
@@ -17,6 +17,14 @@ export default {
   components: {
     NavBar,
   },
+  computed: {
+    backgroundClass() {
+      return this.$route.path == "/" ? "home" : "default";
+    },
+    navBackgroundClass() {
+      return this.$route.path == "/" ? "nav-home" : "default-nav";
+    },
+  },
 };
 </script>
 
@@ -25,6 +33,15 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+body {
+  margin: 0;
+}
+.home {
+  background-color: #1f120f;
+}
+.nav-home {
+  background-color: #180f0d;
 }
 
 .navbar-container,
