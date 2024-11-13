@@ -74,7 +74,7 @@ const { IMP } = window;
 import PageTitle from "@/components/header/PageTitle.vue";
 import { getScreeningAndTotalPrice } from "@/api/screening";
 import { preparePayment } from "@/api/payment";
-// import { createBooking } from "@/api/booking";
+import { createBooking } from "@/api/booking";
 
 export default {
   data() {
@@ -110,6 +110,8 @@ export default {
       return `${formattedDate}-${randomString}`;
     },
     async requestPayment() {
+      this.screening.totalPrice = 100; //테스트용
+      //결제 사전 등록
       const bookingNumber = this.generateUniqueBookingNumber();
       const response = await preparePayment(
         bookingNumber,
@@ -117,6 +119,7 @@ export default {
       );
       console.log(response);
 
+      //아임포트 결제 진행
       IMP.request_pay(
         {
           channelKey: "channel-key-9b25fa8e-097c-4a0b-a3e0-56522892ccc9",
@@ -138,35 +141,27 @@ export default {
           if (response.success) {
             console.log(response);
             const postRequest = {
-              impId: response.imp_id,
+              impId: response.imp_uid,
               amount: response.paid_amount,
               bookingNumber: response.merchant_uid,
               payTime: response.paid_at,
               payMethod: response.pay_method,
-              currencey: response.currencey,
+              currency: response.currency,
               screeningId: this.screeningId,
               seatId: this.seatId,
             };
             console.log(postRequest);
+            const bookingResponse = await createBooking(postRequest);
+            if (bookingResponse.status == 200) {
+              this.$router.push({
+                name: "bookingSuccess",
+                params: { bookingId: bookingResponse.data.data.id },
+              });
+            }
           }
         }
       );
     },
-
-    // async submitReservation() {
-    //   const bookingRequest = {
-    //     screeningId: this.$route.params.screeningId,
-    //     seatId: this.selectedSeats.at(0).seatId,
-    //     totalPrice: this.screening.totalPrice,
-    //   };
-    //   const response = await createBooking(bookingRequest);
-    //   if (response.status == 200) {
-    //     this.$router.push({
-    //       name: "bookingSuccess",
-    //       params: { bookingId: response.data.data.id },
-    //     });
-    //   }
-    // },
   },
 };
 </script>

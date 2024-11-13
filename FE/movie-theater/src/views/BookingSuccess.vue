@@ -32,6 +32,9 @@
 						<tr>
 							<td>· 결제정보</td><td>{{booking.totalPrice}}원</td>
 						</tr>
+            <tr>
+							<td>· 예매일시</td><td>{{booking.bookingTime}}</td>
+						</tr>
 					</table>
 				</div>
 			</div>
@@ -87,8 +90,9 @@ export default {
 .left-side .booking-number {
   color: var(--primary-color);
   font-family: "SUIT-Bold";
-  font-size: 23px;
+  font-size: 21px;
   margin-bottom: 20px;
+  margin-top: 10px;
 }
 .poster-img {
   width: 160px;
@@ -102,7 +106,7 @@ export default {
   color: var(--primary-color);
   font-family: "SUIT-Bold";
   font-size: 23px;
-  padding: 30px 0;
+  padding: 50px 0 30px;
   border-bottom: 1px solid #434343;
 }
 .booking-detail table {

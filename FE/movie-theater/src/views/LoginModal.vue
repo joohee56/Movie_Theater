@@ -77,9 +77,9 @@ export default {
   font-family: "SUIT-Regular";
 }
 .modal-content .top {
-  background-color: var(--point-color);
+  background-color: var(--primary-color);
   display: flex;
-  padding: 15px 20px;
+  padding: 12px 20px;
   font-size: 17px;
   font-family: "SUIT-Regular";
 }

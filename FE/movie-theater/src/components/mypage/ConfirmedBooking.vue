@@ -36,7 +36,7 @@
 				</tr>
 				<tr>
 					<td>결제일시</td>
-					<td>{{ confirmedBooking.bookingDate }}</td>
+					<td>{{ confirmedBooking.bookingTime }}</td>
 				</tr>
 			</table>
 			<div class="navigation-buttons">
@@ -72,7 +72,7 @@ export default {
   padding: 20px;
   font-family: "SUIT-Regular";
   font-size: 15px;
-  width: 620px;
+  width: 650px;
   margin: 0 auto;
   margin-bottom: 15px;
 }
