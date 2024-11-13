@@ -58,7 +58,6 @@ public class PaymentHistoryService {
             throw new IllegalStateException("결제 취소 처리가 되지 않았습니다.");
         }
         Optional<PaymentHistory> paymentHistory = paymentHistoryRepository.findByImpId(impId);
-        System.out.println(paymentHistory);
         if (paymentHistory.isPresent()) {
             paymentHistory.get().fail();
         }

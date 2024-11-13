@@ -86,7 +86,6 @@ public class BookingService {
     public BookingResponse createBookingAndPaymentHistory(Long userId, PostPaymentRequest request, LocalDateTime bookingTime) {
         User user = validateUser(userId);
         PaymentHistory paymentHistory = paymentHistoryRepository.save(PaymentHistory.create(request, user));
-        System.out.println(request.getImpId());
         if (!paymentHistoryService.validatePaymentAmount(request.getImpId(), request.getAmount())) {
             paymentHistoryService.failPayment(request.getImpId(), "비정상적인 접근입니다. 결제 요청이 유효하지 않습니다.");
         }
