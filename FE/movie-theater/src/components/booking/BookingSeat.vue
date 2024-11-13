@@ -171,8 +171,8 @@ button {
 }
 .screen-title {
   font-family: "SUIT-Bold";
-  font-size: 18px;
-  margin: 20px;
+  font-size: 20px;
+  margin: 30px;
 }
 .section-seat-container {
   display: flex;
@@ -191,10 +191,11 @@ button {
   line-height: 20px;
 }
 .seat-btn {
-  width: 24px;
-  height: 24px;
+  width: 27px;
+  height: 27px;
   background-color: #747474;
-  border: 2px solid var(--point-color);
+  /* border: 2px solid black; */
+  border: 2px solid var(--primary-color);
   cursor: pointer;
   text-align: center;
   font-size: 12px;
@@ -304,8 +305,10 @@ button {
   height: 35px;
   background-color: var(--primary-color);
   line-height: 35px;
-  font-family: "S-CoreDream-5Medium";
-  font-size: 13px;
+  font-family: "S-CoreDream-4Regular";
+  font-size: 12px;
+  color: black;
+  border-radius: 5px;
 }
 
 .total-price-container {
@@ -331,20 +334,20 @@ button {
   width: 100%;
 }
 .navigation-buttons button {
-  font-family: "SUIT-Medium";
+  font-family: "SUIT-SemiBold";
   font-size: 18px;
-  color: white;
   border: none;
   padding: 10px 0;
 }
 .navigation-buttons .prev-button {
   width: 50%;
   background-color: #53565b;
-  border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 8px;
+  color: white;
 }
 .navigation-buttons .next-button {
   width: 50%;
-  background-color: var(--secondary-color);
-  border-bottom-right-radius: 10px;
+  background-color: var(--point-color);
+  border-bottom-right-radius: 8px;
 }
 </style>

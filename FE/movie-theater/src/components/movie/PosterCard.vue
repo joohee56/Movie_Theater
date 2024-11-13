@@ -74,12 +74,12 @@ export default {
   margin: 10px 0;
 }
 .reservation-btn {
-  color: white;
   background-color: var(--primary-color);
   border-radius: 4px;
   width: 100%;
-  font-size: 15px;
-  padding: 8px 0;
-  font-weight: 500;
+  font-size: 17px;
+  padding: 10px 0;
+  font-family: "SUIT-Medium";
+  border: none;
 }
 </style>

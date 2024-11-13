@@ -85,7 +85,7 @@ export default {
   padding-top: 30px;
 }
 .left-side .booking-number {
-  color: var(--point-color);
+  color: var(--primary-color);
   font-family: "SUIT-Bold";
   font-size: 23px;
   margin-bottom: 20px;
@@ -99,7 +99,7 @@ export default {
   width: 750px;
 }
 .right-side .title {
-  color: var(--point-color);
+  color: var(--primary-color);
   font-family: "SUIT-Bold";
   font-size: 23px;
   padding: 30px 0;
@@ -121,17 +121,17 @@ export default {
   width: 1110px;
 }
 .navigation-buttons {
-  margin-top: 20px;
+  margin-top: 50px;
   text-align: center;
 }
 .navigation-buttons button {
-  font-family: "SUIT-Medium";
-  padding: 13px 30px;
+  font-family: "SUIT-SemiBold";
+  padding: 13px 50px;
   font-size: 16px;
   border-radius: 5px;
 }
 .booking-history-btn {
-  background-color: var(--primary-color);
+  background-color: var(--point-color);
   color: white;
   border: none;
 }

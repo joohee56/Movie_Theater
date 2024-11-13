@@ -1,12 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Gothic+A1&family=IBM+Plex+Sans+KR&display=swap");
 
 :root {
-  --primary-color: #503396;
-  /* --primary-color: #ffe579; */
-  --secondary-color: #352461;
+  /* --primary-color: #503396; */
+  --primary-color: #ffe579;
+  /* --secondary-color: #352461; */
   /* --secondary-color: #ea726f; */
-  --point-color: #329eb1;
-  /* --point-color: #ffe579; */
+  --point-color: #ea726f;
+  /* --point-color: #fdb900; */
+  --secondary-color: #097bed;
   --text-sub-color: #c4c4c4;
   --border-line-color: #d8d9db;
   --age-all-color: #229c56;

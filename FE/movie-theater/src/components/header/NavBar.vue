@@ -1,5 +1,5 @@
 <template lang="ko">
-  <div :class="homeClass">
+  <div :class="['container', homeClass]">
 		<div class="top-nav">
       <button v-if="isAuthenticated" @click="logout">로그아웃</button>
       <button v-else @click="SHOW_LOGIN_MODAL">로그인</button>
@@ -65,6 +65,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-bottom: 10px;
+}
 .home a,
 .home button {
   color: white;
@@ -108,7 +111,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   margin-top: 10px;
-  width: 170px;
+  width: 180px;
 }
 .user-link {
   margin-left: auto;

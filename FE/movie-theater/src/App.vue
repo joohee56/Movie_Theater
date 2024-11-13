@@ -43,21 +43,21 @@ body {
 .nav-home {
   background-color: #180f0d;
 }
-
 .navbar-container,
 .main-routerview-container {
   max-width: var(--max-width);
   margin: 0 auto;
 }
-
 .divider {
-  border-bottom: 1px solid var(--secondary-color);
-  transform: scaleY(0.5); /* 0.5배로 축소 */
+  border-bottom: 1px solid lightgray;
+  transform: scaleY(0.5);
   transform-origin: top;
 }
-
 a {
   color: black;
   text-decoration: none;
+}
+button {
+  cursor: pointer;
 }
 </style>

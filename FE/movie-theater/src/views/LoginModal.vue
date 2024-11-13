@@ -77,11 +77,11 @@ export default {
   font-family: "SUIT-Regular";
 }
 .modal-content .top {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: var(--point-color);
   display: flex;
-  padding: 10px 20px;
+  padding: 15px 20px;
   font-size: 17px;
+  font-family: "SUIT-Regular";
 }
 .modal-content .content {
   display: grid;
@@ -117,7 +117,6 @@ export default {
   border-radius: 5px;
   font-family: "SUIT-Medium";
   background-color: var(--primary-color);
-  color: white;
 }
 .content .login-btn:disabled {
   background-color: #e0e0e0;
@@ -138,8 +137,7 @@ export default {
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: white;
   margin-left: auto;
-  font-family: "SUIT-Regular";
+  font-family: "SUIT-SemiBold";
 }
 </style>

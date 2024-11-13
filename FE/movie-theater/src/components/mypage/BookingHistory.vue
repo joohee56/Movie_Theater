@@ -72,7 +72,7 @@ export default {
   font-family: SUIT-Medium;
   font-size: 26px;
   margin: 150px 0 20px;
-  color: var(--primary-color);
+  color: var(--point-color);
 }
 .canceled-booking .header {
   background-color: #f2f4f5;
