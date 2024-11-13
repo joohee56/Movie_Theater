@@ -3,13 +3,13 @@ package mt.movie_theater.domain.payment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
-import mt.movie_theater.IntegrationSpringTestSupport;
+import mt.movie_theater.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-class PaymentHistoryRepositorySpringTest extends IntegrationSpringTestSupport {
+class PaymentHistoryRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private PaymentHistoryRepository paymentHistoryRepository;
 

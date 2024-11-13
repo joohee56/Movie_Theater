@@ -3,7 +3,7 @@ package mt.movie_theater.api.user.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import mt.movie_theater.IntegrationSpringTestSupport;
+import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.user.request.UserCreateRequest;
 import mt.movie_theater.api.user.response.UserResponse;
 import mt.movie_theater.domain.user.User;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class UserServiceSpringTest extends IntegrationSpringTestSupport {
+class UserServiceTest extends IntegrationTestSupport {
     @Autowired
     private UserService userService;
     @Autowired

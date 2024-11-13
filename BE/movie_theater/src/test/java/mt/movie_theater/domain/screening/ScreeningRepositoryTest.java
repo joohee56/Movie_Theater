@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import mt.movie_theater.IntegrationSpringTestSupport;
+import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class ScreeningRepositorySpringTest extends IntegrationSpringTestSupport {
+class ScreeningRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private ScreeningRepository screeningRepository;
     @Autowired

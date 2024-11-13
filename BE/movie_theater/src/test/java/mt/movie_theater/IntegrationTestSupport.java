@@ -5,5 +5,5 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @SpringBootTest
-public class IntegrationSpringTestSupport {
+public class IntegrationTestSupport {
 }

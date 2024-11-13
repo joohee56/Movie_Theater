@@ -8,7 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +21,7 @@ import mt.movie_theater.domain.user.User;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Payment {
+public class PaymentHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,16 +30,14 @@ public class Payment {
     private String impId;
     private Long amount;
     private LocalDateTime payTime;
-    @Enumerated(EnumType.STRING)
-    private PayMethod payMethod;
+    private String payMethod;
     @Enumerated(EnumType.STRING)
     private Currency currency;
     @Enumerated(EnumType.STRING)
     private PayStatus payStatus;
 
     @Builder
-    private Payment(User user, String impId, Long amount, LocalDateTime payTime, PayMethod payMethod, Currency currency,
-                   PayStatus payStatus) {
+    private PaymentHistory(User user, String impId, Long amount, LocalDateTime payTime, String payMethod, Currency currency, PayStatus payStatus) {
         this.user = user;
         this.impId = impId;
         this.amount = amount;
@@ -47,15 +47,27 @@ public class Payment {
         this.payStatus = payStatus;
     }
 
-    public static Payment create(PostPaymentRequest request, User user) {
-        return Payment.builder()
+    public static PaymentHistory create(PostPaymentRequest request, User user) {
+        return PaymentHistory.builder()
                 .user(user)
                 .impId(request.getImpId())
                 .amount(request.getAmount())
-                .payTime(request.getPayTime())
+                .payTime(convertUnixTimestampToLocalDateTime(request.getPayTime()))
                 .payMethod(request.getPayMethod())
                 .currency(request.getCurrency())
                 .payStatus(PayStatus.COMPLETED)
                 .build();
+    }
+
+    private static LocalDateTime convertUnixTimestampToLocalDateTime(Long timestamp) {
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.of("Asia/Seoul"));
+    }
+
+    public void cancel() {
+        this.payStatus = PayStatus.CANCELED;
+    }
+
+    public void fail() {
+        this.payStatus = PayStatus.FAILED;
     }
 }

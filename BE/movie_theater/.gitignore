@@ -28,6 +28,7 @@ out/
 application-secret.properties
 application-local.properties
 application-test.properties
+application-imp.properties
 
 ### NetBeans ###
 /nbproject/private/

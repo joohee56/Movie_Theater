@@ -10,7 +10,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import mt.movie_theater.IntegrationSpringTestSupport;
+import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.movie.request.MovieCreateRequest;
 import mt.movie_theater.api.movie.response.MovieResponse;
 import mt.movie_theater.api.movie.response.MovieWatchableResponse;
@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class MovieServiceSpringTest extends IntegrationSpringTestSupport {
+class MovieServiceTest extends IntegrationTestSupport {
     @Autowired
     private MovieService movieService;
     @Autowired

@@ -14,4 +14,9 @@ public class DateUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return dateTime.format(formatter);
     }
+
+    public static String formatToDateAndHourAndMinute(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
+        return dateTime.format(formatter);
+    }
 }

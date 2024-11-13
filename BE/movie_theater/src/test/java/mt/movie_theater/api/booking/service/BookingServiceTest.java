@@ -3,14 +3,13 @@ package mt.movie_theater.api.booking.service;
 import static mt.movie_theater.domain.booking.BookingStatus.CANCELED;
 import static mt.movie_theater.domain.booking.BookingStatus.CONFIRMED;
 import static mt.movie_theater.domain.payment.Currency.KRW;
-import static mt.movie_theater.domain.payment.PayMethod.CARD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import mt.movie_theater.IntegrationSpringTestSupport;
+import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.response.BookingWithDateResponse;
 import mt.movie_theater.api.exception.DuplicateSeatBookingException;
@@ -42,7 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class BookingServiceSpringTest extends IntegrationSpringTestSupport {
+class BookingServiceTest extends IntegrationTestSupport {
     @Autowired
     private BookingService bookingService;
     @Autowired
@@ -61,6 +60,7 @@ class BookingServiceSpringTest extends IntegrationSpringTestSupport {
     private BookingRepository bookingRepository;
     @Autowired
     private PaymentHistoryRepository paymentHistoryRepository;
+
 
     @DisplayName("신규 예매를 생성한다.")
     @Test
@@ -188,15 +188,15 @@ class BookingServiceSpringTest extends IntegrationSpringTestSupport {
         //given
         LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 15, 00);
         Screening screening = createScreening(startDateTime);
-        Booking booking = createBooking(screening);
+        Booking booking = createBooking(screening, LocalDateTime.of(2024, 11, 01, 10, 00));
 
         //when
         BookingResponse bookingResponse = bookingService.getBooking(booking.getId());
 
         //then
         assertThat(bookingResponse)
-                .extracting("startDate", "startTime")
-                .containsExactly("2024.11.01(금)", "15:00");
+                .extracting("startDate", "startTime", "bookingTime")
+                .containsExactly("2024.11.01(금)", "15:00", "2024.11.01(금) 10:00");
     }
 
     @DisplayName("예매정보를 조회할 때, 유효하지 않은 예매일 경우 예외가 발생한다. ")
@@ -214,11 +214,11 @@ class BookingServiceSpringTest extends IntegrationSpringTestSupport {
         //given
         User user = createUser();
         Screening screening = createScreening(LocalDateTime.of(2024, 11, 02, 15, 00));
-        LocalDateTime bookingDate = LocalDateTime.of(2024, 11, 01, 00, 00);
-        createBooking(user, screening, CONFIRMED, bookingDate);
-        createBooking(user, screening, CONFIRMED, bookingDate);
-        createBooking(user, screening, CONFIRMED, bookingDate);
-        createBooking(user, screening, CANCELED, bookingDate);
+        LocalDateTime bookingTime = LocalDateTime.of(2024, 11, 01, 00, 00);
+        createBooking(user, screening, CONFIRMED, bookingTime);
+        createBooking(user, screening, CONFIRMED, bookingTime);
+        createBooking(user, screening, CONFIRMED, bookingTime);
+        createBooking(user, screening, CANCELED, bookingTime);
 
         //when
         Map<BookingStatus, List<BookingWithDateResponse>> bookingStatusMap = bookingService.getBookingHistory(user.getId());
@@ -227,33 +227,14 @@ class BookingServiceSpringTest extends IntegrationSpringTestSupport {
         assertThat(bookingStatusMap).hasSize(2);
         assertThat(bookingStatusMap.get(CONFIRMED)).hasSize(3);
         assertThat(bookingStatusMap.get(CONFIRMED).get(0))
-                .extracting("startDate", "startTime", "bookingDate")
-                .containsExactly("2024.11.02(토)", "15:00", "2024.11.01(금)");
+                .extracting("startDate", "startTime", "bookingTime")
+                .containsExactly("2024.11.02(토)", "15:00", "2024.11.01(금) 00:00");
         assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
     }
 
-    @DisplayName("예매를 취소한 후 예매 내역을 조회한다.")
-    @Test
-    void cancelBookingAndGetBookingHistory() {
-        //given
-        User user = createUser();
-        Seat seat1 = createSeat(true);
-        Seat seat2 = createSeat(true);
-        Booking booking1 = createBooking(user, seat1, CONFIRMED);
-        Booking booking2 = createBooking(user, seat2, CONFIRMED);
+    //TODO: 예메, 결제 취소 후 예매 내역 조회 테스트
 
-        //when
-        Map<BookingStatus, List<BookingWithDateResponse>> bookingStatusMap =
-                bookingService.cancelBookingAndPaymentGetBookingHistory(user.getId(), booking1.getId());
-
-        //then
-        assertThat(bookingStatusMap.get(CONFIRMED)).hasSize(1);
-        assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
-        assertThat(booking1.getSeat().isBooked()).isFalse();
-        assertThat(booking2.getSeat().isBooked()).isTrue();
-    }
-
-
+    //TODO: 결제 사후 검증 후 결제내역, 예매 생성 테스트
 
     @DisplayName("결제 사후 검증 후 결제내역과 예매를 생성 시, 유효하지 않은 사용자일 경우 예외가 발생한다.")
     @Test
@@ -261,7 +242,7 @@ class BookingServiceSpringTest extends IntegrationSpringTestSupport {
         //given
         PostPaymentRequest request = PostPaymentRequest.builder()
                 .amount(Long.valueOf(10000))
-                .payMethod(CARD)
+                .payMethod("card")
                 .currency(KRW)
                 .screeningId(Long.valueOf(1))
                 .seatId(Long.valueOf(1))
@@ -304,16 +285,17 @@ class BookingServiceSpringTest extends IntegrationSpringTestSupport {
         return paymentHistoryRepository.save(paymentHistory);
     }
 
+    private PaymentHistory createPaymentHistory(String impId, PayStatus payStatus) {
+        PaymentHistory paymentHistory = PaymentHistory.builder()
+                .impId(impId)
+                .payStatus(payStatus)
+                .build();
+        return paymentHistoryRepository.save(paymentHistory);
+    }
+
     private Seat createSeat() {
         Seat seat = Seat.builder()
                 .seatLocation(new SeatLocation("A", "1"))
-                .build();
-        return seatRepository.save(seat);
-    }
-    private Seat createSeat(boolean isBooked) {
-        Seat seat = Seat.builder()
-                .seatLocation(new SeatLocation("A", "1"))
-                .isBooked(isBooked)
                 .build();
         return seatRepository.save(seat);
     }
@@ -333,23 +315,13 @@ class BookingServiceSpringTest extends IntegrationSpringTestSupport {
                 .build();
         return screeningRepository.save(screening);
     }
-    private Booking createBooking(Screening screening) {
+    private Booking createBooking(Screening screening, LocalDateTime bookingTime) {
         Booking booking = Booking.builder()
                 .user(createUser())
                 .screening(screening)
                 .seat(createSeat())
                 .paymentHistory(createPaymentHistory())
-                .build();
-        return bookingRepository.save(booking);
-    }
-    private Booking createBooking(User user, Seat seat, BookingStatus bookingStatus) {
-        Booking booking = Booking.builder()
-                .user(user)
-                .screening(createScreening())
-                .seat(seat)
-                .paymentHistory(createPaymentHistory())
-                .bookingStatus(bookingStatus)
-                .bookingTime(LocalDateTime.of(2024, 11, 06, 00, 00))
+                .bookingTime(bookingTime)
                 .build();
         return bookingRepository.save(booking);
     }

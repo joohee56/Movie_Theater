@@ -5,14 +5,14 @@ import static mt.movie_theater.domain.theater.Region.SEOUL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import mt.movie_theater.IntegrationSpringTestSupport;
+import mt.movie_theater.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class TheaterRepositorySpringTest extends IntegrationSpringTestSupport {
+class TheaterRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private TheaterRepository theaterRepository;
 

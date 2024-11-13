@@ -3,14 +3,14 @@ package mt.movie_theater.api.user.service;
 import static mt.movie_theater.api.user.constants.SessionConstants.LOGIN_USER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import mt.movie_theater.IntegrationSpringTestSupport;
+import mt.movie_theater.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-class SessionServiceSpringTest extends IntegrationSpringTestSupport {
+class SessionServiceTest extends IntegrationTestSupport {
     @Autowired
     private SessionService sessionService;
 

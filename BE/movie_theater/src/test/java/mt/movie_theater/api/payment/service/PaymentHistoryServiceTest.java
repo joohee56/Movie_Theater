@@ -14,7 +14,6 @@ import com.siot.IamportRestClient.response.Prepare;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Optional;
-import mt.movie_theater.IntegrationMockitoTestSupport;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.exception.PreparePaymentException;
 import mt.movie_theater.domain.payment.PayStatus;
@@ -33,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @ExtendWith(MockitoExtension.class)
-class PaymentHistoryServiceMockitoTest extends IntegrationTestSupport {
+class PaymentHistoryServiceTest extends IntegrationTestSupport {
     @MockBean
     private IamportResponse<Prepare> prepareResponse;
     @MockBean

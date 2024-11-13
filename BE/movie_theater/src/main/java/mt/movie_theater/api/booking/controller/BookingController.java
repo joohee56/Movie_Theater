@@ -1,15 +1,14 @@
 package mt.movie_theater.api.booking.controller;
 
-import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.apiResponse.ApiResponse;
-import mt.movie_theater.api.booking.request.BookingCreateRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.response.BookingWithDateResponse;
 import mt.movie_theater.api.booking.service.BookingService;
+import mt.movie_theater.api.payment.request.PostPaymentRequest;
 import mt.movie_theater.api.user.annotation.Login;
 import mt.movie_theater.api.user.annotation.LoginCheck;
 import mt.movie_theater.domain.booking.BookingStatus;
@@ -28,12 +27,12 @@ public class BookingController {
 
     @LoginCheck
     @PostMapping("/new")
-    public ApiResponse<BookingResponse> createBooking(@Login Long userId, @Valid @RequestBody BookingCreateRequest request) {
-        LocalDateTime bookingDate = LocalDateTime.now();
-        BookingResponse response = bookingService.createBooking(userId, request, bookingDate);
-        return ApiResponse.ok(response);
+    public ApiResponse<BookingResponse> createBookingAndPaymentHistory(@Login Long userId, @RequestBody PostPaymentRequest request) {
+        LocalDateTime bookingTime = LocalDateTime.now();
+        return ApiResponse.ok(bookingService.createBookingAndPaymentHistory(userId, request, bookingTime));
     }
 
+    @LoginCheck
     @GetMapping("/booking/{bookingId}")
     public ApiResponse<BookingResponse> getBooking(@PathVariable("bookingId") Long bookingId) {
         return ApiResponse.ok(bookingService.getBooking(bookingId));
@@ -48,6 +47,6 @@ public class BookingController {
     @LoginCheck
     @GetMapping("/cancel/{bookingId}")
     public ApiResponse<Map<BookingStatus, List<BookingWithDateResponse>>> cancelBookingAndGetBookingHistory(@Login Long userId, @PathVariable("bookingId") Long bookingId) {
-        return ApiResponse.ok(bookingService.cancelBookingAndGetBookingHistory(userId, bookingId));
+        return ApiResponse.ok(bookingService.cancelBookingAndPaymentGetBookingHistory(userId, bookingId));
     }
 }

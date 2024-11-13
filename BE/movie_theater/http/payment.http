@@ -1,0 +1,8 @@
+### 결제 사전 검증 등록
+POST localhost:8081/api/v1/payments/prepare
+Content-Type: application/json
+
+{
+  "paymentId": "asdfasdf1a2s3",
+  "amount": "15000"
+}

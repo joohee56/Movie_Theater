@@ -18,17 +18,17 @@ public class BookingWithDateResponse {
     private String startTime;
     private String seatSection;
     private String seatRow;
-    private int totalPrice;
+    private Long totalPrice;
     private String cancelDate;
     private String cancelTime;
-    private String bookingDate;
+    private String bookingTime;
 
     @Builder
     public BookingWithDateResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
                                    String screeningTypeDisplay, String theaterName, String hallName, String startDate,
-                                   String startTime, String seatSection, String seatRow, int totalPrice,
+                                   String startTime, String seatSection, String seatRow, Long totalPrice,
                                    String cancelDate,
-                                   String cancelTime, String bookingDate) {
+                                   String cancelTime, String bookingTime) {
         this.id = id;
         this.bookingNumber = bookingNumber;
         this.posterUrl = posterUrl;
@@ -43,7 +43,7 @@ public class BookingWithDateResponse {
         this.totalPrice = totalPrice;
         this.cancelDate = cancelDate;
         this.cancelTime = cancelTime;
-        this.bookingDate = bookingDate;
+        this.bookingTime = bookingTime;
     }
 
     public static BookingWithDateResponse create(Booking booking) {
@@ -59,10 +59,10 @@ public class BookingWithDateResponse {
                 .startTime(DateUtil.formatToHourAndMinute(booking.getScreening().getStartTime()))
                 .seatSection(booking.getSeat().getSeatLocation().getSection())
                 .seatRow(booking.getSeat().getSeatLocation().getSeatRow())
-                .totalPrice(booking.getTotalPrice())
+                .totalPrice(booking.getPaymentHistory().getAmount())
                 .cancelDate(DateUtil.formatToStartDate(booking.getUpdatedAt()))
                 .cancelTime(DateUtil.formatToHourAndMinute(booking.getUpdatedAt()))
-                .bookingDate(DateUtil.formatToStartDate(booking.getBookingTime()))
+                .bookingTime(DateUtil.formatToDateAndHourAndMinute(booking.getBookingTime()))
                 .build();
     }
 }
