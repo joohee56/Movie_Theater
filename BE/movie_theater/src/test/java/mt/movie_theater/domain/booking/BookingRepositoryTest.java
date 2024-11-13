@@ -6,7 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 import java.util.List;
 import java.util.Optional;
-import mt.movie_theater.IntegrationTestSupport;
+import mt.movie_theater.IntegrationSpringTestSupport;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class BookingRepositoryTest extends IntegrationTestSupport {
+class BookingRepositorySpringTest extends IntegrationSpringTestSupport {
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired

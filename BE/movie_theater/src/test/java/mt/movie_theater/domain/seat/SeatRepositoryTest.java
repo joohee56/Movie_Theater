@@ -3,7 +3,7 @@ package mt.movie_theater.domain.seat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import java.util.List;
-import mt.movie_theater.IntegrationTestSupport;
+import mt.movie_theater.IntegrationSpringTestSupport;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import org.assertj.core.api.Assertions;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class SeatRepositoryTest extends IntegrationTestSupport {
+class SeatRepositorySpringTest extends IntegrationSpringTestSupport {
     @Autowired
     private SeatRepository seatRepository;
     @Autowired

@@ -132,7 +132,9 @@ export default {
 .container {
   --border-color: #434343;
 }
-
+button {
+  cursor: pointer;
+}
 .container {
   display: grid;
   grid-template-columns: 70% 28%;
@@ -269,6 +271,8 @@ export default {
 }
 .poster-img {
   width: 70px;
+  aspect-ratio: 290/410;
+  object-fit: fill;
 }
 
 /* 좌석 상세 */

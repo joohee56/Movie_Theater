@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import java.util.Map;
-import mt.movie_theater.IntegrationTestSupport;
+import mt.movie_theater.IntegrationSpringTestSupport;
 import mt.movie_theater.api.seat.request.SeatListCreateRequest;
 import mt.movie_theater.api.seat.response.SeatResponse;
 import mt.movie_theater.api.seat.response.SeatSummaryResponse;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class SeatServiceTest extends IntegrationTestSupport {
+class SeatServiceSpringTest extends IntegrationSpringTestSupport {
     @Autowired
     private SeatService seatService;
     @Autowired

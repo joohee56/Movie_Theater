@@ -3,7 +3,7 @@ package mt.movie_theater.api.hall.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import mt.movie_theater.IntegrationTestSupport;
+import mt.movie_theater.IntegrationSpringTestSupport;
 import mt.movie_theater.api.hall.request.HallCreateRequest;
 import mt.movie_theater.api.hall.response.HallResponse;
 import mt.movie_theater.domain.movie.ScreeningType;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-class HallServiceTest extends IntegrationTestSupport {
+class HallServiceSpringTest extends IntegrationSpringTestSupport {
     @Autowired
     private TheaterRepository theaterRepository;
     @Autowired

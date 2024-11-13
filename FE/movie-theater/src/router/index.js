@@ -9,7 +9,7 @@ import BookingSuccess from "@/views/BookingSuccess.vue";
 import MyPage from "@/views/MyPage.vue";
 import BookingHistory from "@/components/mypage/BookingHistory.vue";
 import store from "@/store/index.js";
-import PaymentView from "@/components/booking/PaymentView";
+import PaymentView from "@/views/PaymentView";
 
 Vue.use(VueRouter);
 
@@ -52,12 +52,12 @@ const routes = [
         beforeEnter: checkAuthenticate,
         component: BookingSeat,
       },
-      {
-        path: "/booking/payment",
-        name: "paymentView",
-        component: PaymentView,
-      },
     ],
+  },
+  {
+    path: "/booking/payment",
+    name: "paymentView",
+    component: PaymentView,
   },
   {
     path: "/booking/success/:bookingId",
