@@ -28,13 +28,13 @@ import { logout } from "@/api/user";
 import LoginModal from "@/views/LoginModal.vue";
 
 export default {
-  components: { LoginModal },
   data() {
     return {
       showLoginModal: false,
       isAuthenticated: false,
     };
   },
+  components: { LoginModal },
   computed: {
     homeClass() {
       return this.$route.path == "/" ? "home" : "default";
@@ -97,14 +97,6 @@ export default {
 .main-nav .left-side a {
   margin-right: 20px;
   line-height: 2;
-}
-.logo {
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin-top: 10px;
-  font-family: "Cafe24Dangdanghae";
-  font-size: 20px;
 }
 .logo-img {
   position: fixed;

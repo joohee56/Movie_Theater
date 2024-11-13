@@ -15,7 +15,7 @@
 			개봉일 {{movie.releaseDate}}
 		</div>
 		<div>
-			<button class="reservation-btn">예매</button>
+			<button class="booking-btn">예매</button>
 		</div>
 	</div>
 </template>
@@ -73,7 +73,7 @@ export default {
   font-size: 15px;
   margin: 10px 0;
 }
-.reservation-btn {
+.booking-btn {
   background-color: var(--primary-color);
   border-radius: 4px;
   width: 100%;
