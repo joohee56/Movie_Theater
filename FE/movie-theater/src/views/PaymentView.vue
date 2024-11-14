@@ -110,6 +110,9 @@ export default {
       return `${formattedDate}-${randomString}`;
     },
     async requestPayment() {
+      alert(
+        "해당 결제는 결제처리가 진행된 후 자정 전(23:00~23:50)에 자동으로 일괄적으로 취소됩니다. 혹시나 발생할 예외를 대비해 결제 금액은 100원으로 고정하였습니다."
+      );
       this.screening.totalPrice = 100; //테스트용
       //결제 사전 등록
       const bookingNumber = this.generateUniqueBookingNumber();
