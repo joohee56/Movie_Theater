@@ -5,6 +5,7 @@
       <button v-else @click="SHOW_LOGIN_MODAL">로그인</button>
       <LoginModal @checkAuthStatus="checkAuthStatus" />
 			<button>회원가입</button>
+      <button v-if="isAuthenticated" @click="redirectAdminPage">관리자 대시보드</button>
 		</div>
 		<div class="main-nav">
       <div class="left-side">
@@ -59,6 +60,9 @@ export default {
         localStorage.removeItem("isAuthenticated");
         this.checkAuthStatus();
       }
+    },
+    redirectAdminPage() {
+      this.$router.push({ name: "admin" });
     },
   },
 };

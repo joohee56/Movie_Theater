@@ -10,6 +10,7 @@ import MyPage from "@/views/MyPage.vue";
 import BookingHistory from "@/components/mypage/BookingHistory.vue";
 import store from "@/store/index.js";
 import PaymentView from "@/views/PaymentView";
+import AdminView from "@/views/AdminView";
 
 Vue.use(VueRouter);
 
@@ -76,6 +77,11 @@ const routes = [
         component: BookingHistory,
       },
     ],
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: AdminView,
   },
 ];
 
