@@ -11,6 +11,7 @@ import BookingHistory from "@/components/mypage/BookingHistory.vue";
 import store from "@/store/index.js";
 import PaymentView from "@/views/PaymentView";
 import AdminView from "@/views/AdminView";
+import CreateMovie from "@/components/admin/movie/CreateMovie.vue";
 
 Vue.use(VueRouter);
 
@@ -82,6 +83,11 @@ const routes = [
     path: "/admin",
     name: "admin",
     component: AdminView,
+  },
+  {
+    path: "/admin/movie/create",
+    name: "createMovie",
+    component: CreateMovie,
   },
 ];
 
