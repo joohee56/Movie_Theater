@@ -11,10 +11,10 @@ import mt.movie_theater.api.movie.response.MovieResponse;
 import mt.movie_theater.api.movie.response.MovieWatchableResponse;
 import mt.movie_theater.domain.genre.Genre;
 import mt.movie_theater.domain.genre.GenreRepository;
-import mt.movie_theater.domain.genre.GenreType;
 import mt.movie_theater.domain.movie.Movie;
 import mt.movie_theater.domain.movie.MovieRepository;
 import mt.movie_theater.domain.screening.ScreeningRepository;
+import mt.movie_theater.util.S3Uploader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +25,13 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final GenreRepository genreRepository;
     private final ScreeningRepository screeningRepository;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public MovieResponse createMovie(MovieCreateRequest request) {
-        List<GenreType> genreTypes = request.getGenreTypes();
-        List<Genre> genres = genreRepository.findAllByTypeIn(genreTypes);
-        Movie movie = Movie.create(request, genres);
+        List<Genre> genres = genreRepository.findAllByTypeIn(request.getGenreTypes());
+        String posterUrl = s3Uploader.upload(request.getPosterImage(), "images");
+        Movie movie = Movie.create(request, genres, posterUrl);
         return MovieResponse.create(movieRepository.save(movie));
     }
 
@@ -61,6 +62,5 @@ public class MovieService {
 
     private LocalDateTime getEndDateTime(LocalDate date) {
         return date.atTime(LocalTime.MAX); // 23:59:59
-
     }
 }

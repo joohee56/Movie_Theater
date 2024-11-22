@@ -27,31 +27,45 @@ import mt.movie_theater.domain.moviegenre.MovieGenre;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Movie extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
+
     private String subTitle;
+
     @Column(columnDefinition = "TEXT")
     private String description;
+
     private LocalDate releaseDate;
+
     private Duration durationMinutes;
+
     private String posterUrl;
+
     @Enumerated(EnumType.STRING)
     private AgeRating ageRating;
+
     @Column(length = 50)
     private String director;
+
     @Enumerated(EnumType.STRING)
     private ScreeningType screeningType;
+
     private int standardPrice;
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieGenre> movieGenres = new ArrayList<>();
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieActor> actors = new ArrayList<>();
 
     public void addMovieGenre(MovieGenre movieGenre) {
         this.movieGenres.add(movieGenre);
     }
+
     public void addMovieActor(MovieActor movieActor) {
         this.actors.add(movieActor);
     }
@@ -74,14 +88,14 @@ public class Movie extends BaseEntity {
         this.actors = movieActors != null ? movieActors : new ArrayList<>();
     }
 
-    public static Movie create(MovieCreateRequest request, List<Genre> genres) {
+    public static Movie create(MovieCreateRequest request, List<Genre> genres, String posterUrl) {
         Movie movie = Movie.builder()
                 .title(request.getTitle())
                 .subTitle(request.getSubTitle())
                 .description(request.getDescription())
                 .releaseDate(request.getReleaseDate())
                 .durationMinutes(Duration.ofMinutes(request.getDurationMinutes()))
-                .posterUrl(request.getPosterUrl())
+                .posterUrl(posterUrl)
                 .ageRating(request.getAgeRating())
                 .director(request.getDirector())
                 .screeningType(request.getScreeningType())
