@@ -15,4 +15,14 @@ function jsonApiInstance() {
   return instance;
 }
 
-export { jsonApiInstance };
+function multipartApiInstance() {
+  const instance = axios.create({
+    baseURL: config.baseUrl,
+    headers: {
+      "content-type": "multipart/from-data",
+    },
+  });
+  return instance;
+}
+
+export { jsonApiInstance, multipartApiInstance };

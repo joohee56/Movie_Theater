@@ -3,7 +3,7 @@
 		<div class="movies-container">
 			<div>
 				<span class="box-office-text">박스오피스</span>
-				<router class="more-movie-link">더 많은 영화보기 + </router>
+				<router-link to="#" class="more-movie-link">더 많은 영화보기 + </router-link>
 			</div>
 			<div class="movie-card-container">
 				<div v-for="movie in movies" :key="movie.movieId">

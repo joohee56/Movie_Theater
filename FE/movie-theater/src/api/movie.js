@@ -1,5 +1,6 @@
-import { jsonApiInstance } from "@/api/index";
+import { jsonApiInstance, multipartApiInstance } from "@/api/index";
 const jsonApi = jsonApiInstance();
+const multipartApi = multipartApiInstance();
 
 async function getMovies(date, theaterId) {
   try {
@@ -15,4 +16,16 @@ async function getMovies(date, theaterId) {
   }
 }
 
-export { getMovies };
+async function createMovie(formData) {
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
+  try {
+    const response = await multipartApi.post("/movies/new", formData);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+}
+
+export { getMovies, createMovie };

@@ -1,7 +1,7 @@
 <template lang="ko">
 	<div class="container">
 		<div>
-			<img src="@/assets/img/no-poster-img.png" class="poster">
+			<img :src="movie.posterUrl" class="poster">
 		</div>
 		<div class="movie-title-container">
 			<div :class="[ageClass, `age-rating`]">
@@ -39,6 +39,7 @@ export default {
   aspect-ratio: 290/410;
   object-fit: fill;
   width: 100%;
+  border-radius: 5px;
 }
 
 .movie-title-container {
