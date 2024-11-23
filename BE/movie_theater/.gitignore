@@ -29,6 +29,7 @@ application-secret.properties
 application-local.properties
 application-test.properties
 application-imp.properties
+application-aws.properties
 
 ### NetBeans ###
 /nbproject/private/
