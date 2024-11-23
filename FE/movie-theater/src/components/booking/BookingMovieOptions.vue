@@ -62,7 +62,7 @@ import { mapMutations } from "vuex";
 import "vue2-datepicker/index.css";
 import "vue2-datepicker/locale/ko";
 import DatePicker from "vue2-datepicker";
-import { getMovies } from "@/api/movie";
+import { getMoviesWithWatchable } from "@/api/movie";
 import {
   getRegionsWithScreeningCount,
   getScreenings,
@@ -117,7 +117,7 @@ export default {
       this.fetchMovies();
     },
     async fetchMovies() {
-      const response = await getMovies(
+      const response = await getMoviesWithWatchable(
         this.formatDate,
         this.selectedTheater.id
       );

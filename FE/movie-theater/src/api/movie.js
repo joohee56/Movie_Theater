@@ -16,6 +16,20 @@ async function getMovies(date, theaterId) {
   }
 }
 
+async function getMoviesWithWatchable(date, theaterId) {
+  try {
+    const response = await jsonApi.get("/movies/watchable", {
+      params: {
+        date: date,
+        theaterId: theaterId,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function createMovie(formData) {
   try {
     const response = await multipartApi.post("/movies/new", formData);
@@ -25,4 +39,4 @@ async function createMovie(formData) {
   }
 }
 
-export { getMovies, createMovie };
+export { getMovies, getMoviesWithWatchable, createMovie };
