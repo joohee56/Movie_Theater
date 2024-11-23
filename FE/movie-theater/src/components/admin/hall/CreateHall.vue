@@ -27,12 +27,12 @@
 				<input type="text" v-model="hall.name">
 			</div>
 			<div>상영타입</div>
-				<select v-model="hall.screeningType">
-					<option value="TWO_D">2D</option>
-					<option value="THREE_D">3D</option>
-					<option value="IMAX">IMAX</option>
-					<option value="FOUR_DX">4DX</option>
-				</select>
+      <select v-model="hall.screeningType">
+        <option value="TWO_D">2D</option>
+        <option value="THREE_D">3D</option>
+        <option value="IMAX">IMAX</option>
+        <option value="FOUR_DX">4DX</option>
+      </select>
 			<div>추가 요금</div>
 			<div>
 				<input type="text" v-model="hall.hallTypeModifier">
@@ -92,6 +92,7 @@ export default {
       this.selectedRegion.index = index;
       this.selectedRegion.name = name;
 
+      this.resetTheater();
       this.fetchTheaters();
     },
     theaterSelect(theaterId, index) {
@@ -116,6 +117,10 @@ export default {
       const response = await createHallWithSeats(this.hall);
       console.log(response);
       this.fetchHalls();
+    },
+    resetTheater() {
+      this.selectedTheater.id = null;
+      this.selectedTheater.index = -1;
     },
   },
 };

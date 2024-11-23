@@ -1,6 +1,15 @@
 import { jsonApiInstance } from "@/api/index";
 const jsonApi = jsonApiInstance();
 
+async function createScreening(request) {
+  try {
+    const response = await jsonApi.post("/screenings/new", request);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function getRegionsWithScreeningCount(movieId, date) {
   try {
     const response = await jsonApi.get("/screenings/region/screeningCount", {
@@ -55,6 +64,7 @@ async function getScreeningAndTotalPrice(screeningId) {
 }
 
 export {
+  createScreening,
   getRegionsWithScreeningCount,
   getScreenings,
   getTheaterAndScreeningCounts,
