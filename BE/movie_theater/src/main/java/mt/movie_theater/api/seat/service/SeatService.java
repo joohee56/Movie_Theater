@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import mt.movie_theater.api.seat.request.SeatListCreateRequest;
 import mt.movie_theater.api.seat.response.SeatResponse;
 import mt.movie_theater.api.seat.response.SeatSummaryResponse;
 import mt.movie_theater.domain.hall.Hall;
@@ -25,18 +24,11 @@ public class SeatService {
     private final HallRepository hallRepository;
 
     @Transactional
-    public List<SeatResponse> createSeatList(SeatListCreateRequest request) {
-        Optional<Hall> optionalHall = hallRepository.findById(request.getHallId());
-        if (optionalHall.isEmpty()) {
-            throw new IllegalArgumentException("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
-        }
-
+    public List<SeatResponse> createSeatList(Long hallId, int rows, int columns) {
+        Hall hall = validateHall(hallId);
         //TODO: 이미 좌석이 생성되어 있다면, 기존 좌석 제거 후 다시 생성..?
 
-        Hall hall = optionalHall.get();
         List<Seat> seats = new ArrayList<>();
-        int rows = request.getRows();
-        int columns = request.getColumns();
         for (char row = 'A'; row < 'A' + rows; row++) {
             for (int col = 1; col <= columns; col++) {
                 Seat seat = Seat.builder()
@@ -66,5 +58,13 @@ public class SeatService {
                                 .map(seat -> SeatSummaryResponse.create(seat))
                                 .collect(Collectors.toList())
                 ));
+    }
+
+    private Hall validateHall(Long hallId) {
+        Optional<Hall> optionalHall = hallRepository.findById(hallId);
+        if (optionalHall.isEmpty()) {
+            throw new IllegalArgumentException("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
+        }
+        return optionalHall.get();
     }
 }

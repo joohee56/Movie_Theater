@@ -8,3 +8,6 @@ Content-Type: application/json
   "screeningType": "IMAX",
   "hallTypeModifier": "3000"
 }
+
+### 영화관에 해당하는 상영관 리스트 조회
+GET localhost:8081/api/v1/halls/theater/1

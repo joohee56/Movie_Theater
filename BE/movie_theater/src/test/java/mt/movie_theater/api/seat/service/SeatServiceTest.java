@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.tuple;
 import java.util.List;
 import java.util.Map;
 import mt.movie_theater.IntegrationTestSupport;
-import mt.movie_theater.api.seat.request.SeatListCreateRequest;
 import mt.movie_theater.api.seat.response.SeatResponse;
 import mt.movie_theater.api.seat.response.SeatSummaryResponse;
 import mt.movie_theater.domain.hall.Hall;
@@ -35,14 +34,11 @@ class SeatServiceTest extends IntegrationTestSupport {
     void createSeatList() {
         //given
         Hall hall = createHall();
-        SeatListCreateRequest request = SeatListCreateRequest.builder()
-                .hallId(hall.getId())
-                .rows(2)
-                .columns(3)
-                .build();
+        int rows = 2;
+        int columns = 3;
 
         //when
-        List<SeatResponse> seats = seatService.createSeatList(request);
+        List<SeatResponse> seats = seatService.createSeatList(hall.getId(), rows, columns);
 
         //then
         assertThat(seats).hasSize(6)
@@ -61,14 +57,11 @@ class SeatServiceTest extends IntegrationTestSupport {
     @Test
     void createSeatListWithNoHall() {
         //given
-        SeatListCreateRequest request = SeatListCreateRequest.builder()
-                .hallId(Long.valueOf(1))
-                .rows(2)
-                .columns(3)
-                .build();
+        int rows = 2;
+        int columns = 3;
 
         //when, then
-        assertThatThrownBy(() -> seatService.createSeatList(request))
+        assertThatThrownBy(() -> seatService.createSeatList(Long.valueOf(1), rows, columns))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 상영관입니다. 상영관 정보를 다시 확인해 주세요.");
     }

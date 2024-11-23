@@ -24,7 +24,7 @@ public class SeatController {
 
     @PostMapping("/new")
     public ApiResponse<List<SeatResponse>> createSeatList(@Valid @RequestBody SeatListCreateRequest request) {
-        List<SeatResponse> seats = seatService.createSeatList(request);
+        List<SeatResponse> seats = seatService.createSeatList(request.getHallId(), request.getRows(), request.getColumns());
         return ApiResponse.ok(seats);
     }
 
