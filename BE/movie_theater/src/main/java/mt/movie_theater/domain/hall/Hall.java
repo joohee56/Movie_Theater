@@ -26,16 +26,22 @@ import mt.movie_theater.domain.theater.Theater;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Hall extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Theater theater;
+
     @Column(length = 50)
     private String name;
+
     @Enumerated(EnumType.STRING)
     private ScreeningType screeningType;
+
     private int hallTypeModifier;
+
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats = new ArrayList<>();
 

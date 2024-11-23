@@ -10,3 +10,6 @@ Content-Type: application/json
   "longitude": "126.8974",
   "contactNumber": "1544-0070"
 }
+
+### 지역 리스트와 지역에 속한 영화관 갯수 조회
+GET localhost:8081/api/v1/theaters/regions
