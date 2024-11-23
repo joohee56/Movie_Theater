@@ -12,6 +12,7 @@ import store from "@/store/index.js";
 import PaymentView from "@/views/PaymentView";
 import AdminView from "@/views/AdminView";
 import CreateMovie from "@/components/admin/movie/CreateMovie.vue";
+import CreateTheater from "@/components/admin/theater/CreateTheater.vue";
 
 Vue.use(VueRouter);
 
@@ -88,6 +89,11 @@ const routes = [
     path: "/admin/movie/create",
     name: "createMovie",
     component: CreateMovie,
+  },
+  {
+    path: "/admin/theater/create",
+    name: "createTheater",
+    component: CreateTheater,
   },
 ];
 
