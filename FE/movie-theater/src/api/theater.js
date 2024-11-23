@@ -10,13 +10,22 @@ async function createTheater(theater) {
   }
 }
 
-async function getTheatersByRegion(region) {
+async function getRegionsWithTheaterCount() {
   try {
-    const response = await jsonApi.get(`/theaters/${region}`);
+    const response = await jsonApi.get("/theaters/regions");
     return response;
   } catch (error) {
     console.log(error);
   }
 }
 
-export { getTheatersByRegion, createTheater };
+async function getTheatersByRegion(region) {
+  try {
+    const response = await jsonApi.get(`/theaters/regions/${region}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { createTheater, getRegionsWithTheaterCount, getTheatersByRegion };

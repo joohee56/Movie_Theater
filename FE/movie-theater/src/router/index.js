@@ -13,6 +13,7 @@ import PaymentView from "@/views/PaymentView";
 import AdminView from "@/views/AdminView";
 import CreateMovie from "@/components/admin/movie/CreateMovie.vue";
 import CreateTheater from "@/components/admin/theater/CreateTheater.vue";
+import CreateHall from "@/components/admin/hall/CreateHall.vue";
 
 Vue.use(VueRouter);
 
@@ -94,6 +95,11 @@ const routes = [
     path: "/admin/theater/create",
     name: "createTheater",
     component: CreateTheater,
+  },
+  {
+    path: "/admin/hall/create",
+    name: "createHall",
+    component: CreateHall,
   },
 ];
 
