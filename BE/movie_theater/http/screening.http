@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "movieId": "1",
-  "theaterId": "1",
+  "hallId": "1",
   "startTime": "2024-10-31T08:00:00"
 }
 
