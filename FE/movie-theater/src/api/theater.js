@@ -1,6 +1,15 @@
 import { jsonApiInstance } from "@/api/index";
 const jsonApi = jsonApiInstance();
 
+async function createTheater(theater) {
+  try {
+    const response = await jsonApi.post("/theaters/new", theater);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function getTheatersByRegion(region) {
   try {
     const response = await jsonApi.get(`/theaters/${region}`);
@@ -10,4 +19,4 @@ async function getTheatersByRegion(region) {
   }
 }
 
-export { getTheatersByRegion };
+export { getTheatersByRegion, createTheater };
