@@ -22,10 +22,13 @@ public class Seat extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Hall hall;
+
     @Embedded
     private SeatLocation seatLocation;
+
     @Column(columnDefinition = "TINYINT(1) DEFAULT true")
     private boolean isBooked;
 
@@ -43,5 +46,4 @@ public class Seat extends BaseEntity {
     public void cancel() {
         this.isBooked = false;
     }
-
 }

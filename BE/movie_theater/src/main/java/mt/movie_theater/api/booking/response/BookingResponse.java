@@ -1,7 +1,10 @@
 package mt.movie_theater.api.booking.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import mt.movie_theater.api.seat.response.SeatLocationResponse;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.util.DateUtil;
 
@@ -16,17 +19,16 @@ public class BookingResponse {
     private String hallName;
     private String startDate;
     private String startTime;
-    private String seatSection;
-    private String seatRow;
     private String userEmail;
     private Long totalPrice;
     private String bookingTime;
+    private List<SeatLocationResponse> seats;
 
     @Builder
     public BookingResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
                            String screeningTypeDisplay,
-                           String theaterName, String hallName, String startDate, String startTime, String seatSection, String seatRow,
-                           String userEmail, Long totalPrice, String bookingTime) {
+                           String theaterName, String hallName, String startDate, String startTime, String userEmail,
+                           Long totalPrice, String bookingTime, List<SeatLocationResponse> seats) {
         this.id = id;
         this.bookingNumber = bookingNumber;
         this.posterUrl = posterUrl;
@@ -36,11 +38,10 @@ public class BookingResponse {
         this.hallName = hallName;
         this.startDate = startDate;
         this.startTime = startTime;
-        this.seatSection = seatSection;
-        this.seatRow = seatRow;
         this.userEmail = userEmail;
         this.totalPrice = totalPrice;
         this.bookingTime = bookingTime;
+        this.seats = seats;
     }
 
     public static BookingResponse create(Booking booking) {
@@ -54,11 +55,12 @@ public class BookingResponse {
                 .hallName(booking.getScreening().getHall().getName())
                 .startDate(DateUtil.formatToStartDate(booking.getScreening().getStartTime()))
                 .startTime(DateUtil.formatToHourAndMinute(booking.getScreening().getStartTime()))
-                .seatSection(booking.getSeat().getSeatLocation().getSection())
-                .seatRow(booking.getSeat().getSeatLocation().getSeatRow())
                 .userEmail(booking.getUser().getEmail())
                 .totalPrice(booking.getPaymentHistory().getAmount())
                 .bookingTime(DateUtil.formatToDateAndHourAndMinute(booking.getBookingTime()))
+                .seats(booking.getBookingSeats().stream()
+                        .map(BookingSeat -> SeatLocationResponse.create(BookingSeat.getSeat()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

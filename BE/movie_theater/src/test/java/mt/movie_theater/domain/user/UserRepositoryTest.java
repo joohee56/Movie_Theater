@@ -2,12 +2,14 @@ package mt.movie_theater.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import mt.movie_theater.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Transactional
 class UserRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private UserRepository userRepository;

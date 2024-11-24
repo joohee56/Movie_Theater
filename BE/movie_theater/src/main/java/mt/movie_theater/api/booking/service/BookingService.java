@@ -1,7 +1,5 @@
 package mt.movie_theater.api.booking.service;
 
-import static mt.movie_theater.domain.booking.BookingStatus.CONFIRMED;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +15,8 @@ import mt.movie_theater.api.payment.service.PaymentHistoryService;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.domain.booking.BookingRepository;
 import mt.movie_theater.domain.booking.BookingStatus;
+import mt.movie_theater.domain.bookingseat.BookingSeat;
+import mt.movie_theater.domain.bookingseat.BookingSeatRepository;
 import mt.movie_theater.domain.payment.PayStatus;
 import mt.movie_theater.domain.payment.PaymentHistory;
 import mt.movie_theater.domain.payment.PaymentHistoryRepository;
@@ -39,43 +39,50 @@ public class BookingService {
     private final UserRepository userRepository;
     private final PaymentHistoryRepository paymentHistoryRepository;
     private final PaymentHistoryService paymentHistoryService;
+    private final BookingSeatRepository bookingSeatRepository;
 
     @Transactional
-    public BookingResponse createBooking(Long userId, Long screeningId, Long seatId, Long paymentId, String bookingNumber, LocalDateTime bookingTime) {
+    public BookingResponse createBooking(Long userId, Long screeningId, List<Long> seatIds, Long paymentId, String bookingNumber, LocalDateTime bookingTime) {
         User user = validateUser(userId);
         Screening screening = validateScreening(screeningId, bookingTime);
-        Seat seat = validateSeat(seatId, screening);
+        List<Seat> seats = validateSeats(seatIds, screening);
         PaymentHistory paymentHistory = validatePayment(paymentId);
 
-        Booking booking = Booking.create(user,screening, seat, paymentHistory, bookingNumber, bookingTime);
-        Booking savedBooking = bookingRepository.save(booking);
-        seat.book();
-        return BookingResponse.create(savedBooking);
+        Booking booking = Booking.create(user, screening, paymentHistory, bookingNumber, bookingTime, seats);
+        return BookingResponse.create(bookingRepository.save(booking));
     }
 
     public BookingResponse getBooking(Long bookingId) {
-        Booking booking = validateBooking(bookingId);
-        return BookingResponse.create(booking);
+        Optional<Booking> booking = bookingRepository.findByIdWithBookingSeats(bookingId);
+        if (booking.isEmpty()) {
+            throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
+        }
+        return BookingResponse.create(booking.get());
     }
 
     /**
      * 회원의 전체 예매 내역 조회 (confirmed, canceled 기준)
      */
     public Map<BookingStatus, List<BookingWithDateResponse>> getBookingHistory(Long userId) {
-        List<Booking> bookings = bookingRepository.findAllByUserId(userId);
+        List<Booking> bookings = bookingRepository.findAllWithBookingSeatsByUserId(userId);
         return bookings.stream()
                 .collect(Collectors.groupingBy(
                         Booking::getBookingStatus,
-                        Collectors.mapping(booking -> BookingWithDateResponse.create(booking), Collectors.toList())));
+                        Collectors.mapping(BookingWithDateResponse::create, Collectors.toList())));
     }
 
     /**
-     * 예매, 결제 취소 후 예매 내역 조회
+     * 예매와 결제 취소 후 예매 내역 조회
      */
     @Transactional
     public Map<BookingStatus, List<BookingWithDateResponse>> cancelBookingAndPaymentGetBookingHistory(Long userId, Long bookingId) {
-        Booking canceledBooking = cancelBooking(userId, bookingId);
-        paymentHistoryService.cancelPayment(canceledBooking.getPaymentHistory().getImpId(), "예매를 취소합니다.");
+        User user = validateUser(userId);
+        Booking booking = validateBookingForCancel(bookingId, user.getId());
+        paymentHistoryService.cancelPayment(booking.getPaymentHistory().getImpId(), "예매를 취소합니다.");
+        booking.cancel();
+        for (BookingSeat bookingSeat : booking.getBookingSeats()) {
+            bookingSeat.getSeat().cancel();
+        }
         return getBookingHistory(userId);
     }
 
@@ -90,15 +97,7 @@ public class BookingService {
             paymentHistoryService.failPayment(request.getImpId(), "비정상적인 접근입니다. 결제 요청이 유효하지 않습니다.");
         }
 
-        return createBooking(user.getId(), request.getScreeningId(), request.getSeatId(),
-                paymentHistory.getId(), request.getBookingNumber(), bookingTime);
-    }
-
-    private Booking cancelBooking(Long userId, Long bookingId) {
-        User user = validateUser(userId);
-        Booking booking = validateBookingForCancel(bookingId, user.getId());
-        booking.cancel();
-        return booking;
+        return createBooking(user.getId(), request.getScreeningId(), request.getSeatIds(), paymentHistory.getId(), request.getBookingNumber(), bookingTime);
     }
 
     private User validateUser(Long userId) {
@@ -128,16 +127,19 @@ public class BookingService {
         return payment.get();
     }
 
-    private Seat validateSeat(Long seatId, Screening screening) {
-        Optional<Seat> seat = seatRepository.findById(seatId);
-        if (seat.isEmpty()) {
+    private List<Seat> validateSeats(List<Long> seatIds, Screening screening) {
+        List<Seat> seats = seatRepository.findAllByIdIn(seatIds);
+        if (seatIds.size() != seats.size()) {
             throw new IllegalArgumentException("유효하지 않은 좌석입니다. 좌석 정보를 다시 확인해 주세요.");
         }
-        Optional<Booking> existingBooking = bookingRepository.findByScreeningAndSeat(screening, seat.get());
-        if (existingBooking.isPresent() && existingBooking.get().getBookingStatus().equals(CONFIRMED)) {
-            throw new DuplicateSeatBookingException("이미 선택된 좌석입니다.");
+
+        List<BookingSeat> bookingSeats = bookingSeatRepository.findAllBySeatIdInAndScreening(screening, seatIds);
+        for (BookingSeat bookingSeat : bookingSeats) {
+            if (bookingSeat.getSeat().isBooked() || bookingSeat.getBooking().getBookingStatus().equals(BookingStatus.CONFIRMED)) {
+                throw new DuplicateSeatBookingException("이미 선택된 좌석입니다.");
+            }
         }
-        return seat.get();
+        return seats;
     }
 
     private Booking validateBooking(Long bookingId) {
@@ -154,7 +156,7 @@ public class BookingService {
             throw new IllegalArgumentException("취소된 예매입니다.");
         }
         if (booking.getUser().getId() != userId) {
-            throw new IllegalArgumentException("예매 권한이 없습니다.");
+            throw new IllegalArgumentException("예매 취소 권한이 없습니다.");
         }
         return booking;
     }

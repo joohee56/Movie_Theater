@@ -89,8 +89,10 @@ class MovieServiceTest extends IntegrationTestSupport {
         Movie movie2 = createMovie("아마존 활명수", releaseDate);
         Movie movie3 = createMovie("고래와 나", releaseDate);
         movieRepository.saveAll(List.of(movie1, movie2, movie3));
+
         //when
         List<MovieResponse> response = movieService.getAllMovies();
+
         //then
         assertThat(response).hasSize(3);
         assertThat(response)

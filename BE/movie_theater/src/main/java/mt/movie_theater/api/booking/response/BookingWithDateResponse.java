@@ -1,7 +1,10 @@
 package mt.movie_theater.api.booking.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import mt.movie_theater.api.seat.response.SeatLocationResponse;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.util.DateUtil;
 
@@ -16,19 +19,17 @@ public class BookingWithDateResponse {
     private String hallName;
     private String startDate;
     private String startTime;
-    private String seatSection;
-    private String seatRow;
     private Long totalPrice;
     private String cancelDate;
     private String cancelTime;
     private String bookingTime;
+    private List<SeatLocationResponse> seats;
 
     @Builder
     public BookingWithDateResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
                                    String screeningTypeDisplay, String theaterName, String hallName, String startDate,
-                                   String startTime, String seatSection, String seatRow, Long totalPrice,
-                                   String cancelDate,
-                                   String cancelTime, String bookingTime) {
+                                   String startTime, Long totalPrice, String cancelDate, String cancelTime,
+                                   String bookingTime, List<SeatLocationResponse> seats) {
         this.id = id;
         this.bookingNumber = bookingNumber;
         this.posterUrl = posterUrl;
@@ -38,12 +39,11 @@ public class BookingWithDateResponse {
         this.hallName = hallName;
         this.startDate = startDate;
         this.startTime = startTime;
-        this.seatSection = seatSection;
-        this.seatRow = seatRow;
         this.totalPrice = totalPrice;
         this.cancelDate = cancelDate;
         this.cancelTime = cancelTime;
         this.bookingTime = bookingTime;
+        this.seats = seats;
     }
 
     public static BookingWithDateResponse create(Booking booking) {
@@ -57,12 +57,13 @@ public class BookingWithDateResponse {
                 .hallName(booking.getScreening().getHall().getName())
                 .startDate(DateUtil.formatToStartDate(booking.getScreening().getStartTime()))
                 .startTime(DateUtil.formatToHourAndMinute(booking.getScreening().getStartTime()))
-                .seatSection(booking.getSeat().getSeatLocation().getSection())
-                .seatRow(booking.getSeat().getSeatLocation().getSeatRow())
                 .totalPrice(booking.getPaymentHistory().getAmount())
                 .cancelDate(DateUtil.formatToStartDate(booking.getUpdatedAt()))
                 .cancelTime(DateUtil.formatToHourAndMinute(booking.getUpdatedAt()))
                 .bookingTime(DateUtil.formatToDateAndHourAndMinute(booking.getBookingTime()))
+                .seats(booking.getBookingSeats().stream()
+                        .map(BookingSeat -> SeatLocationResponse.create(BookingSeat.getSeat()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

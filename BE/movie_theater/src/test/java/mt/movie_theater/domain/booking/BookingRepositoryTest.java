@@ -1,16 +1,17 @@
 package mt.movie_theater.domain.booking;
 
-import static mt.movie_theater.domain.booking.BookingStatus.*;
+import static mt.movie_theater.domain.booking.BookingStatus.CANCELED;
+import static mt.movie_theater.domain.booking.BookingStatus.CONFIRMED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import java.util.Optional;
 import mt.movie_theater.IntegrationTestSupport;
+import mt.movie_theater.domain.bookingseat.BookingSeat;
+import mt.movie_theater.domain.bookingseat.BookingSeatRepository;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
-import mt.movie_theater.domain.seat.Seat;
-import mt.movie_theater.domain.seat.SeatRepository;
 import mt.movie_theater.domain.user.User;
 import mt.movie_theater.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -25,41 +26,11 @@ class BookingRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private ScreeningRepository screeningRepository;
     @Autowired
-    private SeatRepository seatRepository;
+    private BookingSeatRepository bookingSeatRepository;
     @Autowired
     private UserRepository userRepository;
 
-    @DisplayName("상영시간과 좌석에 해당하는 예매를 조회한다.")
-    @Test
-    void findByScreeningIdAndSeatId() {
-        //given
-        Screening screening = createScreening();
-        Seat seat = createSeat();
-        createBooking(screening, seat);
-
-        //when
-        Optional<Booking> findBooking = bookingRepository.findByScreeningAndSeat(screening, seat);
-        //then
-        assertThat(findBooking).isPresent();
-    }
-
-    @DisplayName("상영시간과 좌석에 해당하는 예매가 없다면, 빈값을 반환한다.")
-    @Test
-    void findByScreeningIdAndSeatIdWithEmpty() {
-        //given
-        Screening screening = createScreening();
-        Seat seat1 = createSeat();
-        Seat seat2 = createSeat();
-        Booking booking = createBooking(screening, seat1);
-        bookingRepository.save(booking);
-
-        //when
-        Optional<Booking> findBooking = bookingRepository.findByScreeningAndSeat(screening, seat2);
-        //then
-        assertThat(findBooking).isEmpty();
-    }
-
-    @DisplayName("회원에 해당하는 전체 예매 내역을 수정일자 내림차순으로 조회한다.")
+    @DisplayName("회원에 해당하는 전체 예매 내역을 예매좌석과 함께 수정일자 내림차순으로 조회한다.")
     @Test
     void findAllByUserId() {
         //given
@@ -70,11 +41,20 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         Booking booking2 = createBooking(user1, CONFIRMED);
         Booking booking3 = createBooking(user1, CONFIRMED);
         booking2.cancel();
+        Booking booking4 = createBooking(user2, CONFIRMED); //회원 미해당
 
-        Booking booking4 = createBooking(user2, CONFIRMED);
+        BookingSeat bookingSeat1 = createBookingSeat();
+        BookingSeat bookingSeat2 = createBookingSeat();
+        BookingSeat bookingSeat3 = createBookingSeat();
+        BookingSeat bookingSeat4 = createBookingSeat();
+
+        booking1.addBookingSeat(bookingSeat1);
+        booking1.addBookingSeat(bookingSeat2);
+        booking2.addBookingSeat(bookingSeat3);
+        booking3.addBookingSeat(bookingSeat4);
 
         //when
-        List<Booking> bookings = bookingRepository.findAllByUserId(user1.getId());
+        List<Booking> bookings = bookingRepository.findAllWithBookingSeatsByUserId(user1.getId());
 
         //then
         assertThat(bookings).hasSize(3)
@@ -84,6 +64,31 @@ class BookingRepositoryTest extends IntegrationTestSupport {
                   tuple(user1, booking3.getId(), CONFIRMED),
                   tuple(user1, booking1.getId(), CONFIRMED)
                 );
+        assertThat(bookings)
+                .extracting(booking -> booking.getBookingSeats().size())
+                .containsExactlyInAnyOrder(2, 1, 1);
+    }
+
+    @DisplayName("Id에 해당하는 예매내역을 예매좌석과 함께 조회한다.")
+    @Test
+    void findByIdWithBookingSeats() {
+        //given
+        Booking booking1 = createBooking();
+        Booking booking2 = createBooking();
+        BookingSeat bookingSeat1 = createBookingSeat();
+        BookingSeat bookingSeat2 = createBookingSeat();
+        BookingSeat bookingSeat3 = createBookingSeat();
+        booking1.addBookingSeat(bookingSeat1);
+        booking1.addBookingSeat(bookingSeat2);
+        booking1.addBookingSeat(bookingSeat3);
+
+        //when
+        Optional<Booking> booking = bookingRepository.findByIdWithBookingSeats(booking1.getId());
+
+        //then
+        assertThat(booking).isPresent();
+        assertThat(booking.get().getBookingSeats()).hasSize(3)
+                .containsExactly(bookingSeat1, bookingSeat2, bookingSeat3);
     }
 
     private User createUser() {
@@ -94,14 +99,8 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         Screening screening = Screening.builder().build();
         return screeningRepository.save(screening);
     }
-    private Seat createSeat() {
-        Seat seat = Seat.builder().build();
-        return seatRepository.save(seat);
-    }
-    private Booking createBooking(Screening screening, Seat seat) {
+    private Booking createBooking() {
         Booking booking = Booking.builder()
-                .screening(screening)
-                .seat(seat)
                 .build();
         return bookingRepository.save(booking);
     }
@@ -109,10 +108,12 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         Booking booking = Booking.builder()
                 .user(user)
                 .screening(createScreening())
-                .seat(createSeat())
                 .bookingStatus(bookingStatus)
                 .build();
         return bookingRepository.save(booking);
     }
-
+    private BookingSeat createBookingSeat() {
+        BookingSeat bookingSeat = BookingSeat.builder().build();
+        return bookingSeatRepository.save(bookingSeat);
+    }
 }

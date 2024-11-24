@@ -1,12 +1,12 @@
 package mt.movie_theater.domain.seat;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ class SeatRepositoryTest extends IntegrationTestSupport {
         List<Seat> seats = seatRepository.findAllByHall(hall1.getId());
 
         //then
-        Assertions.assertThat(seats).hasSize(2)
+        assertThat(seats).hasSize(2)
                 .extracting("hall", "seatLocation")
                 .containsExactlyInAnyOrder(
                         tuple(hall1, new SeatLocation("A", "1")),
@@ -42,10 +42,33 @@ class SeatRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("좌석 리스트를 조회한다.")
+    @Test
+    void findAllByIdIn() {
+        //given
+        Seat seat1 = createSeat();
+        Seat seat2 = createSeat();
+        Seat seat3 = createSeat();
+        List<Long> ids = List.of(seat1.getId(), seat2.getId());
+
+        //when
+        List<Seat> seats = seatRepository.findAllByIdIn(ids);
+
+        //then
+        assertThat(seats).hasSize(2)
+                .extracting("id")
+                .containsExactlyInAnyOrder(seat1.getId(), seat2.getId());
+    }
+
     private Hall createHall() {
         Hall hall = Hall.builder()
                     .build();
         return hallRepository.save(hall);
+    }
+
+    private Seat createSeat() {
+        Seat seat = Seat.builder().build();
+        return seatRepository.save(seat);
     }
 
     private Seat createSeat(Hall hall, String section, String seatRow) {

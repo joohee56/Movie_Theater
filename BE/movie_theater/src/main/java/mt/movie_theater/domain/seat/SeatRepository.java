@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Long> {
+
     @Query("select s from Seat s where s.hall.id= :hallId")
     List<Seat> findAllByHall(@Param("hallId") Long hallId);
+
+    List<Seat> findAllByIdIn(List<Long> ids);
 }

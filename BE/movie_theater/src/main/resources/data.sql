@@ -232,7 +232,7 @@ insert into payment_history(amount, pay_time, user_id, imp_id, currency, pay_met
 values ('10000', '2024-11-01T15:00:00', '1', '1', 'KRW', 'CARD', 'COMPLETED'),
        ('10000', '2024-11-01T16:00:00', '1', '2', 'KRW', 'CARD', 'COMPLETED');
 
-insert into booking(user_id, screening_id, seat_id, payment_history_id, booking_status, booking_number, updated_at, booking_time)
-values ('1', '7', '1', '1', 'CONFIRMED', '1234-123-12345', '2024-11-01T15:00:00', '2024-11-01T15:00:00'),
-       ('1', '7', '2', '2', 'CANCELED', '5678-567-56789', '2024-11-02T16:00:00', '2024-11-02T15:00:00');
+insert into booking(user_id, screening_id, payment_history_id, booking_status, booking_number, updated_at, booking_time)
+values ('1', '7',  '1', 'CONFIRMED', '1234-123-12345', '2024-11-01T15:00:00', '2024-11-01T15:00:00'),
+       ('1', '7',  '2', 'CANCELED', '5678-567-56789', '2024-11-02T16:00:00', '2024-11-02T15:00:00');
 

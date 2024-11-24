@@ -2,6 +2,7 @@ package mt.movie_theater.domain.hall;
 
 import static org.assertj.core.groups.Tuple.tuple;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.domain.theater.Theater;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Transactional
 class HallRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private HallRepository hallRepository;

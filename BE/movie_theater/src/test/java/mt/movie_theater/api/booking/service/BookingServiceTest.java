@@ -2,9 +2,9 @@ package mt.movie_theater.api.booking.service;
 
 import static mt.movie_theater.domain.booking.BookingStatus.CANCELED;
 import static mt.movie_theater.domain.booking.BookingStatus.CONFIRMED;
-import static mt.movie_theater.domain.payment.Currency.KRW;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,10 +14,11 @@ import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.response.BookingWithDateResponse;
 import mt.movie_theater.api.exception.DuplicateSeatBookingException;
 import mt.movie_theater.api.exception.PaymentValidationException;
-import mt.movie_theater.api.payment.request.PostPaymentRequest;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.domain.booking.BookingRepository;
 import mt.movie_theater.domain.booking.BookingStatus;
+import mt.movie_theater.domain.bookingseat.BookingSeat;
+import mt.movie_theater.domain.bookingseat.BookingSeatRepository;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
 import mt.movie_theater.domain.movie.Movie;
@@ -60,7 +61,8 @@ class BookingServiceTest extends IntegrationTestSupport {
     private BookingRepository bookingRepository;
     @Autowired
     private PaymentHistoryRepository paymentHistoryRepository;
-
+    @Autowired
+    private BookingSeatRepository bookingSeatRepository;
 
     @DisplayName("신규 예매를 생성한다.")
     @Test
@@ -68,18 +70,30 @@ class BookingServiceTest extends IntegrationTestSupport {
         //given
         User user = createUser();
         Screening screening = createScreening();
-        Seat seat = createSeat();
+
+        Seat seat1 = createSeat("A", "1");
+        Seat seat2 = createSeat("A", "2");
+        List<Long> seatIds = List.of(seat1.getId(), seat2.getId());
+        assertThat(seat1.isBooked()).isFalse();
+        assertThat(seat2.isBooked()).isFalse();
+
         PaymentHistory paymentHistory = createPaymentHistory();
         String bookingNumber = "";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
-        assertThat(seat.isBooked()).isFalse();
 
         //when
-        BookingResponse response = bookingService.createBooking(user.getId(), screening.getId(), seat.getId(), paymentHistory.getId(), bookingNumber,  bookingDate);
+        BookingResponse response = bookingService.createBooking(user.getId(), screening.getId(), seatIds, paymentHistory.getId(), bookingNumber,  bookingDate);
 
         //then
-        assertThat(seat.isBooked()).isTrue();
+        assertThat(seat1.isBooked()).isTrue();
+        assertThat(seat2.isBooked()).isTrue();
         assertThat(response.getId()).isNotNull();
+        assertThat(response.getSeats()).hasSize(2)
+                .extracting("section", "seatRow")
+                .containsExactlyInAnyOrder(
+                        tuple("A", "1"),
+                        tuple("A", "2")
+                );
     }
 
     @DisplayName("신규 예매를 생성할 때, 유효하지 않은 사용자일 경우 예외가 발생한다.")
@@ -87,13 +101,15 @@ class BookingServiceTest extends IntegrationTestSupport {
     void createBookingNoUser() {
         //given
         Screening screening = createScreening();
-        Seat seat = createSeat();
+        Seat seat1 = createSeat("A", "1");
+        Seat seat2 = createSeat("A", "2");
+        List<Long> seatIds = List.of(seat1.getId(), seat2.getId());
         PaymentHistory paymentHistory = createPaymentHistory();
         String bookingNumber = "";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(Long.valueOf(1), screening.getId(), seat.getId(), paymentHistory.getId(), bookingNumber,  bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(Long.valueOf(1), screening.getId(), seatIds, paymentHistory.getId(), bookingNumber,  bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 사용자입니다. 사용자 정보를 다시 확인해 주세요.");
     }
@@ -103,13 +119,15 @@ class BookingServiceTest extends IntegrationTestSupport {
     void createBookingNoScreening() {
         //given
         User user = createUser();
-        Seat seat = createSeat();
+        Seat seat1 = createSeat("A", "1");
+        Seat seat2 = createSeat("A", "2");
+        List<Long> seatIds = List.of(seat1.getId(), seat2.getId());
         PaymentHistory paymentHistory = createPaymentHistory();
         String bookingNumber = "";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), Long.valueOf(1), seat.getId(), paymentHistory.getId(), bookingNumber,  bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), Long.valueOf(1), seatIds, paymentHistory.getId(), bookingNumber,  bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 상영시간입니다. 상영시간 정보를 다시 확인해 주세요.");
     }
@@ -120,12 +138,14 @@ class BookingServiceTest extends IntegrationTestSupport {
         //given
         User user = createUser();
         Screening screening = createScreening();
+        Seat seat = createSeat("A", "1");
+        List<Long> seatIds = List.of(seat.getId(), Long.valueOf(2));
         PaymentHistory paymentHistory = createPaymentHistory();
         String bookingNumber = "";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), Long.valueOf(1), paymentHistory.getId(), bookingNumber,  bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), seatIds, paymentHistory.getId(), bookingNumber,  bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 좌석입니다. 좌석 정보를 다시 확인해 주세요.");
     }
@@ -136,14 +156,16 @@ class BookingServiceTest extends IntegrationTestSupport {
         //given
         User user = createUser();
         Screening screening = createScreening();
-        Seat seat = createSeat();
+        Seat seat1 = createSeat("A", "1");
+        Seat seat2 = createSeat("A", "2");
+        List<Long> seatIds = List.of(seat1.getId(), seat2.getId());
         PaymentHistory paymentHistory = createPaymentHistory();
         String bookingNumber = "";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 28, 15, 0);
-        bookingService.createBooking(user.getId(), screening.getId(), seat.getId(), paymentHistory.getId(), bookingNumber,  bookingDate);
+        bookingService.createBooking(user.getId(), screening.getId(), seatIds, paymentHistory.getId(), bookingNumber,  bookingDate);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), seat.getId(), paymentHistory.getId(), bookingNumber,  bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), seatIds, paymentHistory.getId(), bookingNumber,  bookingDate))
                 .isInstanceOf(DuplicateSeatBookingException.class)
                 .hasMessage("이미 선택된 좌석입니다.");
     }
@@ -155,13 +177,15 @@ class BookingServiceTest extends IntegrationTestSupport {
         User user = createUser();
         LocalDateTime startDate = LocalDateTime.of(2024, 10, 30, 15, 0);
         Screening screening = createScreening(startDate);
-        Seat seat = createSeat();
+        Seat seat1 = createSeat("A", "1");
+        Seat seat2 = createSeat("A", "2");
+        List<Long> seatIds = List.of(seat1.getId(), seat2.getId());
         PaymentHistory paymentHistory = createPaymentHistory();
         String bookingNumber = "";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 31, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), seat.getId(), paymentHistory.getId(), bookingNumber,  bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), seatIds, paymentHistory.getId(), bookingNumber,  bookingDate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상영 시작 시간이 지났습니다. 다른 상영 시간을 선택해 주세요.");
     }
@@ -172,12 +196,14 @@ class BookingServiceTest extends IntegrationTestSupport {
         //given
         User user = createUser();
         Screening screening = createScreening();
-        Seat seat = createSeat();
+        Seat seat1 = createSeat("A", "1");
+        Seat seat2 = createSeat("A", "2");
+        List<Long> seatIds = List.of(seat1.getId(), seat2.getId());
         String bookingNumber = "";
         LocalDateTime bookingDate = LocalDateTime.of(2024, 10, 31, 15, 0);
 
         //when
-        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), seat.getId(), Long.valueOf(1), bookingNumber,  bookingDate))
+        assertThatThrownBy(() -> bookingService.createBooking(user.getId(), screening.getId(), seatIds, Long.valueOf(1), bookingNumber,  bookingDate))
                 .isInstanceOf(PaymentValidationException.class)
                 .hasMessage("유효하지 않은 결제입니다. 결제 정보를 다시 확인해 주세요.");
     }
@@ -189,6 +215,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         LocalDateTime startDateTime = LocalDateTime.of(2024, 11, 01, 15, 00);
         Screening screening = createScreening(startDateTime);
         Booking booking = createBooking(screening, LocalDateTime.of(2024, 11, 01, 10, 00));
+        booking.addBookingSeat(createBookingSeat("A", "1"));
 
         //when
         BookingResponse bookingResponse = bookingService.getBooking(booking.getId());
@@ -215,45 +242,53 @@ class BookingServiceTest extends IntegrationTestSupport {
         User user = createUser();
         Screening screening = createScreening(LocalDateTime.of(2024, 11, 02, 15, 00));
         LocalDateTime bookingTime = LocalDateTime.of(2024, 11, 01, 00, 00);
-        createBooking(user, screening, CONFIRMED, bookingTime);
-        createBooking(user, screening, CONFIRMED, bookingTime);
-        createBooking(user, screening, CONFIRMED, bookingTime);
-        createBooking(user, screening, CANCELED, bookingTime);
+
+        Booking booking1 = createBooking(user, screening, CONFIRMED, bookingTime);
+        booking1.addBookingSeat(createBookingSeat("A", "1"));
+
+        Booking booking2 = createBooking(user, screening, CONFIRMED, bookingTime);
+        booking2.addBookingSeat(createBookingSeat("A", "1"));
+
+        Booking booking3 = createBooking(user, screening, CANCELED, bookingTime);
+        booking3.addBookingSeat(createBookingSeat("A", "1"));
+        booking3.addBookingSeat(createBookingSeat("A", "2"));
 
         //when
         Map<BookingStatus, List<BookingWithDateResponse>> bookingStatusMap = bookingService.getBookingHistory(user.getId());
 
         //then
         assertThat(bookingStatusMap).hasSize(2);
-        assertThat(bookingStatusMap.get(CONFIRMED)).hasSize(3);
-        assertThat(bookingStatusMap.get(CONFIRMED).get(0))
+        assertThat(bookingStatusMap.get(CONFIRMED)).hasSize(2);
+
+        assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
+        assertThat(bookingStatusMap.get(CANCELED).getFirst())
                 .extracting("startDate", "startTime", "bookingTime")
                 .containsExactly("2024.11.02(토)", "15:00", "2024.11.01(금) 00:00");
-        assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
+        assertThat(bookingStatusMap.get(CANCELED).getFirst().getSeats()).hasSize(2)
+                .extracting("section", "seatRow")
+                .containsExactlyInAnyOrder(
+                        tuple("A", "1"),
+                        tuple("A", "2")
+                );
     }
 
-    //TODO: 예메, 결제 취소 후 예매 내역 조회 테스트
-
-    //TODO: 결제 사후 검증 후 결제내역, 예매 생성 테스트
-
-    @DisplayName("결제 사후 검증 후 결제내역과 예매를 생성 시, 유효하지 않은 사용자일 경우 예외가 발생한다.")
-    @Test
-    void createBookingAndPaymentHistoryNoUser() {
-        //given
-        PostPaymentRequest request = PostPaymentRequest.builder()
-                .amount(Long.valueOf(10000))
-                .payMethod("card")
-                .currency(KRW)
-                .screeningId(Long.valueOf(1))
-                .seatId(Long.valueOf(1))
-                .build();
-        LocalDateTime bookingTime = LocalDateTime.of(2024, 11, 12, 10, 00);
-
-        //when
-        assertThatThrownBy(() -> bookingService.createBookingAndPaymentHistory(Long.valueOf(1), request, bookingTime))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("유효하지 않은 사용자입니다. 사용자 정보를 다시 확인해 주세요.");
-    }
+//    @DisplayName("예매와 결제를 취소하고 예매 내역을 조회한다.")
+//    @Test
+//    void cancelBookingAndPaymentGetBookingHistory() {
+//        //given
+//        User user = createUser();
+//        LocalDateTime bookingTime = LocalDateTime.of(2024, 11, 01, 00, 00);
+//        Booking booking = createBooking(user, CONFIRMED, bookingTime);
+//        BookingSeat bookingSeat = createBookingSeat("A", "1");
+//        booking.addBookingSeat(bookingSeat);
+//
+//        //when
+//        bookingService.cancelBookingAndPaymentGetBookingHistory(user.getId(), booking.getId());
+//
+//        //then
+//        assertThat(booking.getBookingStatus()).isEqualTo(CANCELED);
+//        assertThat(bookingSeat.getSeat().isBooked()).isFalse();
+//    }
 
     private User createUser() {
         User user = User.builder()
@@ -277,25 +312,16 @@ class BookingServiceTest extends IntegrationTestSupport {
                 .build();
         return hallRepository.save(hall);
     }
-
     private PaymentHistory createPaymentHistory() {
         PaymentHistory paymentHistory = PaymentHistory.builder()
                 .payStatus(PayStatus.COMPLETED)
                 .build();
         return paymentHistoryRepository.save(paymentHistory);
     }
-
-    private PaymentHistory createPaymentHistory(String impId, PayStatus payStatus) {
-        PaymentHistory paymentHistory = PaymentHistory.builder()
-                .impId(impId)
-                .payStatus(payStatus)
-                .build();
-        return paymentHistoryRepository.save(paymentHistory);
-    }
-
-    private Seat createSeat() {
+    private Seat createSeat(String section, String seatRow) {
+        SeatLocation seatLocation = new SeatLocation(section, seatRow);
         Seat seat = Seat.builder()
-                .seatLocation(new SeatLocation("A", "1"))
+                .seatLocation(seatLocation)
                 .build();
         return seatRepository.save(seat);
     }
@@ -319,7 +345,6 @@ class BookingServiceTest extends IntegrationTestSupport {
         Booking booking = Booking.builder()
                 .user(createUser())
                 .screening(screening)
-                .seat(createSeat())
                 .paymentHistory(createPaymentHistory())
                 .bookingTime(bookingTime)
                 .build();
@@ -329,12 +354,17 @@ class BookingServiceTest extends IntegrationTestSupport {
         Booking booking = Booking.builder()
                 .user(user)
                 .screening(screening)
-                .seat(createSeat())
                 .paymentHistory(createPaymentHistory())
                 .bookingStatus(bookingStatus)
                 .bookingTime(bookingTime)
                 .build();
         return bookingRepository.save(booking);
+    }
+    private BookingSeat createBookingSeat(String section, String seatRow) {
+        BookingSeat bookingSeat = BookingSeat.builder()
+                .seat(createSeat(section, seatRow))
+                .build();
+        return bookingSeatRepository.save(bookingSeat);
     }
 
 }
