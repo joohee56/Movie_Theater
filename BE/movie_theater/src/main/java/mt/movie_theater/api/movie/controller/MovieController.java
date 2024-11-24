@@ -34,6 +34,11 @@ public class MovieController {
         return ApiResponse.ok(movieService.getAllMovies());
     }
 
+    @GetMapping("/recent")
+    public ApiResponse<List<MovieResponse>> getRecentMovies() {
+        return ApiResponse.ok(movieService.getRecentMovies());
+    }
+
     @GetMapping("/watchable")
     public ApiResponse<List<MovieWatchableResponse>> getMoviesWithIsWatchable(@Valid @ModelAttribute MovieWatchableRequest request) {
         List<MovieWatchableResponse> movieResponses = movieService.getMoviesWithIsWatchable(request.getDate(), request.getTheaterId());

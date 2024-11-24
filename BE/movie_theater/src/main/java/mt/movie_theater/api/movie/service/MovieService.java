@@ -43,6 +43,16 @@ public class MovieService {
     }
 
     /**
+     * 가장 최신 영화 조회
+     */
+    public List<MovieResponse> getRecentMovies() {
+        List<Movie> movies = movieRepository.findTop8ByOrderByCreatedAtDesc();
+        return movies.stream()
+                .map(movie -> MovieResponse.create(movie))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 전체 영화 리스트 조회, 영화별 상영시간 포함 유무
      */
     public List<MovieWatchableResponse> getMoviesWithIsWatchable(LocalDate date, Long theaterId) {

@@ -1,7 +1,7 @@
 <template lang="ko">
 	<div>
 		<div>
-			<img src="@/assets/img/no-poster-img.png" class="poster-img">
+			<img :src="movie.posterUrl" class="poster-img">
 		</div>
 		<div>
 			<button class="booking-btn">예매</button>

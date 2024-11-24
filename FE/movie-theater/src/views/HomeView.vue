@@ -18,32 +18,26 @@
 </template>
 
 <script>
+import { getRecentMovies } from "@/api/movie";
 import MovieCard from "@/components/home/MovieCard.vue";
 
 export default {
   data() {
     return {
-      movies: [
-        {
-          movieId: "1",
-          posterUrl: "",
-        },
-        {
-          movieId: "2",
-          posterUrl: "",
-        },
-        {
-          movieId: "3",
-          posterUrl: "",
-        },
-        {
-          movieId: "4",
-          posterUrl: "",
-        },
-      ],
+      movies: [],
     };
   },
   components: { MovieCard },
+  mounted() {
+    this.fetchMovies();
+  },
+  methods: {
+    async fetchMovies() {
+      const response = await getRecentMovies();
+      this.movies = response.data.data;
+      console.log(this.movies);
+    },
+  },
 };
 </script>
 
@@ -70,6 +64,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   column-gap: 40px;
+  row-gap: 30px;
   width: 100%;
   margin-bottom: 70px;
 }

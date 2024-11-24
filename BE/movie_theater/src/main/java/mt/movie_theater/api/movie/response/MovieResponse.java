@@ -15,20 +15,34 @@ import mt.movie_theater.domain.movieactor.MovieActor;
 @Getter
 @NoArgsConstructor
 public class MovieResponse {
+
     private Long id;
+
     private String title;
+
     private String subTitle;
+
     private String description;
+
     @JsonFormat(pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate releaseDate;
+
     private Long durationMinutes;
+
     private String posterUrl;
+
     private String ageRating;
+
     private String ageRatingDisplay;
+
     private String director;
+
     private String screeningType;
+
     private int standardPrice;
+
     private List<String> movieGenres;
+
     private List<String> movieActors;
 
     @Builder

@@ -6,10 +6,10 @@ values('test123', '1234', '홍길동', 'test@test.com');
 
 insert into movie(title, sub_title, description, release_date, duration_minutes, poster_url, age_rating, director, screening_type, standard_price)
 values ('아마존 활명수', 'AMAZON BULLSEYE',  '어서와, 아마존은 처음이지', '2024.10.28', '6720000000000', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-10872114635701600232%EC%95%84%EB%A7%88%EC%A1%B4%ED%99%9C%EB%AA%85%EC%88%98_%ED%8F%AC%EC%8A%A4%ED%84%B0.png', 'AGE_12', '김창주', 'TWO_D', 10000),
-       ('베놈:라스트 댄스', 'Venom: The Last Dance',  '죽음이 우리를 갈라놓을 때까지', '2024.10.23', '109', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-13851946119050865616%EB%B2%A0%EB%86%88_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg', 'AGE_15', '켈리 마르셀', 'TWO_D', 11000),
-       ('글래디에이터 Ⅱ', 'GladiatorⅡ',  '로마의 영웅이자 최고의 검투사였던 ‘막시무스’가 콜로세움에서 죽음을 맞이한 뒤', '2024.10.23', '147', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-14872800562717044265%EA%B8%80%EB%9E%98%EB%94%94%EC%97%90%EC%9D%B4%ED%84%B0_%ED%8F%AC%EC%8A%A4%ED%84%B0.png', 'AGE_19', '리들리 스콧', 'TWO_D', 12000),
-       ('극장판 고래와 나', 'WHALES AND I',  '“고래의 바다, 인간의 땅, 모두의 지구, 우리는 늘 함께였다”', '2024.10.23', '96', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-14391945350701185861%EA%B3%A0%EB%9E%98%EC%99%80%EB%82%98_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg', 'ALL', '', 'TWO_D', 13000),
-       ('오후 네시', '4 PM',  '“예전보다 더 그가 싫어졌다. 죽이고 싶도록!”', '2024.10.23', '111', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-4992739267478120582%EC%98%A4%ED%9B%84%EB%84%A4%EC%8B%9C_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg', 'AGE_12', '송정우', 'TWO_D', 14000);
+       ('베놈:라스트 댄스', 'Venom: The Last Dance',  '죽음이 우리를 갈라놓을 때까지', '2024.10.23', '6540000000000', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-13851946119050865616%EB%B2%A0%EB%86%88_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg', 'AGE_15', '켈리 마르셀', 'TWO_D', 11000),
+       ('글래디에이터 Ⅱ', 'GladiatorⅡ',  '로마의 영웅이자 최고의 검투사였던 ‘막시무스’가 콜로세움에서 죽음을 맞이한 뒤', '2024.10.23', '8820000000000', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-14872800562717044265%EA%B8%80%EB%9E%98%EB%94%94%EC%97%90%EC%9D%B4%ED%84%B0_%ED%8F%AC%EC%8A%A4%ED%84%B0.png', 'AGE_19', '리들리 스콧', 'TWO_D', 12000),
+       ('극장판 고래와 나', 'WHALES AND I',  '“고래의 바다, 인간의 땅, 모두의 지구, 우리는 늘 함께였다”', '2024.10.23', '5760000000000', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-14391945350701185861%EA%B3%A0%EB%9E%98%EC%99%80%EB%82%98_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg', 'ALL', '', 'TWO_D', 13000),
+       ('오후 네시', '4 PM',  '“예전보다 더 그가 싫어졌다. 죽이고 싶도록!”', '2024.10.23', '6660000000000', 'https://movie-theater-files.s3.ap-northeast-2.amazonaws.com/images/upload-4992739267478120582%EC%98%A4%ED%9B%84%EB%84%A4%EC%8B%9C_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg', 'AGE_12', '송정우', 'TWO_D', 14000);
 
 insert into movie_genre(movie_id, genre_id)
 values('1', '2'),
@@ -53,7 +53,7 @@ insert into hall(theater_id, name, screening_type, hall_type_modifier)
            ('5', '5관 [Laser]', 'TWO_D', 0);
 
 insert into seat(hall_id, section, seat_row, is_booked)
-values('1', 'A', '1', true),
+values('1', 'A', '1', false),
       ('1', 'A', '2', false),
       ('1', 'A', '3', false),
       ('1', 'A', '4', false),
