@@ -1,9 +1,9 @@
 <template lang="ko">
 	<div class="container">
 		<div class="movies-container">
+			<div class="box-office-text">박스오피스</div>
 			<div>
-				<span class="box-office-text">박스오피스</span>
-				<router-link to="#" class="more-movie-link">더 많은 영화보기 + </router-link>
+				<router-link :to="{name: 'movie'}" class="more-movie-link">더 많은 영화보기 + </router-link>
 			</div>
 			<div class="movie-card-container">
 				<div v-for="movie in movies" :key="movie.movieId">
@@ -51,13 +51,14 @@ export default {
   margin-top: 100px;
 }
 .box-office-text {
-  position: fixed;
-  transform: translate(-50%, -50%);
-  left: 50%;
+  font-size: 17px;
+  font-family: "SUIT-Medium";
+  text-align: center;
 }
 .more-movie-link {
+  color: white;
   float: right;
-  font-size: 13px;
+  font-size: 15px;
   margin-bottom: 15px;
 }
 .movie-card-container {

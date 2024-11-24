@@ -97,17 +97,17 @@ export default {
   font-family: SUIT-SemiBold;
   font-size: 19px;
   display: flex;
+  position: relative;
 }
 .main-nav .left-side a {
   margin-right: 20px;
   line-height: 2;
 }
 .logo-img {
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin-top: 10px;
   width: 180px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .user-link {
   margin-left: auto;
