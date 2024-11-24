@@ -5,7 +5,14 @@
 			<div class="sub-title">관람인원선택</div>
 			<div class="select-section-container">
 				<div class="audience-selector">
-					성인 1
+          <div>
+            성인
+          </div>
+          <div class="adult-seat-counter">
+              <button class="decrease" @click="decreaseAdultSeatCount">-</button>
+              <span class="number">{{adultSeatCount}}</span>
+              <button class="increase" @click="increaseAdultSeatCount">+</button>
+          </div>
 				</div>
 				<div class="screen-seat-container">
 					<div class="screen-title">SCREEN</div>
@@ -37,13 +44,13 @@
 						<div>{{screening.startDate}}</div>
 						<div class="movie-startTime">{{screening.startTime}}~{{screening.endTime}}</div>
 					</div>
-					<img src="@/assets/img/no-poster-img.png" class="poster-img"></img>
+					<img :src="screening.posterUrl" class="poster-img"></img>
 				</div>
 				<div class="seat-description">
 					<div class="seat-guide">
-						<div>선택</div>
-						<div>예매완료</div>
-						<div>일반</div>
+						<div class="select-seat">선택</div>
+						<div class="booked-seat">예매완료</div>
+						<div class="normal-seat">일반</div>
 					</div>
 					<div class="selected-seat">
             <div class="selected-seats">
@@ -58,12 +65,12 @@
 				</div>
 				<div class="total-price-container">
 					<span class="title">최종결제금액</span>
-					<span class="total-price"><span class="number">{{screening.totalPrice}}</span> 원</span>
+					<span class="total-price"><span class="number">{{screening.totalPrice*this.selectedSeats.length}}</span> 원</span>
 				</div>
 			</div>
 			<div class="navigation-buttons">
 				<button class="prev-button">이전</button>
-				<button class="next-button" @click="goToNext">다음</button>
+				<button class="next-button" @click="goToNext" :disabled="this.adultSeatCount===0 || selectedSeats.length < this.adultSeatCount">다음</button>
 			</div>
 		</div>
 	</div>
@@ -81,6 +88,7 @@ export default {
       screening: {},
       hallId: sessionStorage.getItem("hallId"),
       screeningId: sessionStorage.getItem("screeningId"),
+      adultSeatCount: 0,
     };
   },
   computed: {
@@ -118,11 +126,49 @@ export default {
       console.log(this.screening);
     },
     toggleSeatSelection(seat) {
+      if (this.adultSeatCount == 0) {
+        alert("관람하실 인원을 먼저 선택해주세요.");
+        return;
+      }
+      if (
+        !seat.isSelected &&
+        this.selectedSeats.length >= this.adultSeatCount
+      ) {
+        alert("좌석 선택이 완료되었습니다.");
+        return;
+      }
       seat.isSelected = !seat.isSelected; // 좌석 선택 상태 토글
     },
     goToNext() {
-      sessionStorage.setItem("seatId", this.selectedSeats.at(0).seatId);
+      var seatIds = [];
+      this.selectedSeats.forEach((seat) => {
+        seatIds.push(seat.seatId);
+      });
+      sessionStorage.setItem("seatIds", JSON.stringify(seatIds));
       this.$router.push({ name: "paymentView" });
+    },
+    decreaseAdultSeatCount() {
+      if (this.adultSeatCount <= 0) {
+        return;
+      }
+      if (this.selectedSeats.length >= this.adultSeatCount) {
+        if (confirm("선택하신 좌석을 모두 취소하고 다시 선택하시겠습니까?")) {
+          this.selectedSeats.forEach((seat) => {
+            seat.isSelected = false;
+          });
+          this.selectedSeats.length = 0;
+        } else {
+          return;
+        }
+      }
+      this.adultSeatCount--;
+    },
+    increaseAdultSeatCount() {
+      if (this.adultSeatCount >= 8) {
+        alert("인원선택은 총 8명까지 가능합니다.");
+        return;
+      }
+      this.adultSeatCount++;
     },
   },
 };
@@ -157,6 +203,7 @@ button {
   background-color: #f2f4f5;
   padding: 15px 10px;
   font-size: 16px;
+  display: flex;
 }
 .select-section-container {
   border: 1px solid var(--border-line-color);
@@ -286,6 +333,28 @@ button {
   border-right: 1px solid var(--border-color);
   padding: 15px;
 }
+.seat-guide div {
+  position: relative;
+  padding-left: 20px;
+}
+.seat-guide div::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+}
+.seat-guide .select-seat::after {
+  background-color: var(--primary-color);
+}
+.seat-guide .booked-seat::after {
+  background-color: #cccccc;
+}
+.seat-guide .normal-seat::after {
+  background-color: #747474;
+}
 .selected-seat {
   text-align: center;
   padding: 15px;
@@ -344,6 +413,9 @@ button {
   background-color: #53565b;
   border-bottom-left-radius: 8px;
   color: white;
+}
+.navigation-buttons .next-button:disabled {
+  background-color: #e0e0e0;
 }
 .navigation-buttons .next-button {
   width: 50%;

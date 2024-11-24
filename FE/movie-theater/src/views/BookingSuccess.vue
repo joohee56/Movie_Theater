@@ -5,7 +5,7 @@
 			<div class="left-side">
 				<div>티켓 예매번호</div>
 				<div class="booking-number">{{booking.bookingNumber}}</div>
-				<img src="@/assets/img/no-poster-img.png" class="poster-img">
+				<img :src="booking.posterUrl" class="poster-img">
 			</div>
 			<div class="right-side">
 				<div class="title">예매가 완료되었습니다!</div>
@@ -21,10 +21,13 @@
 							<td>· 관람일시</td><td>{{booking.startDate}} {{booking.startTime}}</td>
 						</tr>
 						<tr>
-							<td>· 관람인원</td><td>성인 1명</td>
+							<td>· 관람인원</td><td>성인 {{booking.seats.length}}명</td>
 						</tr>
 						<tr>
-							<td>· 좌석번호</td><td>{{booking.seatSection}}열 {{booking.seatRow}}</td>
+							<td>· 좌석번호</td>
+              <td>
+                <span v-for="seat in booking.seats">{{seat.section}}열 {{seat.seatRow}}, </span>
+              </td>
 						</tr>
 						<tr>
 							<td>· 이메일</td><td>{{booking.userEmail}}</td>

@@ -5,12 +5,12 @@
 			<div class="section-container">
 				<div class="section-title">예매정보</div>
 				<div class="booking-info">
-					<img class="poster-img" src="@/assets/img/no-poster-img.png"></img>
+					<img class="poster-img" :src="screening.posterUrl"></img>
 					<div class="booking-info-content">
-						<div class="movie-name">청설</div>
-						<div><span>2024.11.13(수)</span><span> 19:25~21:23</span></div>
-						<div>강남/3관 2D</div>
-						<div>성인 1</div>
+						<div class="movie-name">{{screening.movieTitle}}</div>
+						<div><span>{{screening.startDate}}</span><span> {{screening.startTime}}~{{screening.endTime}}</span></div>
+						<div>{{screening.theaterName}}/{{screening.hallName}} {{screening.screeningForDisplay}}</div>
+						<div>성인 {{seatIds.length}}</div>
 					</div>
 				</div>
 			</div>
@@ -34,11 +34,11 @@
 					<button>휴대폰결제</button>
 					<button>내통장결제</button>
 				</div>
-				<div>
+				<!-- <div>
 					<div>카드사 선택</div>
 					<div>현대카드</div>
 					<radio>앱카드</radio>
-				</div>
+				</div> -->
 			</div>
 		</div>
 
@@ -46,15 +46,15 @@
 			<div class="payment-info">
 				<div class="payment-info-title">결제금액</div>
 				<div class="payment-detail-container">
-					<div><span>성인 1</span><span class="value">14,000</span></div>
-					<div><span>금액</span><span class="value">14,000원</span></div>
+					<div><span>성인 {{seatIds.length}}</span><span class="value">{{screening.totalPrice * seatIds.length}}</span></div>
+					<div><span>금액</span><span class="value">{{screening.totalPrice * seatIds.length}}원</span></div>
 				</div>
 				<div class="payment-detail-container">
 					<div><span>할인적용</span><span class="value">0원</span></div>
 				</div>
 				<div class="final-info">
 					<div>
-						<span>최종결제금액</span><span class="value"><span class="cost">14,000</span> 원</span>
+						<span>최종결제금액</span><span class="value"><span class="cost">{{screening.totalPrice * seatIds.length}}</span> 원</span>
 					</div>
 					<div>
 						<span>결제수단</span><span class="value">신용/체크카드</span>
@@ -81,7 +81,7 @@ export default {
     return {
       screening: {},
       screeningId: sessionStorage.getItem("screeningId"),
-      seatId: sessionStorage.getItem("seatId"),
+      seatIds: JSON.parse(sessionStorage.getItem("seatIds")),
     };
   },
   components: { PageTitle },
@@ -118,7 +118,7 @@ export default {
       const bookingNumber = this.generateUniqueBookingNumber();
       const response = await preparePayment(
         bookingNumber,
-        this.screening.totalPrice
+        this.screening.totalPrice * this.seatIds.length
       );
       console.log(response);
 
@@ -128,7 +128,7 @@ export default {
           channelKey: "channel-key-9b25fa8e-097c-4a0b-a3e0-56522892ccc9",
           pay_method: "card",
           merchant_uid: bookingNumber, // 에매번호
-          amount: this.screening.totalPrice,
+          amount: this.screening.totalPrice * this.seatIds.length,
           buyer_email: "gildong@gmail.com",
           buyer_name: "홍길동",
           buyer_tel: "010-4242-4242",
@@ -151,7 +151,7 @@ export default {
               payMethod: response.pay_method,
               currency: response.currency,
               screeningId: this.screeningId,
-              seatId: this.seatId,
+              seatIds: this.seatIds,
             };
             console.log(postRequest);
             const bookingResponse = await createBooking(postRequest);

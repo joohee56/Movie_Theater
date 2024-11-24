@@ -1,7 +1,7 @@
 <template lang="ko">
 	<div class="confirmed-booking-container">
 		<div>
-			<img src="@/assets/img/no-poster-img.png" class="poster-img" />
+			<img :src="confirmedBooking.posterUrl" class="poster-img" />
 		</div>
 		<div class="confirmed-booking">
 			<table>
@@ -22,7 +22,7 @@
 						{{ confirmedBooking.theaterName }}/{{ confirmedBooking.hallName }}
 					</td>
 					<td>관람인원</td>
-					<td>성인 1명</td>
+					<td>성인 {{confirmedBooking.seats.length}}명</td>
 				</tr>
 				<tr>
 					<td>관람일시</td>
@@ -31,7 +31,7 @@
 					</td>
 					<td>관람좌석</td>
 					<td>
-						{{ confirmedBooking.seatSection }}열 {{ confirmedBooking.seatRow }}
+						<span v-for="seat in confirmedBooking.seats">{{ seat.section }}열 {{ seat.seatRow }}, </span>
 					</td>
 				</tr>
 				<tr>
@@ -83,7 +83,7 @@ export default {
 }
 .confirmed-booking table {
   border-collapse: separate;
-  border-spacing: 10px;
+  border-spacing: 5px;
   margin-bottom: 5px;
 }
 .booking-number {
