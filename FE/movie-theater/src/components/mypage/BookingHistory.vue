@@ -42,11 +42,9 @@ export default {
       const response = await getBookingHistory();
       console.log(response);
       this.bookingHistory = response.data.data;
-      console.log(this.bookingHistory);
     },
     updateBookingHistory(data) {
       console.log("parent update history");
-      console.log(data);
       this.bookingHistory = data;
     },
   },

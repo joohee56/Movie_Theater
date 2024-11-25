@@ -250,8 +250,8 @@ export default {
 .movie-list {
   width: 250px;
   overflow-y: auto;
-  max-height: 350px;
-  /* height: 350px; */
+  max-height: 300px;
+  height: 300px;
 }
 .movie-list button,
 .theater-list button,

@@ -30,8 +30,8 @@
 						{{ confirmedBooking.startDate }} {{ confirmedBooking.startTime }}
 					</td>
 					<td>관람좌석</td>
-					<td>
-						<span v-for="seat in confirmedBooking.seats">{{ seat.section }}열 {{ seat.seatRow }}, </span>
+					<td class="seats">
+						<span v-for="seat in confirmedBooking.seats">{{ seat.section }}열 {{ seat.seatRow }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -83,7 +83,7 @@ export default {
 }
 .confirmed-booking table {
   border-collapse: separate;
-  border-spacing: 5px;
+  border-spacing: 9px;
   margin-bottom: 5px;
 }
 .booking-number {
@@ -97,6 +97,9 @@ export default {
 }
 .confirmed-booking table td:nth-child(2) {
   padding-right: 70px;
+}
+.confirmed-booking .seats span:not(:last-child)::after {
+  content: ", ";
 }
 
 /* 예매 취소 버튼 */
