@@ -11,6 +11,9 @@
 						<span :class="[ageClass(movie.ageRatingDisplay), `age-rating`]">{{movie.ageRatingDisplay}}</span>{{movie.title}}
 					</button>
 				</div>
+        <div class="poster-img-container" v-if="this.selectedMovie.posterUrl !== ''">
+          <img :src="this.selectedMovie.posterUrl" class="poster-img">
+        </div>
 			</div>
 			<div class="section">
 				<div class="section-title">극장</div>
@@ -81,6 +84,7 @@ export default {
       selectedMovie: {
         index: -1,
         id: null,
+        posterUrl: "",
       },
       selectedRegion: {
         index: -1,
@@ -159,6 +163,7 @@ export default {
       if (this.selectedMovie.id != movieId) {
         this.selectedMovie.id = movieId;
         this.selectedMovie.index = index;
+        this.selectedMovie.posterUrl = this.movies[index].posterUrl;
       } else {
         this.resetMovie();
       }
@@ -207,6 +212,7 @@ export default {
     resetMovie() {
       this.selectedMovie.id = null;
       this.selectedMovie.index = -1;
+      this.selectedMovie.posterUrl = "";
     },
     resetRegion() {
       this.selectedRegion.index = -1;
@@ -229,9 +235,7 @@ export default {
   border-collapse: collapse;
 }
 .section {
-  border: 1px solid var(--border-line-color);
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  border: 2px solid var(--border-line-color);
   padding: 20px;
   height: 600px;
   display: table-cell;
@@ -246,7 +250,8 @@ export default {
 .movie-list {
   width: 250px;
   overflow-y: auto;
-  max-height: 550px;
+  max-height: 350px;
+  /* height: 350px; */
 }
 .movie-list button,
 .theater-list button,
@@ -283,6 +288,15 @@ export default {
 .theater-list .theaterSelected {
   background-color: #666666;
   color: white;
+}
+.poster-img-container {
+  text-align: center;
+  margin-top: 50px;
+}
+.poster-img {
+  aspect-ratio: 290/410;
+  object-fit: fill;
+  width: 140px;
 }
 
 /* 극장 */

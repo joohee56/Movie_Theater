@@ -7,7 +7,7 @@
           <p>{{movie.description}}</p>
         </div>
       </router-link>
-      <p>{{movie.title}}</p>
+      <div>{{movie.title}}</div>
 		</div>
 		<div>
 			<router-link :to="{name: 'booking'}" class="booking-btn">예매</router-link>
@@ -37,6 +37,7 @@ p {
   aspect-ratio: 290/410;
   object-fit: fill;
   width: 100%;
+  margin-bottom: 10px;
 }
 .overlay {
   position: absolute;
