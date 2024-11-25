@@ -26,7 +26,7 @@ public class BookingWithDateResponse {
     private List<SeatLocationResponse> seats;
 
     @Builder
-    public BookingWithDateResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
+    private BookingWithDateResponse(Long id, String bookingNumber, String posterUrl, String movieTitle,
                                    String screeningTypeDisplay, String theaterName, String hallName, String startDate,
                                    String startTime, Long totalPrice, String cancelDate, String cancelTime,
                                    String bookingTime, List<SeatLocationResponse> seats) {
