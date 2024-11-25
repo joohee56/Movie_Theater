@@ -48,6 +48,9 @@ export default {
       console.log(response);
       if (response.status == 200) {
         localStorage.setItem("isAuthenticated", true);
+        if (this.userId === "admin") {
+          localStorage.setItem("admin", true);
+        }
         this.$emit("checkAuthStatus");
         this.close();
       }

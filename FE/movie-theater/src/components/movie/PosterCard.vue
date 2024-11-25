@@ -1,10 +1,12 @@
 <template lang="ko">
 	<div class="container">
 		<div class="poster-container">
-			<img :src="movie.posterUrl" class="poster-img">
-      <div class="overlay">
-        <p>{{movie.description}}</p>
-      </div>
+      <router-link :to="{name: 'booking'}">
+        <img :src="movie.posterUrl" class="poster-img">
+        <div class="overlay">
+          <p>{{movie.description}}</p>
+        </div>
+      </router-link>
 		</div>
 		<div class="movie-title-container">
 			<div :class="[ageClass, `age-rating`]">
@@ -18,7 +20,7 @@
 			개봉일 {{movie.releaseDate}}
 		</div>
 		<div>
-			<button class="booking-btn">예매</button>
+			<router-link :to="{name: 'booking'}" class="booking-btn">예매</router-link>
 		</div>
 	</div>
 </template>
@@ -71,7 +73,7 @@ export default {
   opacity: 1; /* 오버레이 표시 */
 }
 .movie-title-container {
-  margin: 10px 0;
+  margin-bottom: 10px;
 }
 .movie-title {
   display: inline;
@@ -110,5 +112,7 @@ export default {
   padding: 10px 0;
   font-family: "SUIT-Medium";
   border: none;
+  display: block;
+  text-align: center;
 }
 </style>
