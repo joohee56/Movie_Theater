@@ -1,14 +1,16 @@
 <template lang="ko">
 	<div>
 		<div class="poster-container">
-			<img :src="movie.posterUrl" class="poster-img">
+      <router-link :to="{name: 'booking'}">
+        <img :src="movie.posterUrl" class="poster-img">
+        <div class="overlay">
+          <p>{{movie.description}}</p>
+        </div>
+      </router-link>
       <p>{{movie.title}}</p>
-      <div class="overlay">
-        <p>{{movie.description}}</p>
-      </div>
 		</div>
 		<div>
-			<button class="booking-btn">예매</button>
+			<router-link :to="{name: 'booking'}" class="booking-btn">예매</router-link>
 		</div>
 	</div>
 </template>
@@ -29,6 +31,7 @@ p {
   display: inline-block;
   width: 100%;
   height: 100%;
+  margin-bottom: 10px;
 }
 .poster-img {
   aspect-ratio: 290/410;
@@ -47,6 +50,7 @@ p {
   padding: 20px 20px;
   opacity: 0;
   transition: opacity 0.5s ease;
+  color: white;
 }
 .poster-container:hover .poster-img {
   filter: blur(5px);
@@ -60,7 +64,9 @@ p {
   width: 100%;
   font-size: 17px;
   padding: 10px 0;
-  font-family: "SUIT-Medium";
+  font-family: "SUIT-Regular";
   border: none;
+  display: block;
+  text-align: center;
 }
 </style>

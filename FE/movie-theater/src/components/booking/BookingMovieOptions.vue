@@ -254,7 +254,7 @@ export default {
   background: white;
   border: none;
   display: block;
-  padding: 5px;
+  padding: 5px 5px 7px;
   width: 100%;
   text-align: left;
 }
@@ -264,7 +264,7 @@ export default {
   color: white;
   border-radius: 3px;
   margin-right: 4px;
-  padding: 1px 4px 2px 3px;
+  padding: 2px 4px 2px 3px;
   font-size: 10px;
 }
 .age-ALL {
