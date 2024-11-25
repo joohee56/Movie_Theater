@@ -25,8 +25,8 @@
 						</tr>
 						<tr>
 							<td>· 좌석번호</td>
-              <td>
-                <span v-for="seat in booking.seats">{{seat.section}}열 {{seat.seatRow}}, </span>
+              <td class="seats">
+                <span v-for="seat in booking.seats">{{seat.section}}열 {{seat.seatRow}}</span>
               </td>
 						</tr>
 						<tr>
@@ -120,6 +120,9 @@ export default {
 .booking-detail td:nth-child(2) {
   color: white;
   padding-left: 17px;
+}
+.booking-detail .seats span:not(:last-child)::after {
+  content: ", ";
 }
 .ticket-frame {
   position: absolute;
