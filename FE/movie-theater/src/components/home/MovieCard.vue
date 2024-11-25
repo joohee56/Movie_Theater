@@ -39,16 +39,15 @@ p {
   position: absolute;
   top: 0;
   left: 0;
-  width: 95%;
-  height: 86%;
+  width: 85%;
+  height: 83%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 20px 20px;
   opacity: 0;
   transition: opacity 0.5s ease;
 }
-
 .poster-container:hover .poster-img {
   filter: blur(5px);
 }

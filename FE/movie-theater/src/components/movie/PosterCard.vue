@@ -1,7 +1,10 @@
 <template lang="ko">
 	<div class="container">
-		<div>
-			<img :src="movie.posterUrl" class="poster">
+		<div class="poster-container">
+			<img :src="movie.posterUrl" class="poster-img">
+      <div class="overlay">
+        <p>{{movie.description}}</p>
+      </div>
 		</div>
 		<div class="movie-title-container">
 			<div :class="[ageClass, `age-rating`]">
@@ -35,19 +38,44 @@ export default {
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
 }
-.poster {
+.poster-container {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+}
+.poster-img {
   aspect-ratio: 290/410;
   object-fit: fill;
   width: 100%;
   border-radius: 5px;
 }
-
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 83%;
+  height: 98%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  color: white;
+  border-radius: 5px;
+}
+.poster-container:hover .poster-img {
+  filter: blur(5px);
+}
+.poster-container:hover .overlay {
+  opacity: 1; /* 오버레이 표시 */
+}
 .movie-title-container {
   margin: 10px 0;
 }
 .movie-title {
   display: inline;
-  font-size: 20px;
+  font-size: 17px;
 }
 .age-rating {
   display: inline;
@@ -56,7 +84,7 @@ export default {
   border-radius: 4px;
   margin-right: 8px;
   padding: 2px 1px 2px 3px;
-  font-size: 14px;
+  font-size: 12px;
 }
 .age-ALL {
   background-color: var(--age-all-color);
@@ -71,7 +99,7 @@ export default {
   background-color: var(--age-19-color);
 }
 .movie-releaseDate {
-  font-size: 15px;
+  font-size: 13px;
   margin: 10px 0;
 }
 .booking-btn {

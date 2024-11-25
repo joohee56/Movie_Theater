@@ -41,6 +41,6 @@ export default {
 .postercard-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 60px;
+  gap: 50px;
 }
 </style>
