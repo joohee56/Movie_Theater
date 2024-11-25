@@ -5,12 +5,12 @@
 			<div class="sub-title">관람인원선택</div>
 			<div class="select-section-container">
 				<div class="audience-selector">
-          <div>
+          <div class="adult-text">
             성인
           </div>
           <div class="adult-seat-counter">
               <button class="decrease" @click="decreaseAdultSeatCount">-</button>
-              <span class="number">{{adultSeatCount}}</span>
+              <button class="number">{{adultSeatCount}}</button>
               <button class="increase" @click="increaseAdultSeatCount">+</button>
           </div>
 				</div>
@@ -198,6 +198,10 @@ button {
   font-size: 20px;
   padding: 15px 0;
 }
+.select-section-container {
+  border: 1px solid var(--border-line-color);
+  height: 90%;
+}
 .audience-selector {
   font-family: "SUIT-Regular";
   background-color: #f2f4f5;
@@ -205,11 +209,34 @@ button {
   font-size: 16px;
   display: flex;
 }
-.select-section-container {
-  border: 1px solid var(--border-line-color);
-  height: 90%;
+.adult-text {
+  margin-left: 10px;
+  margin-right: 20px;
+  line-height: 30px;
 }
-
+.adult-seat-counter button {
+  background: white;
+  font-size: 17px;
+  padding: 5px 10px;
+}
+.adult-seat-counter .decrease {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 1px solid var(--border-line-color);
+}
+.adult-seat-counter .increase {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 1px solid var(--border-line-color);
+}
+.adult-seat-counter .number {
+  background-color: white;
+  border-top: 1px solid var(--border-line-color);
+  border-bottom: 1px solid var(--border-line-color);
+  border-left: none;
+  border-right: none;
+  padding: 5px 15px;
+}
 .screen-seat-container {
   text-align: center;
   padding: 20px;
