@@ -60,7 +60,9 @@ export default {
     async submit() {
       console.log(this.theater);
       const response = await createTheater(this.theater);
-      console.log(response);
+      if (response.code == 200) {
+        alert("영화관 생성 완료 " + response.data.id);
+      }
     },
   },
 };

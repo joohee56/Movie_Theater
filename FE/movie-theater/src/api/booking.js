@@ -9,6 +9,7 @@ async function holdBooking(bookingHoldRequest) {
     );
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 }
@@ -21,6 +22,7 @@ async function confirmBooking(confirmBooking) {
     );
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 }
@@ -28,27 +30,30 @@ async function confirmBooking(confirmBooking) {
 async function getBooking(bookingId) {
   try {
     const response = await jsonApi.get(`/bookings/booking/${bookingId}`);
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
 async function getBookingHistory() {
   try {
     const response = await jsonApi.get("/bookings/user");
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
 async function cancelBookingAndGetBookingHistory(bookingId) {
   try {
     const response = await jsonApi.get(`/bookings/cancel/${bookingId}`);
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 

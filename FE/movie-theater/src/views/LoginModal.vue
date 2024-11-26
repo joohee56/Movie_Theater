@@ -45,8 +45,7 @@ export default {
     },
     async login() {
       const response = await login(this.userId, this.password);
-      console.log(response);
-      if (response.status == 200) {
+      if (response.code == 200) {
         localStorage.setItem("isAuthenticated", true);
         if (this.userId === "admin") {
           localStorage.setItem("admin", true);

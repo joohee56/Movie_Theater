@@ -7,9 +7,10 @@ async function preparePayment(paymentId, amount) {
       paymentId: paymentId,
       amount: amount,
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 

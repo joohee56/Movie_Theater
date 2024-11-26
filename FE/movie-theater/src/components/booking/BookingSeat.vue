@@ -107,24 +107,26 @@ export default {
   methods: {
     async fetchSeats() {
       const response = await getSeats(this.screeningId, this.hallId);
-      const data = response.data.data;
-
-      // 좌석 정보에 selected 필드를 추가
-      this.seats = Object.fromEntries(
-        Object.entries(data).map(([section, seatArray]) => [
-          section,
-          seatArray.map((seat) => ({
-            ...seat,
-            isSelected: false, // selected 필드 추가
-          })),
-        ])
-      );
-      this.sections = Object.keys(data);
+      if (response.code == 200) {
+        const data = response.data;
+        // 좌석 정보에 selected 필드를 추가
+        this.seats = Object.fromEntries(
+          Object.entries(data).map(([section, seatArray]) => [
+            section,
+            seatArray.map((seat) => ({
+              ...seat,
+              isSelected: false, // selected 필드 추가
+            })),
+          ])
+        );
+        this.sections = Object.keys(data);
+      }
     },
     async fetchScreeningWithTotalPrice() {
       const response = await getScreeningAndTotalPrice(this.screeningId);
-      this.screening = response.data.data;
-      console.log(this.screening);
+      if (response.code == 200) {
+        this.screening = response.data;
+      }
     },
     toggleSeatSelection(seat) {
       if (this.adultSeatCount == 0) {
@@ -149,10 +151,7 @@ export default {
         screeningId: this.screeningId,
         seatIds: seatIds,
       };
-
-      console.log(bookingHoldRequest);
       const response = await holdBooking(bookingHoldRequest);
-      console.log(response);
       if (response.code !== 200) {
         alert(
           "선택하신 좌석은 이미 판매가 진행중입니다．\n다른 좌석을 선택해주세요."

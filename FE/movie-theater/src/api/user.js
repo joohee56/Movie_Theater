@@ -7,18 +7,20 @@ async function login(loginId, password) {
       loginId: loginId,
       password: password,
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
 async function logout() {
   try {
     const response = await jsonApi.get("/users/user/logout");
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 

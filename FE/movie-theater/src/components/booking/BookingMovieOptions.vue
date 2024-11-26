@@ -125,8 +125,8 @@ export default {
         this.formatDate,
         this.selectedTheater.id
       );
-      if (response.status == 200) {
-        this.movies = response.data.data;
+      if (response.code == 200) {
+        this.movies = response.data;
       }
     },
     async fetchRegionsWithScreeningCount() {
@@ -134,8 +134,8 @@ export default {
         this.selectedMovie.id,
         this.formatDate
       );
-      if (response.status == 200) {
-        this.regions = response.data.data;
+      if (response.code == 200) {
+        this.regions = response.data;
       }
     },
     async fetchTheaters() {
@@ -144,8 +144,8 @@ export default {
         this.selectedMovie.id,
         this.selectedRegion.name
       );
-      if (response.status == 200) {
-        this.theaters = response.data.data;
+      if (response.code == 200) {
+        this.theaters = response.data;
       }
     },
     async fetchScreening() {
@@ -154,8 +154,8 @@ export default {
         this.selectedTheater.id,
         this.formatDate
       );
-      if (response.status == 200) {
-        this.screenings = response.data.data;
+      if (response.code == 200) {
+        this.screenings = response.data;
       }
       console.log(response);
     },

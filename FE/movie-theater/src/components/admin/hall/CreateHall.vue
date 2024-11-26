@@ -84,8 +84,8 @@ export default {
   methods: {
     async fetchRegions() {
       const response = await getRegionsWithTheaterCount();
-      if (response.status == 200) {
-        this.regions = response.data.data;
+      if (response.code == 200) {
+        this.regions = response.data;
       }
     },
     regionSelect(name, index) {
@@ -104,18 +104,22 @@ export default {
     },
     async fetchTheaters() {
       const response = await getTheatersByRegion(this.selectedRegion.name);
-      if (response.status == 200) {
-        this.theaters = response.data.data;
+      if (response.code == 200) {
+        this.theaters = response.data;
       }
     },
     async fetchHalls() {
       const response = await getHalls(this.selectedTheater.id);
-      this.halls = response.data.data;
+      if (response.code == 200) {
+        this.halls = response.data;
+      }
     },
     async submit() {
       console.log(this.hall);
       const response = await createHallWithSeats(this.hall);
-      console.log(response);
+      if (response.code == 200) {
+        alert("상영관 생성 완료 " + response.data.hallId);
+      }
       this.fetchHalls();
     },
     resetTheater() {

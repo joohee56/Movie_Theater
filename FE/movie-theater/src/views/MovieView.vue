@@ -28,8 +28,8 @@ export default {
   methods: {
     async fetchMovies() {
       const response = await getMovies();
-      if (response.status == 200) {
-        this.movies = response.data.data;
+      if (response.code == 200) {
+        this.movies = response.data;
       }
       console.log(response);
     },

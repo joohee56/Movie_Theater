@@ -40,8 +40,9 @@ export default {
   methods: {
     async fetchBookingList() {
       const response = await getBookingHistory();
-      console.log(response);
-      this.bookingHistory = response.data.data;
+      if (response.code == 200) {
+        this.bookingHistory = response.data;
+      }
     },
     updateBookingHistory(data) {
       console.log("parent update history");

@@ -10,18 +10,20 @@ async function getMovies(date, theaterId) {
         theaterId: theaterId,
       },
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
 async function getRecentMovies() {
   try {
     const response = await jsonApi.get("/movies/recent");
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
@@ -33,18 +35,20 @@ async function getMoviesWithWatchable(date, theaterId) {
         theaterId: theaterId,
       },
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
 async function createMovie(formData) {
   try {
     const response = await multipartApi.post("/movies/new", formData);
-    return response;
+    return response.data;
   } catch (error) {
-    return error.response;
+    console.log(error);
+    return error.response.data;
   }
 }
 

@@ -9,9 +9,10 @@ async function getSeats(screeningId, hallId) {
         hallId: hallId,
       },
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 

@@ -77,12 +77,14 @@ export default {
   methods: {
     async fetchMovies() {
       const response = await getMovies();
-      this.movies = response.data.data;
+      if (response.code == 200) {
+        this.movies = response.data;
+      }
     },
     async fetchRegions() {
       const response = await getRegionsWithTheaterCount();
-      if (response.status == 200) {
-        this.regions = response.data.data;
+      if (response.code == 200) {
+        this.regions = response.data;
       }
     },
     regionSelect(name, index) {
@@ -105,18 +107,22 @@ export default {
     },
     async fetchTheaters() {
       const response = await getTheatersByRegion(this.selectedRegion.name);
-      if (response.status == 200) {
-        this.theaters = response.data.data;
+      if (response.code == 200) {
+        this.theaters = response.data;
       }
     },
     async fetchHalls() {
       const response = await getHalls(this.selectedTheater.id);
-      this.halls = response.data.data;
+      if (response.code == 200) {
+        this.halls = response.data;
+      }
     },
     async submit() {
       console.log(this.screening);
       const response = await createScreening(this.screening);
-      console.log(response);
+      if (response.code == 200) {
+        alert("상영시간 생성 완료 " + response.data.id);
+      }
     },
     resetTheater() {
       this.selectedTheater.id = null;

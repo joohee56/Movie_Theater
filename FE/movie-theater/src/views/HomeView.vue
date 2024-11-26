@@ -34,8 +34,9 @@ export default {
   methods: {
     async fetchMovies() {
       const response = await getRecentMovies();
-      this.movies = response.data.data;
-      console.log(this.movies);
+      if (response.code == 200) {
+        this.movies = response.data;
+      }
     },
   },
 };

@@ -66,7 +66,9 @@ export default {
   methods: {
     async fetchBooking() {
       const response = await getBooking(this.$route.params.bookingId);
-      this.booking = response.data.data;
+      if (response.code == 200) {
+        this.booking = response.data;
+      }
     },
     goToBookingHistory() {
       this.$router.push({ name: "bookingHistory" });

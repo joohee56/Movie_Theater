@@ -34,11 +34,6 @@
 					<button>휴대폰결제</button>
 					<button>내통장결제</button>
 				</div>
-				<!-- <div>
-					<div>카드사 선택</div>
-					<div>현대카드</div>
-					<radio>앱카드</radio>
-				</div> -->
 			</div>
 		</div>
 
@@ -95,8 +90,9 @@ export default {
   methods: {
     async fetchScreeningWithTotalPrice() {
       const response = await getScreeningAndTotalPrice(this.screeningId);
-      this.screening = response.data.data;
-      console.log(this.screening);
+      if (response.code == 200) {
+        this.screening = response.data;
+      }
     },
     generateUniqueBookingNumber() {
       const now = new Date();
@@ -112,7 +108,7 @@ export default {
     },
     async requestPayment() {
       alert(
-        "결제처리가 완료된 후 자정 전(23:00~23:50)에 자동으로 일괄적으로 취소됩니다. 예외를 대비해 결제 금액은 100원으로 변경됩니다."
+        "결제처리가 완료된 후 자정 전(23:00~23:50)에 자동으로 일괄적으로 취소됩니다.\n예외를 대비해 결제 금액은 100원으로 변경됩니다."
       );
       this.screening.totalPrice = 100; //테스트용
       //결제 사전 등록
@@ -121,49 +117,51 @@ export default {
         bookingNumber,
         this.screening.totalPrice * this.seatIds.length
       );
-      console.log(response);
 
-      //아임포트 결제 진행
-      IMP.request_pay(
-        {
-          channelKey: "channel-key-9b25fa8e-097c-4a0b-a3e0-56522892ccc9",
-          pay_method: "card",
-          merchant_uid: bookingNumber, // 에매번호
-          amount: this.screening.totalPrice * this.seatIds.length,
-          buyer_email: "gildong@gmail.com",
-          buyer_name: "홍길동",
-          buyer_tel: "010-4242-4242",
-          buyer_addr: "서울특별시 강남구 신사동",
-          buyer_postcode: "01181",
-        },
-        async (response) => {
-          if (response.error_code != null) {
-            return alert(
-              `결제에 실패하였습니다. 에러 내용: ${response.error_msg}`
-            );
-          }
-          if (response.success) {
-            console.log(response);
-            const confirmBookingRequest = {
-              bookingId: this.bookingId,
-              impId: response.imp_uid,
-              amount: response.paid_amount,
-              bookingNumber: response.merchant_uid,
-              payTime: response.paid_at,
-              payMethod: response.pay_method,
-              currency: response.currency,
-            };
-            const bookingResponse = await confirmBooking(confirmBookingRequest);
-            console.log(bookingResponse);
-            if (bookingResponse.code == 200) {
-              this.$router.push({
-                name: "bookingSuccess",
-                params: { bookingId: bookingResponse.data.id },
-              });
+      if (response.code == 200) {
+        //아임포트 결제 진행
+        IMP.request_pay(
+          {
+            channelKey: "channel-key-9b25fa8e-097c-4a0b-a3e0-56522892ccc9",
+            pay_method: "card",
+            merchant_uid: bookingNumber, // 에매번호
+            amount: this.screening.totalPrice * this.seatIds.length,
+            buyer_email: "gildong@gmail.com",
+            buyer_name: "홍길동",
+            buyer_tel: "010-4242-4242",
+            buyer_addr: "서울특별시 강남구 신사동",
+            buyer_postcode: "01181",
+          },
+          async (response) => {
+            if (response.error_code != null) {
+              return alert(
+                `결제에 실패하였습니다. 에러 내용: ${response.error_msg}`
+              );
+            }
+            if (response.success) {
+              console.log(response);
+              const confirmBookingRequest = {
+                bookingId: this.bookingId,
+                impId: response.imp_uid,
+                amount: response.paid_amount,
+                bookingNumber: response.merchant_uid,
+                payTime: response.paid_at,
+                payMethod: response.pay_method,
+                currency: response.currency,
+              };
+              const bookingResponse = await confirmBooking(
+                confirmBookingRequest
+              );
+              if (bookingResponse.code == 200) {
+                this.$router.push({
+                  name: "bookingSuccess",
+                  params: { bookingId: bookingResponse.data.id },
+                });
+              }
             }
           }
-        }
-      );
+        );
+      }
     },
   },
 };

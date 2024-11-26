@@ -57,8 +57,9 @@ export default {
     async cancelBooking(bookingId) {
       alert("예매를 취소하시겠습니까?");
       const response = await cancelBookingAndGetBookingHistory(bookingId);
-      console.log(response.data);
-      this.$emit("updateBookingHistory", response.data.data);
+      if (response.code == 200) {
+        this.$emit("updateBookingHistory", response.data);
+      }
     },
   },
 };

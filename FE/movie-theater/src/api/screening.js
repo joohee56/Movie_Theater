@@ -4,9 +4,10 @@ const jsonApi = jsonApiInstance();
 async function createScreening(request) {
   try {
     const response = await jsonApi.post("/screenings/new", request);
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
@@ -18,9 +19,10 @@ async function getRegionsWithScreeningCount(movieId, date) {
         date: date,
       },
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
@@ -33,9 +35,10 @@ async function getScreenings(movieId, theaterId, date) {
         date: date,
       },
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
@@ -48,18 +51,20 @@ async function getTheaterAndScreeningCounts(date, movieId, region) {
         region: region,
       },
     });
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
 async function getScreeningAndTotalPrice(screeningId) {
   try {
     const response = await jsonApi.get(`/screenings/screening/${screeningId}`);
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
+    return error.response.data;
   }
 }
 
