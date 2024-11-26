@@ -4,7 +4,8 @@
       <button v-if="isAuthenticated" @click="logout">로그아웃</button>
       <button v-else @click="SHOW_LOGIN_MODAL">로그인</button>
       <LoginModal @checkAuthStatus="checkAuthStatus" />
-			<button>회원가입</button>
+			<button @click="SHOW_JOIN_MODAL">회원가입</button>
+      <JoinModal />
       <button v-if="isAdmin" @click="redirectAdminPage">관리자 대시보드</button>
 		</div>
 		<div class="main-nav">
@@ -27,6 +28,7 @@
 import { mapMutations } from "vuex";
 import { logout } from "@/api/user";
 import LoginModal from "@/views/LoginModal.vue";
+import JoinModal from "@/views/JoinModal.vue";
 
 export default {
   data() {
@@ -36,7 +38,7 @@ export default {
       isAdmin: false,
     };
   },
-  components: { LoginModal },
+  components: { LoginModal, JoinModal },
   computed: {
     homeClass() {
       return this.$route.path == "/" ? "home" : "default";
@@ -50,7 +52,7 @@ export default {
     window.removeEventListener("storage", this.checkAuthStatus);
   },
   methods: {
-    ...mapMutations(["SHOW_LOGIN_MODAL"]),
+    ...mapMutations(["SHOW_LOGIN_MODAL", "SHOW_JOIN_MODAL"]),
     checkAuthStatus() {
       const authStatus = localStorage.getItem("isAuthenticated");
       const admin = localStorage.getItem("admin");

@@ -1,21 +1,18 @@
 <template lang="ko">
-  <div v-if="isLoginModalVisible" class="modal-overlay">
+  <div v-if="isJoinModalVisible" class="modal-overlay">
     <div class="modal-content">
       <div class="top">
-        <div>로그인</div>
-        <button class="close-btn" @click="HIDE_LOGIN_MODAL">X</button>
+        <div>회원가입</div>
+        <button class="close-btn" @click="HIDE_JOIN_MODAL">X</button>
       </div>
       <div class="content">
-        <div class="left-side">
-          <div class="input-container">
-            <input type="text" v-model="userId" placeholder="아이디" required />
-            <input type="password" v-model="password" placeholder="비밀번호" required />
-          </div>
-          <button class="login-btn" :disabled="isLoginDisabled" @click="login">로그인</button>
+        <div class="input-container">
+          <input type="text" v-model="user.loginId" placeholder="아이디" required />
+          <input type="password" v-model="user.password" placeholder="비밀번호" required />
+          <input type="text" v-model="user.name" placeholder="이름" required />
+          <input type="text" v-model="user.email" placeholder="이메일" required />
         </div>
-        <div class="ad">
-          <img src="@/assets/img/ad-img.png"></img>
-        </div>
+        <button class="join-btn" :disabled="isJoinDisabled" @click="join">회원가입</button>
       </div>
     </div>
   </div>
@@ -23,35 +20,41 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { login } from "@/api/user";
+import { join } from "@/api/user";
 
 export default {
   data() {
     return {
-      userId: "",
-      password: "",
+      user: {
+        loginId: "",
+        password: "",
+        name: "",
+        email: "",
+      },
     };
   },
   computed: {
-    ...mapState(["isLoginModalVisible"]),
-    isLoginDisabled() {
-      return this.userId.trim() === "" || this.password.trim() === "";
+    ...mapState(["isJoinModalVisible"]),
+    isJoinDisabled() {
+      return (
+        this.user.loginId.trim() === "" ||
+        this.user.password.trim() === "" ||
+        this.user.name.trim() === "" ||
+        this.user.email.trim() === ""
+      );
     },
   },
   methods: {
-    ...mapMutations(["HIDE_LOGIN_MODAL"]),
+    ...mapMutations(["HIDE_JOIN_MODAL", "SHOW_LOGIN_MODAL"]),
     close() {
-      this.HIDE_LOGIN_MODAL();
+      this.HIDE_JOIN_MODAL();
     },
-    async login() {
-      const response = await login(this.userId, this.password);
+    async join() {
+      const response = await join(this.user);
       if (response.code == 200) {
-        localStorage.setItem("isAuthenticated", true);
-        if (this.userId === "admin") {
-          localStorage.setItem("admin", true);
-        }
-        this.$emit("checkAuthStatus");
+        alert(response.data.name + "님 반갑습니다.");
         this.close();
+        this.SHOW_LOGIN_MODAL();
       }
     },
   },
@@ -71,10 +74,9 @@ export default {
   align-items: center;
   z-index: 1000;
 }
-
 .modal-content {
   background: white;
-  width: 800px;
+  width: 500px;
   position: relative;
   font-family: "SUIT-Regular";
 }
@@ -86,16 +88,13 @@ export default {
   font-family: "SUIT-Regular";
 }
 .modal-content .content {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   column-gap: 50px;
-  padding: 20px;
+  padding: 30px;
 }
-.content .left-side {
-  width: 100%;
-}
-.left-side .input-container {
-  margin-bottom: 20px;
+.content .input-container {
+  margin: 0 auto;
+  margin-bottom: 30px;
+  width: 70%;
 }
 .content input {
   border: 1px solid var(--border-line-color);
@@ -111,24 +110,20 @@ export default {
 .content input:focus {
   border: 2px solid black;
 }
-.content .login-btn {
-  width: 100%;
+.content .join-btn {
   border: none;
   padding: 15px 0;
   font-size: 15px;
   border-radius: 5px;
   font-family: "SUIT-Medium";
   background-color: var(--primary-color);
+  width: 50%;
+  display: block;
+  margin: 0 auto;
 }
-.content .login-btn:disabled {
+.content .join-btn:disabled {
   background-color: #e0e0e0;
   color: gray;
-}
-.content .ad {
-  width: 370px;
-}
-.content .ad img {
-  width: 100%;
 }
 
 .close-btn {

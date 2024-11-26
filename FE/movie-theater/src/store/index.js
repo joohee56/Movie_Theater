@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isLoginModalVisible: false,
+    isJoinModalVisible: false,
   },
   getters: {},
   mutations: {
@@ -14,6 +15,12 @@ export default new Vuex.Store({
     },
     HIDE_LOGIN_MODAL(state) {
       state.isLoginModalVisible = false;
+    },
+    SHOW_JOIN_MODAL(state) {
+      state.isJoinModalVisible = true;
+    },
+    HIDE_JOIN_MODAL(state) {
+      state.isJoinModalVisible = false;
     },
   },
   actions: {},

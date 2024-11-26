@@ -14,6 +14,16 @@ async function login(loginId, password) {
   }
 }
 
+async function join(joinRequest) {
+  try {
+    const response = await jsonApi.post("/users/user/join", joinRequest);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error.response.data;
+  }
+}
+
 async function logout() {
   try {
     const response = await jsonApi.get("/users/user/logout");
@@ -24,4 +34,4 @@ async function logout() {
   }
 }
 
-export { login, logout };
+export { login, join, logout };
