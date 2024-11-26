@@ -1,7 +1,6 @@
 package mt.movie_theater.api.payment.request;
 
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,32 +16,15 @@ public class PostPaymentRequest {
     private Long payTime;
     private String payMethod;
     private Currency currency;
-    private Long screeningId;
-//    private Long seatId;
-    private List<Long> seatIds;
-
-//    @Builder
-//    public PostPaymentRequest(String impId, Long amount, String bookingNumber, Long payTime, String payMethod, Currency currency, Long screeningId, Long seatId) {
-//        this.impId = impId;
-//        this.amount = amount;
-//        this.bookingNumber = bookingNumber;
-//        this.payTime = payTime;
-//        this.payMethod = payMethod;
-//        this.currency = currency;
-//        this.screeningId = screeningId;
-//        this.seatId = seatId;
-//    }
 
     @Builder
     public PostPaymentRequest(String impId, Long amount, String bookingNumber, Long payTime, String payMethod,
-                              Currency currency, Long screeningId, List<Long> seatIds) {
+                              Currency currency) {
         this.impId = impId;
         this.amount = amount;
         this.bookingNumber = bookingNumber;
         this.payTime = payTime;
         this.payMethod = payMethod;
         this.currency = currency;
-        this.screeningId = screeningId;
-        this.seatIds = seatIds;
     }
 }

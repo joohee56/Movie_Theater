@@ -74,12 +74,13 @@ const { IMP } = window;
 import PageTitle from "@/components/header/PageTitle.vue";
 import { getScreeningAndTotalPrice } from "@/api/screening";
 import { preparePayment } from "@/api/payment";
-import { createBooking } from "@/api/booking";
+import { confirmBooking } from "@/api/booking";
 
 export default {
   data() {
     return {
       screening: {},
+      bookingId: sessionStorage.getItem("bookingId"),
       screeningId: sessionStorage.getItem("screeningId"),
       seatIds: JSON.parse(sessionStorage.getItem("seatIds")),
     };
@@ -143,22 +144,21 @@ export default {
           }
           if (response.success) {
             console.log(response);
-            const postRequest = {
+            const confirmBookingRequest = {
+              bookingId: this.bookingId,
               impId: response.imp_uid,
               amount: response.paid_amount,
               bookingNumber: response.merchant_uid,
               payTime: response.paid_at,
               payMethod: response.pay_method,
               currency: response.currency,
-              screeningId: this.screeningId,
-              seatIds: this.seatIds,
             };
-            console.log(postRequest);
-            const bookingResponse = await createBooking(postRequest);
-            if (bookingResponse.status == 200) {
+            const bookingResponse = await confirmBooking(confirmBookingRequest);
+            console.log(bookingResponse);
+            if (bookingResponse.code == 200) {
               this.$router.push({
                 name: "bookingSuccess",
-                params: { bookingId: bookingResponse.data.data.id },
+                params: { bookingId: bookingResponse.data.id },
               });
             }
           }

@@ -79,6 +79,7 @@
 <script>
 import { getSeats } from "@/api/seat";
 import { getScreeningAndTotalPrice } from "@/api/screening";
+import { holdBooking } from "@/api/booking";
 
 export default {
   data() {
@@ -105,7 +106,7 @@ export default {
   },
   methods: {
     async fetchSeats() {
-      const response = await getSeats(this.hallId);
+      const response = await getSeats(this.screeningId, this.hallId);
       const data = response.data.data;
 
       // 좌석 정보에 selected 필드를 추가
@@ -139,11 +140,26 @@ export default {
       }
       seat.isSelected = !seat.isSelected; // 좌석 선택 상태 토글
     },
-    goToNext() {
+    async goToNext() {
       var seatIds = [];
       this.selectedSeats.forEach((seat) => {
         seatIds.push(seat.seatId);
       });
+      const bookingHoldRequest = {
+        screeningId: this.screeningId,
+        seatIds: seatIds,
+      };
+
+      console.log(bookingHoldRequest);
+      const response = await holdBooking(bookingHoldRequest);
+      console.log(response);
+      if (response.code !== 200) {
+        alert(
+          "선택하신 좌석은 이미 판매가 진행중입니다．\n다른 좌석을 선택해주세요."
+        );
+        return;
+      }
+      sessionStorage.setItem("bookingId", response.data);
       sessionStorage.setItem("seatIds", JSON.stringify(seatIds));
       this.$router.push({ name: "paymentView" });
     },

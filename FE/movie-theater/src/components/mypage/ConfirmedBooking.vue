@@ -72,7 +72,7 @@ export default {
   padding: 20px;
   font-family: "SUIT-Regular";
   font-size: 15px;
-  width: 650px;
+  max-width: 700px;
   margin: 0 auto;
   margin-bottom: 15px;
 }

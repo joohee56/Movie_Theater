@@ -1,12 +1,27 @@
 import { jsonApiInstance } from "@/api/index";
 const jsonApi = jsonApiInstance();
 
-async function createBooking(postPaymentRequest) {
+async function holdBooking(bookingHoldRequest) {
   try {
-    const response = await jsonApi.post("/bookings/new", postPaymentRequest);
-    return response;
+    const response = await jsonApi.post(
+      "/bookings/booking/hold",
+      bookingHoldRequest
+    );
+    return response.data;
   } catch (error) {
-    console.log(error);
+    return error.response.data;
+  }
+}
+
+async function confirmBooking(confirmBooking) {
+  try {
+    const response = await jsonApi.post(
+      "/bookings/booking/confirm",
+      confirmBooking
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
 }
 
@@ -38,7 +53,8 @@ async function cancelBookingAndGetBookingHistory(bookingId) {
 }
 
 export {
-  createBooking,
+  holdBooking,
+  confirmBooking,
   getBooking,
   getBookingHistory,
   cancelBookingAndGetBookingHistory,
