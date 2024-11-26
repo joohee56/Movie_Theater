@@ -24,10 +24,9 @@ public class UserController {
     private final UserService userService;
     private final SessionService sessionService;
 
-    @PostMapping("/new")
-    public ApiResponse<UserResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
-        UserResponse response = userService.createUser(request);
-        return ApiResponse.ok(response);
+    @PostMapping("/user/join")
+    public ApiResponse<UserResponse> join(@Valid @RequestBody UserCreateRequest request) {
+        return ApiResponse.ok(userService.join(request));
     }
 
     @PostMapping("/user/login")

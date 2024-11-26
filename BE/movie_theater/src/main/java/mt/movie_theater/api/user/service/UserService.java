@@ -16,7 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserResponse createUser(UserCreateRequest request) {
+    public UserResponse join(UserCreateRequest request) {
         User savedUser = userRepository.save(request.toEntity());
         return UserResponse.create(savedUser);
     }

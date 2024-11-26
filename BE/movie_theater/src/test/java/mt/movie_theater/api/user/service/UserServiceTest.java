@@ -22,7 +22,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
     @DisplayName("새 회원을 등록한다.")
     @Test
-    void createUserTest() {
+    void joinTest() {
         //given
         UserCreateRequest request = UserCreateRequest.builder()
                 .loginId("joohee123")
@@ -31,7 +31,7 @@ class UserServiceTest extends IntegrationTestSupport {
                 .email("test@test.com")
                 .build();
         //when
-        UserResponse response = userService.createUser(request);
+        UserResponse response = userService.join(request);
 
         //then
         assertThat(response.getId()).isNotNull();
@@ -46,7 +46,7 @@ class UserServiceTest extends IntegrationTestSupport {
         //given
         String loginId = "test123";
         String password = "1234";
-        createUser(loginId, password);
+        join(loginId, password);
 
         //when
         User user = userService.authenticate(loginId, password);
@@ -71,7 +71,7 @@ class UserServiceTest extends IntegrationTestSupport {
     void authenticateWithWrongPassword() {
         //given
         String loginId = "test123";
-        User user = createUser(loginId, "1234");
+        User user = join(loginId, "1234");
 
         //when, then
         assertThatThrownBy(() -> userService.authenticate(loginId, "000"))
@@ -79,7 +79,7 @@ class UserServiceTest extends IntegrationTestSupport {
                 .hasMessage("아이디와 비밀번호가 일치하지 않습니다. 다시 확인해 주세요.");
     }
 
-    private User createUser(String loginId, String password) {
+    private User join(String loginId, String password) {
         User user = User.builder()
                 .loginId(loginId)
                 .password(password)
