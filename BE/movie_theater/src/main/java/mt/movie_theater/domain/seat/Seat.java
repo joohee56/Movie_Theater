@@ -29,21 +29,10 @@ public class Seat extends BaseEntity {
     @Embedded
     private SeatLocation seatLocation;
 
-    @Column(columnDefinition = "TINYINT(1) DEFAULT true")
-    private boolean isBooked;
-
     @Builder
-    public Seat(Hall hall, SeatLocation seatLocation, boolean isBooked) {
+    public Seat(Hall hall, SeatLocation seatLocation) {
         this.hall = hall;
         this.seatLocation = seatLocation;
-        this.isBooked = isBooked;
     }
 
-    public void book() {
-       this.isBooked = true;
-    }
-
-    public void cancel() {
-        this.isBooked = false;
-    }
 }

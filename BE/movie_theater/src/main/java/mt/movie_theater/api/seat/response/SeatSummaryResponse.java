@@ -21,12 +21,12 @@ public class SeatSummaryResponse {
         this.isBooked = isBooked;
     }
 
-    public static SeatSummaryResponse create(Seat seat) {
+    public static SeatSummaryResponse create(Seat seat, boolean isBooked) {
         return SeatSummaryResponse.builder()
                 .seatId(seat.getId())
                 .section(seat.getSeatLocation().getSection())
                 .seatRow(seat.getSeatLocation().getSeatRow())
-                .isBooked(seat.isBooked())
+                .isBooked(isBooked)
                 .build();
     }
 }

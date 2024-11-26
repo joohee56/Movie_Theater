@@ -1,6 +1,5 @@
 package mt.movie_theater.api.seat.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import mt.movie_theater.domain.seat.Seat;
@@ -11,16 +10,13 @@ public class SeatResponse {
     private Long hallId;
     private String section;
     private String seatRow;
-    @JsonProperty("isBooked")
-    private boolean isBooked;
 
     @Builder
-    public SeatResponse(Long id, Long hallId, String section, String seatRow, boolean isBooked) {
+    public SeatResponse(Long id, Long hallId, String section, String seatRow) {
         this.id = id;
         this.hallId = hallId;
         this.section = section;
         this.seatRow = seatRow;
-        this.isBooked = isBooked;
     }
 
     public static SeatResponse create(Seat seat) {
@@ -29,7 +25,6 @@ public class SeatResponse {
                 .hallId(seat.getHall().getId())
                 .section(seat.getSeatLocation().getSection())
                 .seatRow(seat.getSeatLocation().getSeatRow())
-                .isBooked(seat.isBooked())
                 .build();
     }
 }

@@ -11,6 +11,8 @@ import mt.movie_theater.api.seat.response.SeatResponse;
 import mt.movie_theater.api.seat.response.SeatSummaryResponse;
 import mt.movie_theater.domain.hall.Hall;
 import mt.movie_theater.domain.hall.HallRepository;
+import mt.movie_theater.domain.screening.Screening;
+import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
 import mt.movie_theater.domain.seat.SeatLocation;
 import mt.movie_theater.domain.seat.SeatRepository;
@@ -27,6 +29,8 @@ class SeatServiceTest extends IntegrationTestSupport {
     private HallRepository hallRepository;
     @Autowired
     private SeatRepository seatRepository;
+    @Autowired
+    private ScreeningRepository screeningRepository;
 
     @Transactional
     @DisplayName("상영관에 좌석 리스트를 등록한다.")
@@ -42,14 +46,14 @@ class SeatServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(seats).hasSize(6)
-                .extracting("section", "seatRow", "isBooked")
+                .extracting("section", "seatRow")
                 .containsExactlyInAnyOrder(
-                        tuple("A", "1", false),
-                        tuple("A", "2", false),
-                        tuple("A", "3", false),
-                        tuple("B", "1", false),
-                        tuple("B", "2", false),
-                        tuple("B", "3", false)
+                        tuple("A", "1"),
+                        tuple("A", "2"),
+                        tuple("A", "3"),
+                        tuple("B", "1"),
+                        tuple("B", "2"),
+                        tuple("B", "3")
                 );
     }
 
@@ -72,6 +76,7 @@ class SeatServiceTest extends IntegrationTestSupport {
         //given
         Hall hall1 = createHall();
         Hall hall2 = createHall();
+        Screening screening = createScreening(hall1);
         createSeat(hall1, "A", "1");
         createSeat(hall1, "A", "2");
         createSeat(hall1, "B", "1");
@@ -79,7 +84,7 @@ class SeatServiceTest extends IntegrationTestSupport {
         createSeat(hall2, "A", "1");
 
         //when
-        Map<String, List<SeatSummaryResponse>> sectionSeatMap = seatService.getSeatList(hall1.getId());
+        Map<String, List<SeatSummaryResponse>> sectionSeatMap = seatService.getSeatList(screening.getId(), hall1.getId());
 
         //then
         assertThat(sectionSeatMap).hasSize(2);
@@ -95,6 +100,13 @@ class SeatServiceTest extends IntegrationTestSupport {
                         tuple("B", "1"),
                         tuple("B", "2")
                 );
+    }
+
+    private Screening createScreening(Hall hall) {
+        Screening screening = Screening.builder()
+                .hall(hall)
+                .build();
+        return screeningRepository.save(screening);
     }
 
     private Hall createHall() {

@@ -6,24 +6,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import mt.movie_theater.api.booking.request.BookingHoldRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.response.BookingWithDateResponse;
-import mt.movie_theater.api.exception.DuplicateSeatBookingException;
-import mt.movie_theater.api.exception.PaymentValidationException;
-import mt.movie_theater.api.payment.request.PostPaymentRequest;
+import mt.movie_theater.api.payment.request.ConfirmBookingRequest;
 import mt.movie_theater.api.payment.service.PaymentHistoryService;
+import mt.movie_theater.api.seat.service.SeatService;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.domain.booking.BookingRepository;
 import mt.movie_theater.domain.booking.BookingStatus;
-import mt.movie_theater.domain.bookingseat.BookingSeat;
-import mt.movie_theater.domain.bookingseat.BookingSeatRepository;
-import mt.movie_theater.domain.payment.PayStatus;
 import mt.movie_theater.domain.payment.PaymentHistory;
 import mt.movie_theater.domain.payment.PaymentHistoryRepository;
 import mt.movie_theater.domain.screening.Screening;
 import mt.movie_theater.domain.screening.ScreeningRepository;
 import mt.movie_theater.domain.seat.Seat;
-import mt.movie_theater.domain.seat.SeatRepository;
 import mt.movie_theater.domain.user.User;
 import mt.movie_theater.domain.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -35,21 +31,35 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final ScreeningRepository screeningRepository;
-    private final SeatRepository seatRepository;
     private final UserRepository userRepository;
     private final PaymentHistoryRepository paymentHistoryRepository;
     private final PaymentHistoryService paymentHistoryService;
-    private final BookingSeatRepository bookingSeatRepository;
+    private final SeatService seatService;
 
     @Transactional
-    public BookingResponse createBooking(Long userId, Long screeningId, List<Long> seatIds, Long paymentId, String bookingNumber, LocalDateTime bookingTime) {
+    public Long holdBooking(Long userId, BookingHoldRequest request, LocalDateTime bookingTime) {
         User user = validateUser(userId);
-        Screening screening = validateScreening(screeningId, bookingTime);
-        List<Seat> seats = validateSeats(seatIds, screening);
-        PaymentHistory paymentHistory = validatePayment(paymentId);
+        Screening screening = validateScreening(request.getScreeningId(), bookingTime);
+        List<Seat> seats = seatService.validateSeats(request.getSeatIds(), screening);
 
-        Booking booking = Booking.create(user, screening, paymentHistory, bookingNumber, bookingTime, seats);
-        return BookingResponse.create(bookingRepository.save(booking));
+        Booking booking = Booking.hold(user, screening, seats);
+        return bookingRepository.save(booking).getId();
+    }
+
+    /**
+     * 결제 사후 검증 후 결제내역, 예매 생성
+     */
+    @Transactional
+    public BookingResponse confirmBookingAndPaymentHistory(Long userId, ConfirmBookingRequest request, LocalDateTime bookingTime) {
+        User user = validateUser(userId);
+        Booking booking = validateBookingForConfirm(user.getId(), request.getBookingId());
+        PaymentHistory paymentHistory = paymentHistoryRepository.save(PaymentHistory.create(request, user));
+        if (!paymentHistoryService.validatePaymentAmount(request.getImpId(), request.getAmount())) {
+            paymentHistoryService.failPayment(request.getImpId(), "비정상적인 접근입니다. 결제 요청이 유효하지 않습니다.");
+        }
+
+        booking.confirm(paymentHistory, request.getBookingNumber(), bookingTime);
+        return BookingResponse.create(booking);
     }
 
     public BookingResponse getBooking(Long bookingId) {
@@ -80,24 +90,7 @@ public class BookingService {
         Booking booking = validateBookingForCancel(bookingId, user.getId());
         paymentHistoryService.cancelPayment(booking.getPaymentHistory().getImpId(), "예매를 취소합니다.");
         booking.cancel();
-        for (BookingSeat bookingSeat : booking.getBookingSeats()) {
-            bookingSeat.getSeat().cancel();
-        }
         return getBookingHistory(userId);
-    }
-
-    /**
-     * 결제 사후 검증 후 결제내역, 예매 생성
-     */
-    @Transactional
-    public BookingResponse createBookingAndPaymentHistory(Long userId, PostPaymentRequest request, LocalDateTime bookingTime) {
-        User user = validateUser(userId);
-        PaymentHistory paymentHistory = paymentHistoryRepository.save(PaymentHistory.create(request, user));
-        if (!paymentHistoryService.validatePaymentAmount(request.getImpId(), request.getAmount())) {
-            paymentHistoryService.failPayment(request.getImpId(), "비정상적인 접근입니다. 결제 요청이 유효하지 않습니다.");
-        }
-
-        return createBooking(user.getId(), request.getScreeningId(), request.getSeatIds(), paymentHistory.getId(), request.getBookingNumber(), bookingTime);
     }
 
     private User validateUser(Long userId) {
@@ -119,45 +112,26 @@ public class BookingService {
         return screening.get();
     }
 
-    private PaymentHistory validatePayment(Long paymentId) {
-        Optional<PaymentHistory> payment = paymentHistoryRepository.findById(paymentId);
-        if (payment.isEmpty() || !payment.get().getPayStatus().equals(PayStatus.COMPLETED)) {
-            throw new PaymentValidationException("유효하지 않은 결제입니다. 결제 정보를 다시 확인해 주세요.");
-        }
-        return payment.get();
-    }
-
-    private List<Seat> validateSeats(List<Long> seatIds, Screening screening) {
-        List<Seat> seats = seatRepository.findAllByIdIn(seatIds);
-        if (seatIds.size() != seats.size()) {
-            throw new IllegalArgumentException("유효하지 않은 좌석입니다. 좌석 정보를 다시 확인해 주세요.");
-        }
-
-        List<BookingSeat> bookingSeats = bookingSeatRepository.findAllBySeatIdInAndScreening(screening, seatIds);
-        for (BookingSeat bookingSeat : bookingSeats) {
-            if (bookingSeat.getSeat().isBooked() || bookingSeat.getBooking().getBookingStatus().equals(BookingStatus.CONFIRMED)) {
-                throw new DuplicateSeatBookingException("이미 선택된 좌석입니다.");
-            }
-        }
-        return seats;
-    }
-
-    private Booking validateBooking(Long bookingId) {
+    private Booking validateBookingForConfirm(Long userId, Long bookingId) {
         Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
-        if (optionalBooking.isEmpty()) {
+        if (optionalBooking.isEmpty() || !optionalBooking.get().getBookingStatus().equals(BookingStatus.PENDING) || !optionalBooking.get().getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
         }
         return optionalBooking.get();
     }
 
     private Booking validateBookingForCancel(Long bookingId, Long userId) {
-        Booking booking = validateBooking(bookingId);
-        if (booking.getBookingStatus().equals(BookingStatus.CANCELED)) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        if (optionalBooking.isEmpty()) {
+            throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
+        }
+        if (optionalBooking.get().getBookingStatus().equals(BookingStatus.CANCELED)) {
             throw new IllegalArgumentException("취소된 예매입니다.");
         }
-        if (booking.getUser().getId() != userId) {
+        if (!optionalBooking.get().getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("예매 취소 권한이 없습니다.");
         }
-        return booking;
+        return optionalBooking.get();
     }
+
 }

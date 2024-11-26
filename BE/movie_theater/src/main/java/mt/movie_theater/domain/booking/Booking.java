@@ -77,21 +77,24 @@ public class Booking extends BaseEntity {
         bookingSeat.setBooking(this);
     }
 
-    public static Booking create(User user, Screening screening, PaymentHistory paymentHistory, String bookingNumber, LocalDateTime bookingTime, List<Seat> seats) {
+    public static Booking hold(User user, Screening screening, List<Seat> seats) {
         Booking booking = Booking.builder()
                 .user(user)
                 .screening(screening)
-                .paymentHistory(paymentHistory)
-                .bookingNumber(bookingNumber)
-                .bookingTime(bookingTime)
-                .bookingStatus(BookingStatus.CONFIRMED)
+                .bookingStatus(BookingStatus.PENDING)
                 .build();
         for (Seat seat : seats) {
             BookingSeat bookingSeat = BookingSeat.create(seat);
             booking.addBookingSeat(bookingSeat);
-            seat.book();
         }
         return booking;
+    }
+
+    public void confirm(PaymentHistory paymentHistory, String bookingNumber, LocalDateTime bookingTime) {
+        this.paymentHistory = paymentHistory;
+        this.bookingNumber = bookingNumber;
+        this.bookingTime = bookingTime;
+        this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
     public void cancel() {

@@ -58,9 +58,7 @@ public class PaymentHistoryService {
             throw new IllegalStateException("결제 취소 처리가 되지 않았습니다.");
         }
         Optional<PaymentHistory> paymentHistory = paymentHistoryRepository.findByImpId(impId);
-        if (paymentHistory.isPresent()) {
-            paymentHistory.get().fail();
-        }
+        paymentHistory.ifPresent(PaymentHistory::fail);
     }
 
     public void cancelPayment(String impId, String reason) {
@@ -68,9 +66,7 @@ public class PaymentHistoryService {
             throw new IllegalStateException("결제 취소 처리가 되지 않았습니다.");
         }
         Optional<PaymentHistory> paymentHistory = paymentHistoryRepository.findByImpId(impId);
-        if (paymentHistory.isPresent()) {
-            paymentHistory.get().cancel();
-        }
+        paymentHistory.ifPresent(PaymentHistory::cancel);
     }
 
     private boolean cancelIamportPayment(String impId, String reason) {

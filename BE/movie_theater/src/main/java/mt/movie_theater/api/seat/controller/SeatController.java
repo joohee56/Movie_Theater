@@ -29,7 +29,7 @@ public class SeatController {
     }
 
     @GetMapping("")
-    public ApiResponse<Map<String, List<SeatSummaryResponse>>> getSeatList(@RequestParam(name = "hallId") Long hallId) {
-        return ApiResponse.ok(seatService.getSeatList(hallId));
+    public ApiResponse<Map<String, List<SeatSummaryResponse>>> getSeatList(@RequestParam(name = "screeningId") Long screeningId, @RequestParam(name = "hallId") Long hallId) {
+        return ApiResponse.ok(seatService.getSeatList(screeningId, hallId));
     }
 }

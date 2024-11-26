@@ -8,7 +8,9 @@ import mt.movie_theater.domain.payment.Currency;
 
 @Getter
 @NoArgsConstructor
-public class PostPaymentRequest {
+public class ConfirmBookingRequest {
+    @NotNull
+    private Long bookingId;
     @NotNull
     private String impId;
     private Long amount;
@@ -18,8 +20,9 @@ public class PostPaymentRequest {
     private Currency currency;
 
     @Builder
-    public PostPaymentRequest(String impId, Long amount, String bookingNumber, Long payTime, String payMethod,
-                              Currency currency) {
+    public ConfirmBookingRequest(Long bookingId, String impId, Long amount, String bookingNumber, Long payTime,
+                                 String payMethod, Currency currency) {
+        this.bookingId = bookingId;
         this.impId = impId;
         this.amount = amount;
         this.bookingNumber = bookingNumber;

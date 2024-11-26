@@ -15,7 +15,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mt.movie_theater.api.payment.request.PostPaymentRequest;
+import mt.movie_theater.api.payment.request.ConfirmBookingRequest;
 import mt.movie_theater.domain.user.User;
 
 @Getter
@@ -47,7 +47,7 @@ public class PaymentHistory {
         this.payStatus = payStatus;
     }
 
-    public static PaymentHistory create(PostPaymentRequest request, User user) {
+    public static PaymentHistory create(ConfirmBookingRequest request, User user) {
         return PaymentHistory.builder()
                 .user(user)
                 .impId(request.getImpId())
