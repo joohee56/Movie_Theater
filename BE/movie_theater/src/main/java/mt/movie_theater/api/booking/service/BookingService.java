@@ -4,8 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mt.movie_theater.api.booking.request.BookingHoldRequest;
 import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.response.BookingWithDateResponse;
@@ -28,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final ScreeningRepository screeningRepository;
@@ -35,15 +40,24 @@ public class BookingService {
     private final PaymentHistoryRepository paymentHistoryRepository;
     private final PaymentHistoryService paymentHistoryService;
     private final SeatService seatService;
+    private final Lock fairLock = new ReentrantLock(true);
 
     @Transactional
     public Long holdBooking(Long userId, BookingHoldRequest request, LocalDateTime bookingTime) {
-        User user = validateUser(userId);
-        Screening screening = validateScreening(request.getScreeningId(), bookingTime);
-        List<Seat> seats = seatService.validateSeats(request.getSeatIds(), screening);
-
-        Booking booking = Booking.hold(user, screening, seats);
-        return bookingRepository.save(booking).getId();
+        try {
+            if (!fairLock.tryLock(10, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("접속이 지연되고 있습니다. 나중에 다시 시도해 주세요.");
+            }
+            User user = validateUser(userId);
+            Screening screening = validateScreening(request.getScreeningId(), bookingTime);
+            List<Seat> seats = seatService.validateSeats(request.getSeatIds(), screening);
+            Booking booking = Booking.hold(user, screening, seats);
+            return bookingRepository.save(booking).getId();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            fairLock.unlock();
+        }
     }
 
     /**
@@ -63,11 +77,16 @@ public class BookingService {
     }
 
     public BookingResponse getBooking(Long bookingId) {
-        Optional<Booking> booking = bookingRepository.findByIdWithBookingSeats(bookingId);
-        if (booking.isEmpty()) {
-            throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
+        try {
+            fairLock.lock();
+            Optional<Booking> booking = bookingRepository.findByIdWithBookingSeats(bookingId);
+            if (booking.isEmpty()) {
+                throw new IllegalArgumentException("유효하지 않은 예매입니다. 예매 정보를 다시 확인해 주세요.");
+            }
+            return BookingResponse.create(booking.get());
+        } finally {
+            fairLock.unlock();
         }
-        return BookingResponse.create(booking.get());
     }
 
     /**
