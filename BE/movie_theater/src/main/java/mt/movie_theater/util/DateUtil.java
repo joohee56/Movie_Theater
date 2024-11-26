@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class DateUtil {
     public static String formatToStartDate(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd(EEE)", Locale.KOREA);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd (EEE)", Locale.KOREA);
         return dateTime.format(formatter);
     }
 
@@ -16,7 +16,7 @@ public class DateUtil {
     }
 
     public static String formatToDateAndHourAndMinute(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd (EEE) HH:mm", Locale.KOREA);
         return dateTime.format(formatter);
     }
 }
