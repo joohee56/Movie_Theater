@@ -62,7 +62,7 @@ export default {
     },
     async logout() {
       const response = await logout();
-      if (response.code == 200) {
+      if (response.code == 200 || response.code == 401) {
         localStorage.removeItem("isAuthenticated");
         if (this.isAdmin) {
           localStorage.removeItem("admin");

@@ -76,11 +76,14 @@ export default {
   max-width: 700px;
   margin: 0 auto;
   margin-bottom: 15px;
+  text-align: center;
+  justify-content: center;
 }
 .poster-img {
   width: 130px;
   aspect-ratio: 290/410;
   margin-right: 30px;
+  border-radius: 5px;
 }
 .confirmed-booking table {
   border-collapse: separate;

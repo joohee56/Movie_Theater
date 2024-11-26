@@ -52,6 +52,8 @@ export default {
         }
         this.$emit("checkAuthStatus");
         this.close();
+      } else if (response.code == 400) {
+        alert(response.message);
       }
     },
   },

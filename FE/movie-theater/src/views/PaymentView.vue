@@ -197,6 +197,7 @@ export default {
   object-fit: fill;
   width: 100px;
   margin-right: 20px;
+  border-radius: 5px;
 }
 .movie-name {
   font-family: "SUIT-Medium";

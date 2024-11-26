@@ -62,11 +62,13 @@ const routes = [
   {
     path: "/booking/payment",
     name: "paymentView",
+    beforeEnter: checkAuthenticate,
     component: PaymentView,
   },
   {
     path: "/booking/success/:bookingId",
     name: "bookingSuccess",
+    beforeEnter: checkAuthenticate,
     component: BookingSuccess,
   },
   {
@@ -78,6 +80,7 @@ const routes = [
       {
         path: "/mypage/bookingHistory",
         name: "bookingHistory",
+        beforeEnter: checkAuthenticate,
         component: BookingHistory,
       },
     ],
@@ -85,26 +88,31 @@ const routes = [
   {
     path: "/admin",
     name: "admin",
+    beforeEnter: checkAuthenticate,
     component: AdminView,
   },
   {
     path: "/admin/movie/create",
     name: "createMovie",
+    beforeEnter: checkAuthenticate,
     component: CreateMovie,
   },
   {
     path: "/admin/theater/create",
     name: "createTheater",
+    beforeEnter: checkAuthenticate,
     component: CreateTheater,
   },
   {
     path: "/admin/hall/create",
     name: "createHall",
+    beforeEnter: checkAuthenticate,
     component: CreateHall,
   },
   {
     path: "/admin/screening/create",
     name: "createScreening",
+    beforeEnter: checkAuthenticate,
     component: CreateScreening,
   },
 ];
