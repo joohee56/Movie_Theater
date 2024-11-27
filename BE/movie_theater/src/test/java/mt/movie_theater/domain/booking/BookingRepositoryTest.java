@@ -1,6 +1,5 @@
 package mt.movie_theater.domain.booking;
 
-import static mt.movie_theater.domain.booking.BookingStatus.CANCELED;
 import static mt.movie_theater.domain.booking.BookingStatus.CONFIRMED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -40,7 +39,6 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         Booking booking1 = createBooking(user1, CONFIRMED);
         Booking booking2 = createBooking(user1, CONFIRMED);
         Booking booking3 = createBooking(user1, CONFIRMED);
-        booking2.cancel();
         Booking booking4 = createBooking(user2, CONFIRMED); //회원 미해당
 
         BookingSeat bookingSeat1 = createBookingSeat();
@@ -60,16 +58,29 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         assertThat(bookings).hasSize(3)
                 .extracting("user", "id", "bookingStatus")
                 .containsExactly(
-                  tuple(user1, booking2.getId(), CANCELED),
-                  tuple(user1, booking3.getId(), CONFIRMED),
-                  tuple(user1, booking1.getId(), CONFIRMED)
+                        tuple(user1, booking3.getId(), CONFIRMED),
+                        tuple(user1, booking2.getId(), CONFIRMED),
+                        tuple(user1, booking1.getId(), CONFIRMED)
                 );
         assertThat(bookings)
                 .extracting(booking -> booking.getBookingSeats().size())
                 .containsExactlyInAnyOrder(2, 1, 1);
     }
 
-    @DisplayName("Id에 해당하는 예매내역을 예매좌석과 함께 조회한다.")
+    @DisplayName("회원에 해당하는 예매내역을 예매좌석과 함께 조회할 때, 예매 내역이 없을 경우 빈 배열을 반환한다.")
+    @Test
+    void findAllWithBookingSeatsByUserIdEmpty() {
+        //given
+        User user = createUser();
+
+        //when
+        List<Booking> bookings = bookingRepository.findAllWithBookingSeatsByUserId(user.getId());
+
+        //then
+        assertThat(bookings).isEmpty();
+    }
+
+    @DisplayName("예매Id에 해당하는 예매내역을 예매좌석과 함께 조회한다.")
     @Test
     void findByIdWithBookingSeats() {
         //given
@@ -89,6 +100,21 @@ class BookingRepositoryTest extends IntegrationTestSupport {
         assertThat(booking).isPresent();
         assertThat(booking.get().getBookingSeats()).hasSize(3)
                 .containsExactly(bookingSeat1, bookingSeat2, bookingSeat3);
+    }
+
+    @DisplayName("예매Id에 해당하는 예매내역을 예매좌석과 함께 조회할 때, 일치하는 예매 내역이 없는 경우 빈 객체를 반환한다.")
+    @Test
+    void findByIdWithBookingSeatsOptional() {
+        //given
+        Booking booking = createBooking();
+        BookingSeat bookingSeat = createBookingSeat();
+        booking.addBookingSeat(bookingSeat);
+
+        //when
+        Optional<Booking> findBooking = bookingRepository.findByIdWithBookingSeats(Long.valueOf(2));
+
+        //then
+        assertThat(findBooking).isEmpty();
     }
 
     private User createUser() {

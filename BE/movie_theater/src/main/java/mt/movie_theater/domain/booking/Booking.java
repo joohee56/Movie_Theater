@@ -11,8 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +28,6 @@ import mt.movie_theater.domain.user.User;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "booking", uniqueConstraints = {
-        @UniqueConstraint(
-                name="screening_seat_unique",
-                columnNames = {"screening_id", "seat_id"}
-        )
-})
 public class Booking extends BaseEntity {
 
     @Id
@@ -62,7 +54,7 @@ public class Booking extends BaseEntity {
     private List<BookingSeat> bookingSeats = new ArrayList<>();
 
     @Builder
-    public Booking(User user, Screening screening, PaymentHistory paymentHistory, String bookingNumber,
+    private Booking(User user, Screening screening, PaymentHistory paymentHistory, String bookingNumber,
                    LocalDateTime bookingTime, BookingStatus bookingStatus) {
         this.user = user;
         this.screening = screening;
