@@ -49,7 +49,7 @@ class HallServiceTest extends IntegrationTestSupport {
         assertThat(response.getTheater().getId()).isEqualTo(savedTheater.getId());
     }
 
-    @DisplayName("신규 상영관을 등록할 때, 잘못된 극장 번호가 포함될 경우 예외가 발생한다.")
+    @DisplayName("신규 상영관을 등록할 때, 잘못된 영화관이 포함될 경우 예외가 발생한다.")
     @Test
     void createHallWithNoTheater() {
         //given
@@ -58,6 +58,7 @@ class HallServiceTest extends IntegrationTestSupport {
                 .name("1관")
                 .screeningType(ScreeningType.TWO_D)
                 .build();
+
         //when, then
         assertThatThrownBy(() -> hallService.createHall(request))
                 .isInstanceOf(IllegalArgumentException.class)

@@ -12,8 +12,6 @@ import java.util.Map;
 import mt.movie_theater.IntegrationTestSupport;
 import mt.movie_theater.api.booking.response.BookingResponse;
 import mt.movie_theater.api.booking.response.BookingWithDateResponse;
-import mt.movie_theater.api.exception.DuplicateSeatBookingException;
-import mt.movie_theater.api.exception.PaymentValidationException;
 import mt.movie_theater.domain.booking.Booking;
 import mt.movie_theater.domain.booking.BookingRepository;
 import mt.movie_theater.domain.booking.BookingStatus;
@@ -79,7 +77,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         //then
         assertThat(bookingResponse)
                 .extracting("startDate", "startTime", "bookingTime")
-                .containsExactly("2024.11.01(금)", "15:00", "2024.11.01(금) 10:00");
+                .containsExactly("2024.11.01 (금)", "15:00", "2024.11.01 (금) 10:00");
     }
 
     @DisplayName("예매정보를 조회할 때, 유효하지 않은 예매일 경우 예외가 발생한다. ")
@@ -119,7 +117,7 @@ class BookingServiceTest extends IntegrationTestSupport {
         assertThat(bookingStatusMap.get(CANCELED)).hasSize(1);
         assertThat(bookingStatusMap.get(CANCELED).getFirst())
                 .extracting("startDate", "startTime", "bookingTime")
-                .containsExactly("2024.11.02(토)", "15:00", "2024.11.01(금) 00:00");
+                .containsExactly("2024.11.02 (토)", "15:00", "2024.11.01 (금) 00:00");
         assertThat(bookingStatusMap.get(CANCELED).getFirst().getSeats()).hasSize(2)
                 .extracting("section", "seatRow")
                 .containsExactlyInAnyOrder(

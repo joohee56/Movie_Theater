@@ -217,7 +217,7 @@ class ScreeningServiceTest extends IntegrationTestSupport {
         //then
         assertThat(response)
                 .extracting("startDate", "startTime", "endTime")
-                .containsExactly("2024.11.01(금)", "15:00", "16:48");
+                .containsExactly("2024.11.01 (금)", "15:00", "16:48");
     }
 
     @DisplayName("최종 결제 금액과 상영시간을 조회할 때, 유효하지 않은 상영시간일 경우 예외가 발생한다.")
