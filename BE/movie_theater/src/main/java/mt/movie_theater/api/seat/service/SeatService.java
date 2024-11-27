@@ -53,7 +53,7 @@ public class SeatService {
 
     public Map<String, List<SeatSummaryResponse>> getSeatList(Long screeningId, Long hallId) {
         List<Seat> seats = seatRepository.findAllByHall(hallId);
-        List<Seat> bookingSeats = bookingSeatRepository.findAllByScreeningIdAndHallIdAndBookingStatusNot(screeningId, hallId, BookingStatus.CANCELED);
+        List<Seat> bookingSeats = bookingSeatRepository.findAllByScreeningIdAndBookingStatusNot(screeningId, BookingStatus.CANCELED);
         Map<String, List<Seat>> sectionSeatMap = seats.stream()
                                                 .collect(Collectors.groupingBy(seat -> seat.getSeatLocation().getSection()));
 

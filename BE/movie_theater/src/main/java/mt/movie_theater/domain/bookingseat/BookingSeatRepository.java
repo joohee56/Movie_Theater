@@ -18,8 +18,6 @@ public interface BookingSeatRepository extends JpaRepository<BookingSeat, Intege
 
     @Query("select bs.seat from BookingSeat bs"
             + " where bs.booking.screening.id= :screeningId"
-            + " and bs.booking.screening.hall.id= :hallId"
             + " and bs.booking.bookingStatus != :bookingStatus")
-    List<Seat> findAllByScreeningIdAndHallIdAndBookingStatusNot(@Param("screeningId") Long screeningId, @Param("hallId") Long hallId, @Param("bookingStatus")
-                                                                       BookingStatus bookingStatus);
+    List<Seat> findAllByScreeningIdAndBookingStatusNot(@Param("screeningId") Long screeningId, @Param("bookingStatus") BookingStatus bookingStatus);
 }
