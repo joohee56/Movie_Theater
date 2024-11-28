@@ -77,11 +77,15 @@ public class SeatService {
             BookingStatus bookingStatus = bookingSeat.getBooking().getBookingStatus();
             if (bookingStatus.equals(BookingStatus.PENDING)) {
                 throw new DuplicateSeatBookingException("판매가 진행중인 좌석입니다.");
-            }
-            if (bookingStatus.equals(BookingStatus.CONFIRMED)) {
+            } else if (bookingStatus.equals(BookingStatus.CONFIRMED)) {
                 throw new DuplicateSeatBookingException("이미 선택된 좌석입니다.");
             }
+
+            if (!bookingStatus.equals(BookingStatus.CANCELED)) {
+                throw new IllegalStateException("불가능한 예매입니다.");
+            }
         }
+
         return seats;
     }
 

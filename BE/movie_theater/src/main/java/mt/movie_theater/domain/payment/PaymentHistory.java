@@ -22,17 +22,25 @@ import mt.movie_theater.domain.user.User;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PaymentHistory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
     private String impId;
+
     private Long amount;
+
     private LocalDateTime payTime;
+
     private String payMethod;
+
     @Enumerated(EnumType.STRING)
     private Currency currency;
+
     @Enumerated(EnumType.STRING)
     private PayStatus payStatus;
 
@@ -60,7 +68,9 @@ public class PaymentHistory {
     }
 
     private static LocalDateTime convertUnixTimestampToLocalDateTime(Long timestamp) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.of("Asia/Seoul"));
+        return Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.of("Asia/Seoul"))
+                .toLocalDateTime();
     }
 
     public void cancel() {

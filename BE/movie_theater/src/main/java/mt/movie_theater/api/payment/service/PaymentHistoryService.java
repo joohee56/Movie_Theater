@@ -8,7 +8,6 @@ import com.siot.IamportRestClient.response.Payment;
 import com.siot.IamportRestClient.response.Prepare;
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import mt.movie_theater.api.exception.CancelPaymentException;
 import mt.movie_theater.api.exception.PaymentValidationException;
@@ -20,16 +19,21 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 @PropertySource("classpath:application-imp.properties")
 @Transactional
 public class PaymentHistoryService {
+
     @Value("${IMP_API_KEY}")
     private String apiKey;
+
     @Value("${IMP_API_SECRET_KEY}")
     private String apiSecretKey;
+
     private IamportClient iamportClient;
+
     private final PaymentHistoryRepository paymentHistoryRepository;
 
     @PostConstruct
@@ -53,23 +57,21 @@ public class PaymentHistoryService {
         }
     }
 
-    public void failPayment(String impId, String reason) {
+    public void failPayment(String impId, PaymentHistory paymentHistory, String reason) {
         if (!cancelIamportPayment(impId, reason)) {
             throw new IllegalStateException("결제 취소 처리가 되지 않았습니다.");
         }
-        Optional<PaymentHistory> paymentHistory = paymentHistoryRepository.findByImpId(impId);
-        paymentHistory.ifPresent(PaymentHistory::fail);
+        paymentHistory.fail();
     }
 
-    public void cancelPayment(String impId, String reason) {
+    public void cancelPayment(String impId, PaymentHistory paymentHistory, String reason) {
         if (!cancelIamportPayment(impId, reason)) {
             throw new IllegalStateException("결제 취소 처리가 되지 않았습니다.");
         }
-        Optional<PaymentHistory> paymentHistory = paymentHistoryRepository.findByImpId(impId);
-        paymentHistory.ifPresent(PaymentHistory::cancel);
+        paymentHistory.cancel();
     }
 
-    private boolean cancelIamportPayment(String impId, String reason) {
+    public boolean cancelIamportPayment(String impId, String reason) {
         try {
             CancelData cancelData = new CancelData(impId, true);
             cancelData.setReason(reason);

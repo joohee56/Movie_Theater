@@ -61,18 +61,22 @@ public class BookingService {
     }
 
     /**
-     * 결제 사후 검증 후 결제내역, 예매 생성
+     * 결제내역 생성, 결제 사후 검증 후 예매 확정
      */
     @Transactional
     public BookingResponse confirmBookingAndPaymentHistory(Long userId, ConfirmBookingRequest request, LocalDateTime bookingTime) {
         User user = validateUser(userId);
         Booking booking = validateBookingForConfirm(user.getId(), request.getBookingId());
         PaymentHistory paymentHistory = paymentHistoryRepository.save(PaymentHistory.create(request, user));
+        booking.initPaymentHistory(paymentHistory);
+
         if (!paymentHistoryService.validatePaymentAmount(request.getImpId(), request.getAmount())) {
-            paymentHistoryService.failPayment(request.getImpId(), "비정상적인 접근입니다. 결제 요청이 유효하지 않습니다.");
+            paymentHistoryService.failPayment(request.getImpId(), paymentHistory, "비정상적인 접근입니다. 결제 요청이 유효하지 않습니다.");
+            booking.cancel();
+            throw new IllegalStateException("비정상적인 접근입니다. 결제 사후 검증에 실패했습니다.");
         }
 
-        booking.confirm(paymentHistory, request.getBookingNumber(), bookingTime);
+        booking.confirm(request.getBookingNumber(), bookingTime);
         return BookingResponse.create(booking);
     }
 
@@ -107,7 +111,7 @@ public class BookingService {
     public Map<BookingStatus, List<BookingWithDateResponse>> cancelBookingAndPaymentGetBookingHistory(Long userId, Long bookingId) {
         User user = validateUser(userId);
         Booking booking = validateBookingForCancel(bookingId, user.getId());
-        paymentHistoryService.cancelPayment(booking.getPaymentHistory().getImpId(), "예매를 취소합니다.");
+        paymentHistoryService.cancelPayment(booking.getPaymentHistory().getImpId(), booking.getPaymentHistory(), "예매를 취소합니다.");
         booking.cancel();
         return getBookingHistory(userId);
     }

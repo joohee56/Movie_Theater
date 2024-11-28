@@ -69,6 +69,10 @@ public class Booking extends BaseEntity {
         bookingSeat.setBooking(this);
     }
 
+    public void initPaymentHistory(PaymentHistory paymentHistory) {
+        this.paymentHistory = paymentHistory;
+    }
+
     public static Booking hold(User user, Screening screening, List<Seat> seats) {
         Booking booking = Booking.builder()
                 .user(user)
@@ -82,8 +86,7 @@ public class Booking extends BaseEntity {
         return booking;
     }
 
-    public void confirm(PaymentHistory paymentHistory, String bookingNumber, LocalDateTime bookingTime) {
-        this.paymentHistory = paymentHistory;
+    public void confirm(String bookingNumber, LocalDateTime bookingTime) {
         this.bookingNumber = bookingNumber;
         this.bookingTime = bookingTime;
         this.bookingStatus = BookingStatus.CONFIRMED;

@@ -97,7 +97,7 @@ class PaymentHistoryServiceTest extends IntegrationTestSupport {
                         .findByImpId(paymentHistory.getImpId());
 
         //when
-        paymentHistoryService.failPayment(paymentHistory.getImpId(), "결제 실패 처리 테스트");
+        paymentHistoryService.failPayment(paymentHistory.getImpId(), paymentHistory, "결제 실패 처리 테스트");
 
         //then
         assertThat(paymentHistory.getPayStatus()).isEqualTo(FAILED);
@@ -117,7 +117,7 @@ class PaymentHistoryServiceTest extends IntegrationTestSupport {
                 .findByImpId(paymentHistory.getImpId());
 
         //when
-        paymentHistoryService.cancelPayment(paymentHistory.getImpId(), "결제 취소 처리 테스트");
+        paymentHistoryService.cancelPayment(paymentHistory.getImpId(), paymentHistory,"결제 취소 처리 테스트");
 
         //then
         assertThat(paymentHistory.getPayStatus()).isEqualTo(CANCELED);
