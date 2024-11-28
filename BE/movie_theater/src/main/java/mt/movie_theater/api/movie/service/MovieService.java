@@ -38,12 +38,12 @@ public class MovieService {
     public List<MovieResponse> getAllMovies() {
         List<Movie> movies = movieRepository.findAll();
         return movies.stream()
-                .map(movie -> MovieResponse.create(movie))
+                .map(MovieResponse::create)
                 .collect(Collectors.toList());
     }
 
     /**
-     * 가장 최신 영화 조회
+     * 가장 최신 영화 8개 조회
      */
     public List<MovieResponse> getRecentMovies() {
         List<Movie> movies = movieRepository.findTop8ByOrderByCreatedAtDesc();
@@ -53,13 +53,12 @@ public class MovieService {
     }
 
     /**
-     * 전체 영화 리스트 조회, 영화별 상영시간 포함 유무
+     * 전체 영화 리스트 조회, 각 영화별 상영시간 포함 유무
      */
     public List<MovieWatchableResponse> getMoviesWithIsWatchable(LocalDate date, Long theaterId) {
         LocalDateTime startDateTime = getStartDateTime(date);
         LocalDateTime endDateTime = getEndDateTime(date);
         List<Movie> watchableMovies = screeningRepository.findMoviesByDateAndOptionalTheaterId(startDateTime, endDateTime, theaterId);
-
         List<Movie> allMovies = movieRepository.findAll();
         return allMovies.stream()
                 .map(movie -> MovieWatchableResponse.create(movie, watchableMovies.contains(movie)))

@@ -17,11 +17,14 @@ import mt.movie_theater.domain.movie.Movie;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MovieActor extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
+
     private String name;
 
     @Builder

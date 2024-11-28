@@ -101,7 +101,6 @@ public class Movie extends BaseEntity {
                 .screeningType(request.getScreeningType())
                 .standardPrice(request.getStandardPrice())
                 .build();
-
         for (Genre genre : genres) {
             movie.addMovieGenre(MovieGenre.create(movie, genre));
         }
