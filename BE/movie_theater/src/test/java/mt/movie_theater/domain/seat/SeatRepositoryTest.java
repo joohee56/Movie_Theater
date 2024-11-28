@@ -56,8 +56,7 @@ class SeatRepositoryTest extends IntegrationTestSupport {
 
         //then
         assertThat(seats).hasSize(2)
-                .extracting("id")
-                .containsExactlyInAnyOrder(seat1.getId(), seat2.getId());
+                .containsExactlyInAnyOrder(seat1, seat2);
     }
 
     private Hall createHall() {
