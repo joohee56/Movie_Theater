@@ -67,7 +67,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder(movie1, movie2);
     }
 
-    @DisplayName("지역 리스트와 지역별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜, (영화)가 있다.")
+    @DisplayName("지역 리스트와 각 지역별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜, (영화)가 있다.")
     @Test
     void countScreeningByRegion() {
         //given
@@ -103,7 +103,7 @@ class ScreeningRepositoryTest extends IntegrationTestSupport {
                 );
     }
 
-    @DisplayName("지역별 영화관 리스트와 영화관별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜, (영화)가 있다.")
+    @DisplayName("지역별 영화관 리스트와 각 영화관별 상영시간 갯수를 조회한다. 상영시간 조건에는 날짜, (영화)가 있다.")
     @Test
     void findTheaterScreeningCounts() {
         //given
