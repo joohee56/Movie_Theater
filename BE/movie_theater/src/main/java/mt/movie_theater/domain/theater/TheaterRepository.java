@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TheaterRepository extends JpaRepository<Theater, Long> {
+
     List<Theater> findALlByRegion(@Param("region") Region region);
 
     @Query("select new mt.movie_theater.domain.theater.dto.RegionTheaterCountDto(t.region, count(t)) from Theater t"

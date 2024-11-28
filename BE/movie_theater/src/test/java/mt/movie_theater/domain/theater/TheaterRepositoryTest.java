@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 class TheaterRepositoryTest extends IntegrationTestSupport {
+
     @Autowired
     private TheaterRepository theaterRepository;
 
@@ -22,16 +23,16 @@ class TheaterRepositoryTest extends IntegrationTestSupport {
     @Test
     void findALlByRegion() {
         //given
-        createTheater(SEOUL, "강남");
-        createTheater(SEOUL, "강동");
-        createTheater(SEOUL, "군자");
+        Region targetRegion = SEOUL;
+
+        createTheater(targetRegion, "강남");
+        createTheater(targetRegion, "강동");
+        createTheater(targetRegion, "군자");
         createTheater(GYEONGGI, "고양스타필드");
         createTheater(GYEONGGI, "광명ak플라자");
 
-        Region region = SEOUL;
-
         //when
-        List<Theater> theaters = theaterRepository.findALlByRegion(region);
+        List<Theater> theaters = theaterRepository.findALlByRegion(targetRegion);
 
         //then
         assertThat(theaters).hasSize(3)
@@ -39,7 +40,7 @@ class TheaterRepositoryTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("강남", "강동", "군자");
     }
 
-    @DisplayName("지역리스트와 지역에 속하는 영화관 갯수를 조회한다.")
+    @DisplayName("지역리스트와 각 지역에 속하는 영화관 갯수를 조회한다.")
     @Test
     void countTheaterByRegion() {
         //given
