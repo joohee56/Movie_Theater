@@ -27,16 +27,19 @@ public class HallService {
     public HallResponse createHall(HallCreateRequest request) {
         Theater theater = validateTheater(request.getTheaterId());
         Hall hall = request.toEntity(theater);
-        Hall savedHall = hallRepository.save(hall);
-        return HallResponse.create(savedHall);
+        return HallResponse.create(hallRepository.save(hall));
     }
 
     public HallSeatsResponse createHallWithSeats(@Valid HallSeatsCreateRequest request) {
         Theater theater = validateTheater(request.getTheaterId());
-        Hall hall = request.toEntity(theater);
-        Hall savedHall = hallRepository.save(hall);
-        List<SeatResponse> seats = seatService.createSeatList(savedHall.getId(), request.getRows(), request.getColumns());
-        return HallSeatsResponse.create(savedHall.getId());
+        Hall hall = hallRepository.save(request.toEntity(theater));
+        List<SeatResponse> seats = seatService.createSeatList(hall.getId(), request.getRows(), request.getColumns());
+        return HallSeatsResponse.create(hall.getId(), seats);
+    }
+
+    public List<HallResponse> getHalls(Long theaterId) {
+        List<Hall> halls = hallRepository.findAllByTheaterId(theaterId);
+        return halls.stream().map(HallResponse::create).collect(Collectors.toList());
     }
 
     private Theater validateTheater(Long theaterId) {
@@ -45,10 +48,5 @@ public class HallService {
             throw new IllegalArgumentException("유효하지 않은 영화관입니다. 영화관 정보를 다시 확인해 주세요.");
         }
         return theater.get();
-    }
-
-    public List<HallResponse> getHalls(Long theaterId) {
-        List<Hall> halls = hallRepository.findAllByTheaterId(theaterId);
-        return halls.stream().map(HallResponse::create).collect(Collectors.toList());
     }
 }
