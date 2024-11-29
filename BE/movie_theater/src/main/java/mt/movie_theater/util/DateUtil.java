@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class DateUtil {
+public abstract class DateUtil {
     public static String formatToStartDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd (EEE)", Locale.KOREA);
         return dateTime.format(formatter);
