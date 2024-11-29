@@ -9,4 +9,4 @@ Content-Type: application/json
 }
 
 ### 좌석 리스트 조회
-GET localhost:8081/api/v1/seats?hallId=1
+GET localhost:8081/api/v1/seats?screeningId=1&hallId=1

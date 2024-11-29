@@ -1,5 +1,5 @@
 ### 신규 회원 등록
-POST localhost:8081/api/v1/users/new
+POST localhost:8081/api/v1/users/user/join
 Content-Type: application/json
 
 {

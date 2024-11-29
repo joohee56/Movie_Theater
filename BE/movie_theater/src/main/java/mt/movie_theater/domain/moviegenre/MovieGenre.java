@@ -22,14 +22,12 @@ public class MovieGenre extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Genre genre;
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
 
     @Builder
     private MovieGenre(Movie movie, Genre genre) {
@@ -42,5 +40,9 @@ public class MovieGenre extends BaseEntity {
                 .movie(movie)
                 .genre(genre)
                 .build();
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 }
