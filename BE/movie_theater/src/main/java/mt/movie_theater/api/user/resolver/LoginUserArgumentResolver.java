@@ -26,7 +26,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         if(session == null) {
             return null;
         }
-
         return session.getAttribute(SessionConstants.LOGIN_USER_ID);
     }
 }
