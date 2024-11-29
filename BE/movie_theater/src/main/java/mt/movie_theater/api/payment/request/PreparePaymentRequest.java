@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PreparePaymentRequest {
 
-    @NotBlank(message = "결제 ID는 필수 입력값입니다.")
-    private String paymentId;
+    @NotBlank(message = "예매번호는 필수 입력값입니다.")
+    private String bookingNumber;
 
     @NotNull(message = "금액은 필수 입력값입니다.")
     private Long amount;
 
     @Builder
-    public PreparePaymentRequest(String paymentId, Long amount) {
-        this.paymentId = paymentId;
+    public PreparePaymentRequest(String bookingNumber, Long amount) {
+        this.bookingNumber = bookingNumber;
         this.amount = amount;
     }
 }

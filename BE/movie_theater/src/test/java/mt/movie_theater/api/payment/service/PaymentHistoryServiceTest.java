@@ -57,7 +57,7 @@ class PaymentHistoryServiceTest {
                 .willReturn(0);
 
         //when
-        boolean result = paymentHistoryService.preparePayment("paymentId", 10000L);
+        boolean result = paymentHistoryService.preparePayment("bookingNumber", 10000L);
 
         //then
         assertThat(result).isTrue();
@@ -73,7 +73,7 @@ class PaymentHistoryServiceTest {
                 .willReturn(-1);
 
         //when
-        boolean result = paymentHistoryService.preparePayment("paymentId", 10000L);
+        boolean result = paymentHistoryService.preparePayment("bookingNumber", 10000L);
 
         //then
         assertThat(result).isFalse();
@@ -87,7 +87,7 @@ class PaymentHistoryServiceTest {
                 .willThrow(IOException.class);
 
         //when, then
-        assertThatThrownBy(() -> paymentHistoryService.preparePayment("paymentId", 10000L))
+        assertThatThrownBy(() -> paymentHistoryService.preparePayment("bookingNumber", 10000L))
                 .isInstanceOf(PreparePaymentException.class)
                 .hasMessage("결제 사전 등록 중 예외가 발생했습니다.");
     }

@@ -41,8 +41,8 @@ public class PaymentHistoryService {
     /**
      * 결제 사전 검증
      */
-    public boolean preparePayment(String paymentId, Long amount) {
-        PrepareData prepareData = new PrepareData(paymentId, BigDecimal.valueOf(amount));
+    public boolean preparePayment(String bookingNumber, Long amount) {
+        PrepareData prepareData = new PrepareData(bookingNumber, BigDecimal.valueOf(amount));
         try {
             IamportResponse<Prepare> response = iamportClient.postPrepare(prepareData);
             if (response.getCode() == 0) {

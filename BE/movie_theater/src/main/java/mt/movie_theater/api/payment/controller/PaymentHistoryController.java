@@ -19,10 +19,10 @@ public class PaymentHistoryController {
 
     @PostMapping("/prepare")
     public ApiResponse<String> preparePayment(@Valid @RequestBody PreparePaymentRequest request) {
-        boolean result  = paymentHistoryService.preparePayment(request.getPaymentId(), request.getAmount());
+        boolean result  = paymentHistoryService.preparePayment(request.getBookingNumber(), request.getAmount());
         if (result) {
             return ApiResponse.ok("결제 사전 검증을 등록했습니다.");
         }
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, "결제 사전 검증 등록을 실패했습니다.");
+        return ApiResponse.of(HttpStatus.BAD_REQUEST, "결제 사전 검증 등록을 실패했습니다.", null);
     }
 }
