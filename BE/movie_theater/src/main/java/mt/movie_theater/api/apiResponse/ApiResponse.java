@@ -1,5 +1,6 @@
 package mt.movie_theater.api.apiResponse;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
