@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -47,6 +48,7 @@ public class MovieCreateRequest {
     @NotNull(message = "상영타입은 필수 입력값입니다.")
     private ScreeningType screeningType;
 
+    @PositiveOrZero(message = "기본금액은 0 또는 양수여야 합니다.")
     private int standardPrice;
 
     @NotEmpty(message = "장르 리스트는 필수 입력값입니다.")

@@ -1,8 +1,8 @@
 package mt.movie_theater.api.movie.controller;
 
-import mt.movie_theater.ControllerTestSupport;
+import mt.movie_theater.IntegrationControllerTestSupport;
 
-class MovieControllerTest extends ControllerTestSupport {
+class MovieIntegrationControllerTest extends IntegrationControllerTestSupport {
 
 //    @DisplayName("신규 영화를 등록한다.")
 //    @Test

@@ -1,5 +1,6 @@
 package mt.movie_theater.api.booking.controller;
 
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class BookingController {
      */
     @LoginCheck
     @PostMapping("/booking/hold")
-    public ApiResponse<Long> holdBooking(@Login Long userId, @RequestBody BookingHoldRequest request) {
+    public ApiResponse<Long> holdBooking(@Login Long userId, @Valid @RequestBody BookingHoldRequest request) {
         LocalDateTime bookingTime = LocalDateTime.now();
         return ApiResponse.ok(bookingService.holdBooking(userId, request, bookingTime));
     }
@@ -45,7 +46,7 @@ public class BookingController {
      */
     @LoginCheck
     @PostMapping("/booking/confirm")
-    public ApiResponse<BookingResponse> confirmBookingAndPaymentHistory(@Login Long userId, @RequestBody ConfirmBookingRequest request) {
+    public ApiResponse<BookingResponse> confirmBookingAndPaymentHistory(@Login Long userId, @Valid @RequestBody ConfirmBookingRequest request) {
         LocalDateTime bookingTime = LocalDateTime.now();
         return ApiResponse.ok(bookingService.confirmBookingAndPaymentHistory(userId, request, bookingTime));
     }

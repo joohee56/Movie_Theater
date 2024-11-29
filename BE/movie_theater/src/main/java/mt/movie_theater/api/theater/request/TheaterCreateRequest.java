@@ -27,7 +27,6 @@ public class TheaterCreateRequest {
     @NotNull(message = "영화관 경도는 필수 입력값입니다.")
     private Float longitude;
 
-    @NotBlank(message = "영화관 연락처는 필수 입력값입니다.")
     private String contactNumber;
 
     @Builder
