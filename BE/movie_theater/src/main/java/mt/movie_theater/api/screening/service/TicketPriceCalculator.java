@@ -3,7 +3,7 @@ package mt.movie_theater.api.screening.service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class TicketPriceCalculator {
+public abstract class TicketPriceCalculator {
     public static final LocalTime MORNING_DISCOUNT_START_TIME = LocalTime.of(6, 0);
     public static final LocalTime MORNING_DISCOUNT_END_TIME = LocalTime.of(10, 0);
 
@@ -21,10 +21,10 @@ public class TicketPriceCalculator {
     }
 
     private static boolean isMorningDiscount(LocalTime startDate) {
-        return startDate.equals(MORNING_DISCOUNT_START_TIME) || startDate.equals(MORNING_DISCOUNT_END_TIME) || (startDate.isAfter(MORNING_DISCOUNT_START_TIME) && startDate.isBefore(MORNING_DISCOUNT_END_TIME));
+        return startDate.equals(MORNING_DISCOUNT_START_TIME) || (startDate.isAfter(MORNING_DISCOUNT_START_TIME) && startDate.isBefore(MORNING_DISCOUNT_END_TIME)) || startDate.equals(MORNING_DISCOUNT_END_TIME);
     }
 
     private static boolean isNightDiscount(LocalTime startDate) {
-        return startDate.equals(NIGHT_DISCOUNT_START_TIME) || startDate.equals(NIGHT_DISCOUNT_END_TIME) || startDate.isAfter(NIGHT_DISCOUNT_START_TIME) || startDate.isBefore(NIGHT_DISCOUNT_END_TIME);
+        return startDate.equals(NIGHT_DISCOUNT_START_TIME) || startDate.isAfter(NIGHT_DISCOUNT_START_TIME) || startDate.isBefore(NIGHT_DISCOUNT_END_TIME) || startDate.equals(NIGHT_DISCOUNT_END_TIME);
     }
 }

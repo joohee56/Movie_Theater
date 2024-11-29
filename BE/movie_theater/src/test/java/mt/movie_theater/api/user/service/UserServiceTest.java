@@ -40,7 +40,7 @@ class UserServiceTest extends IntegrationTestSupport {
                 .contains("joohee123", "이주희");
     }
 
-    @DisplayName("로그인 검증을 성공한다.")
+    @DisplayName("로그인을 검증한다.")
     @Test
     void authenticate() {
         //given
@@ -66,12 +66,12 @@ class UserServiceTest extends IntegrationTestSupport {
                 .hasMessage("없는 아이디입니다. 아이디 정보를 다시 확인해 주세요.");
     }
 
-    @DisplayName("로그인 검증 시, 틀린 비밀번호일 경우 예외가 발생한다.")
+    @DisplayName("로그인 검증 시, 비밀번호가 다를 경우 예외가 발생한다.")
     @Test
     void authenticateWithWrongPassword() {
         //given
         String loginId = "test123";
-        User user = join(loginId, "1234");
+        join(loginId, "1234");
 
         //when, then
         assertThatThrownBy(() -> userService.authenticate(loginId, "000"))
@@ -84,7 +84,6 @@ class UserServiceTest extends IntegrationTestSupport {
                 .loginId(loginId)
                 .password(password)
                 .build();
-
         return userRepository.save(user);
     }
 }

@@ -13,7 +13,6 @@ public class ScreeningWithPriceResponse {
     private String posterUrl;
     private String theaterName;
     private String hallName;
-
     private String startDate;
     private String startTime;
     private String endTime;

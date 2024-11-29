@@ -20,21 +20,20 @@ public class TheaterService {
 
     public TheaterResponse createTheater(TheaterCreateRequest request) {
         Theater theater = request.toEntity();
-        Theater savedTheater = theaterRepository.save(theater);
-        return TheaterResponse.create(savedTheater);
+        return TheaterResponse.create(theaterRepository.save(theater));
     }
 
     public List<RegionTheaterCountResponse> getRegionsWithTheaterCount() {
         List<RegionTheaterCountDto> regions = theaterRepository.findRegionListWithTheaterCount();
         return regions.stream()
-                .map(dto -> RegionTheaterCountResponse.create(dto))
+                .map(RegionTheaterCountResponse::create)
                 .collect(Collectors.toList());
     }
 
     public List<TheaterIdNameResponse> getTheatersByRegion(Region region) {
         List<Theater> theaters = theaterRepository.findALlByRegion(region);
         return theaters.stream()
-                .map(theater -> TheaterIdNameResponse.create(theater))
+                .map(TheaterIdNameResponse::create)
                 .collect(Collectors.toList());
     }
 }

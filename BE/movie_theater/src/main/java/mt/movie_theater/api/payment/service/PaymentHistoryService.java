@@ -13,7 +13,6 @@ import mt.movie_theater.api.exception.CancelPaymentException;
 import mt.movie_theater.api.exception.PaymentValidationException;
 import mt.movie_theater.api.exception.PreparePaymentException;
 import mt.movie_theater.domain.payment.PaymentHistory;
-import mt.movie_theater.domain.payment.PaymentHistoryRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,6 @@ public class PaymentHistoryService {
     private String apiSecretKey;
 
     private IamportClient iamportClient;
-
-    private final PaymentHistoryRepository paymentHistoryRepository;
 
     @PostConstruct
     public void init() {
@@ -59,14 +56,14 @@ public class PaymentHistoryService {
 
     public void failPayment(String impId, PaymentHistory paymentHistory, String reason) {
         if (!cancelIamportPayment(impId, reason)) {
-            throw new IllegalStateException("결제 취소 처리가 되지 않았습니다.");
+            throw new IllegalStateException("[Fail Payment] 결제 취소가 실패했습니다.");
         }
         paymentHistory.fail();
     }
 
     public void cancelPayment(String impId, PaymentHistory paymentHistory, String reason) {
         if (!cancelIamportPayment(impId, reason)) {
-            throw new IllegalStateException("결제 취소 처리가 되지 않았습니다.");
+            throw new IllegalStateException("[Cancel Payment] 결제 취소가 실패했습니다.");
         }
         paymentHistory.cancel();
     }
@@ -75,14 +72,13 @@ public class PaymentHistoryService {
         try {
             CancelData cancelData = new CancelData(impId, true);
             cancelData.setReason(reason);
-
             IamportResponse<Payment> response = iamportClient.cancelPaymentByImpUid(cancelData);
             if (response != null && response.getResponse().getStatus().equals("cancelled")) {
                 return true;
             }
             return false;
         } catch (Exception e) {
-            throw new CancelPaymentException("결제 취소 중 예외가 발생했습니다.", e);
+            throw new CancelPaymentException("[Iamport] 결제 취소 중 예외가 발생했습니다.", e);
         }
     }
 
@@ -95,7 +91,7 @@ public class PaymentHistoryService {
             }
             return false;
         } catch (Exception e) {
-            throw new PaymentValidationException("유효하지 않은 결제입니다", e);
+            throw new PaymentValidationException("결제 사후 검증 중 예외가 발생했습니다.", e);
         }
     }
 }

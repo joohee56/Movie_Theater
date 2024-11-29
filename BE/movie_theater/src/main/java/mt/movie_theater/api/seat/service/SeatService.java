@@ -32,8 +32,7 @@ public class SeatService {
     @Transactional
     public List<SeatResponse> createSeatList(Long hallId, int rows, int columns) {
         Hall hall = validateHall(hallId);
-        //TODO: 이미 좌석이 생성되어 있다면, 기존 좌석 제거 후 다시 생성..?
-
+        //TODO: 이미 좌석이 생성되었다면 예외처리
         List<Seat> seats = new ArrayList<>();
         for (char row = 'A'; row < 'A' + rows; row++) {
             for (int col = 1; col <= columns; col++) {
@@ -47,7 +46,7 @@ public class SeatService {
 
         List<Seat> savedSeats = seatRepository.saveAll(seats);
         return savedSeats.stream()
-                .map(seat -> SeatResponse.create(seat))
+                .map(SeatResponse::create)
                 .collect(Collectors.toList());
     }
 
